@@ -1,0 +1,102 @@
+.desktop {
+    background-color: #f5c1c1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+.desktop .div {
+    background-color: #f5c1c1;
+    width: 1440px;
+    height: 1024px;
+    position: relative; 
+}
+
+.desktop .logo {
+    position: absolute;
+    width: 626px;
+    height: 166px;
+    top: 221px;
+    left: 407px;
+    border-radius: 6px;
+}
+
+.desktop .name {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    width: 418px;
+    height: 43px;
+    top: 280px;
+    left: 585px;
+
+    color: #fff;
+    text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+
+.desktop .overlap-group-wrapper {
+    position: absolute;
+    width: 370px;
+    height: 208px;
+    top: 433px;
+    left: 569px;
+}
+
+.desktop .overlap-group {
+    width: 500;
+    height: 208px;
+    border-radius: 6px;
+    background-color: white;
+    background-size: 100% 100%;
+}
+
+.desktop .flexcontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    width: 318px;
+    height: 143px;
+    top: 32px;
+    left: 25px;
+}
+
+.desktop .text {
+    position: relative;
+    align-self: stretch;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 5000;
+    color: #000000;
+    font-size: 35px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.desktop .text-wrapper {
+    font-family: 'Rubik', sans-serif;
+    font-weight: 1000;
+    color: #000000;
+    font-size: 35px;
+    letter-spacing: 0;
+}
+
+.desktop .hotText {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 1000;
+  color: #C50909;
+  font-size: 80px;
+  letter-spacing: 0;
+  margin: 0;
+  display: inline;
+}
+
+.desktop .text-wrapper:hover {
+  color:rgb(65, 65, 65);
+  font-size: 40px;
+  transition: all 0.3s ease; 
+}
