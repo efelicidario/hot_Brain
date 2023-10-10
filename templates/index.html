@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="static/globals.css" />
+        <link rel="stylesheet" href="static/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="desktop">
+            <div class="div">
+                <img class="logo" src="static/pics/logo.png" />
+                <div class="name">
+                  <span class="hotText">hot<span style="color: #FE8F87;">Brain</span></span>
+                </div>
+                <div class="overlap-group-wrapper">
+                    <div class="overlap-group">
+                        <div class="flexcontainer">
+                            <p class="text">
+                              <a href="{{ url_for('static', filename='video.html') }}" class="text-wrapper" target="_blank">Videos</a><br />
+                            </p>
+                            <p class="text">
+                                <span class="text-wrapper">Connect<br /></span>
+                            </p>
+                            <p class="text"><span class="text-wrapper">Sign Up</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
