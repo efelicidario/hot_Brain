@@ -17,7 +17,7 @@ from db_con import get_db_instance, get_db
 from tools.token_required import token_required
 
 #used if you want to store your secrets in the aws valut
-#from tools.get_aws_secrets import get_secrets
+from tools.get_aws_secrets import get_secrets
 
 from tools.logging import logger
 
@@ -50,8 +50,8 @@ def init_new_env():
     if 'hb' not in g:
         g.hb = get_head_band_sensor_object()
 
-    #g.secrets = get_secrets()
-    #g.sms_client = get_sms_client()
+    g.secrets = get_secrets()
+    g.sms_client = get_sms_client()
 
 #This gets executed by default by the browser if no page is specified
 #So.. we redirect to the endpoint we want to load the base page
@@ -68,6 +68,11 @@ def login():
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
+
+@app.route('/video')
+def video():
+    return render_template('video.html')
+
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
 @token_required
