@@ -7,10 +7,10 @@ import datetime
 import bcrypt
 import traceback
 
-from tools.eeg import get_head_band_sensor_object
+#from tools.eeg import get_head_band_sensor_object
 
 
-from db_con import get_db_instance, get_db
+#from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
@@ -28,13 +28,13 @@ app = Flask(__name__)
 FlaskJSON(app)
 
 #g is flask for a global var storage 
-def init_new_env():
+#def init_new_env():
     #To connect to DB
-    if 'db' not in g:
-        g.db = get_db()
+#    if 'db' not in g:
+#        g.db = get_db()
 
-    if 'hb' not in g:
-        g.hb = get_head_band_sensor_object()
+#    if 'hb' not in g:
+#        g.hb = get_head_band_sensor_object()
 
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()
