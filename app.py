@@ -7,15 +7,15 @@ import datetime
 import bcrypt
 import traceback
 
-from tools.eeg import get_head_band_sensor_object
+#from tools.eeg import get_head_band_sensor_object
 
 
-from db_con import get_db_instance, get_db
+#from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
 #used if you want to store your secrets in the aws valut
-from tools.get_aws_secrets import get_secrets
+#from tools.get_aws_secrets import get_secrets
 
 from tools.logging import logger
 
@@ -28,16 +28,16 @@ app = Flask(__name__)
 FlaskJSON(app)
 
 #g is flask for a global var storage 
-def init_new_env():
-    #To connect to DB
-    if 'db' not in g:
-        g.db = get_db()
+#def init_new_env():
+    #To connect to DB#
+#    if 'db' not in g:
+#        g.db = get_db()
 
-    if 'hb' not in g:
-        g.hb = get_head_band_sensor_object()
+#    if 'hb' not in g:
+#        g.hb = get_head_band_sensor_object()
 
-    g.secrets = get_secrets()
-    g.sms_client = get_sms_client()
+#    g.secrets = get_secrets()
+#    g.sms_client = get_sms_client()
 
 #This gets executed by default by the browser if no page is specified
 #So.. we redirect to the endpoint we want to load the base page
