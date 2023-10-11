@@ -18,12 +18,17 @@
                     <div class="overlap-group">
                         <div class="flexcontainer">
                             <p class="text">
-                              <a href="{{ url_for('static', filename='video.html') }}" class="text-wrapper" target="_blank">Videos</a><br />
+                              <a href="{{ url_for('static', filename='video.html') }}" class="text-wrapper">Videos</a><br />
                             </p>
                             <p class="text">
                                 <span class="text-wrapper">Connect<br /></span>
                             </p>
-                            <p class="text"><span class="text-wrapper">Sign Up</span></p>
+                            <p class="text">
+                              <a href="{{ url_for('login') }}" class="text-wrapper">Login</a><br />
+                            </p>
+                            <p class="text">
+                                <a href="{{ url_for('signup') }}" class="text-wrapper">Sign Up</a><br />
+                            </p>
                         </div>
                     </div>
                 </div>

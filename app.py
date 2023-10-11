@@ -1,5 +1,7 @@
 from flask import Flask,render_template,request, redirect, url_for, g
 from flask_json import FlaskJSON, JsonError, json_response, as_json
+from flask_sqlalchemy import SQLAlchemy #for the database
+from flask_login import UserMixin
 import jwt
 
 import sys
@@ -24,7 +26,19 @@ ERROR_MSG = "Ooops.. Didn't work!"
 
 #Create our app
 app = Flask(__name__)
-#add in flask json
+
+#connects app file to database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = 'mewhenthe'
+
+#Creates the database instance
+db = SQLAlchemy(app)
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)#Identity column for user
+    username = db.Column(db.String(20), nullable = False, unique=True)#User's name (20 char max, can't be empty, must be unique)
+    password = db.Column(db.String(80), nullable = False)#Password (80 char max, can't be empty)
+
 FlaskJSON(app)
 
 #g is flask for a global var storage 
@@ -45,6 +59,15 @@ def init_new_env():
 def index():
     return render_template('index.html')
 
+#This is the login page
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+#This is the Signup page
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
 @token_required
