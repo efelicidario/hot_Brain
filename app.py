@@ -13,7 +13,7 @@ import datetime
 import bcrypt
 import traceback
 
-#from tools.eeg import get_head_band_sensor_object
+from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
 #from db_con import get_db_instance, get_db
@@ -86,14 +86,14 @@ FlaskJSON(app)
 #g is flask for a global var storage 
 def init_new_env():
     #To connect to DB
-    if 'db' not in g:
-        g.db = get_db()
+    #if 'db' not in g:
+    #    g.db = get_db()
 
-#    if 'hb' not in g:
-#        g.hb = get_head_band_sensor_object()
+    if 'hb' not in g: #comment for mac
+        g.hb = get_head_band_sensor_object() #comment out for mac
 
-    g.secrets = get_secrets()
-    g.sms_client = get_sms_client()
+    #g.secrets = get_secrets()
+    #g.sms_client = get_sms_client()
 
 #This gets executed by default by the browser if no page is specified
 #So.. we redirect to the endpoint we want to load the base page
