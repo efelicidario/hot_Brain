@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>
+        Build a Survey Form using HTML and CSS
+    </title>
+
+ 
+    <style>
+ 
+        /* Styling the Body element i.e. Color, 
+        Font, Alignment */ 
+        body {
+            background-color: #FE8F87 ;
+            font-family: Verdana;
+            text-align: center;
+        }
+ 
+        /* Styling the Form (Color, Padding, Shadow) */
+        form {
+            background-color: #fff;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px 20px;
+            box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+ 
+        /* Styling form-control Class */
+        .form-control {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+ 
+        /* Styling form-control Label */ 
+        .form-control label {
+            display: block;
+            margin-bottom: 10px;
+        }
+ 
+        /* Styling form-control input, 
+        select, textarea */
+        .form-control input,
+        .form-control select,
+        .form-control textarea {
+            border: 1px solid #777;
+            border-radius: 2px;
+            font-family: inherit;
+            padding: 10px;
+            display: block;
+            width: 95%;
+        }
+ 
+        /* Styling form-control Radio 
+        button and Checkbox */
+        .form-control input[type="radio"],
+        .form-control input[type="checkbox"] {
+            display: inline-block;
+            width: auto;
+        }
+ 
+        /* Styling Button */
+        button {
+            background-color: #05c46b;
+            border: 1px solid #777;
+            border-radius: 2px;
+            font-family: inherit;
+            font-size: 21px;
+            display: block;
+            width: 100%;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <h1>Hot Brain Survey</h1>
+  
+    <!-- Create Form -->
+    <form id="form">
+
+        <a href="{{url_for('survey')}}">We want to gather infomation about you now </a>
+
+        <!-- Details -->
+        <div class="form-control">
+            <label for="first name" id="label-name">
+                Name
+            </label>
+ 
+            <!-- Input Type Text -->
+            <input type="text"
+                   id=" first name"
+                   placeholder="Enter your first name" />
+        </div>
+
+
+
+
+
+        <div class="form-control">
+            <label for="last name" id="label-name">
+                Name
+            </label>
+ 
+            <!-- Input Type Text -->
+            <input type="text"
+                   id="last name"
+                   placeholder="Enter your last name" />
+        </div>
+
+
+  
+        <div class="form-control">
+            <label for="email" id="label-email">
+                Email
+            </label>
+ 
+            <!-- Input Type Email-->
+            <input type="email"
+                   id="email"
+                   placeholder="Enter your email" />
+        </div>
+  
+        <div class="form-control">
+            <label for="age" id="label-age">
+                Age
+            </label>
+ 
+            <!-- Input Type Text -->
+            <input type="text"
+                   id="age"
+                   placeholder="Enter your age" />
+        </div>
+  
+
+
+  
+        <div class="form-control">
+            <label>
+                Gender
+            </label>
+ 
+            <!-- Input Type Radio Button -->
+            <label for="gender-1">
+                <input type="radio"
+                       id="gender-1"
+                       name="gender">Female</input>
+            </label>
+
+
+
+            <!-- Input Type Radio Button -->
+            <label for="gender-2">
+                <input type="radio"
+                       id="gender-2"
+                       name="gender">Male</input>
+            </label>
+
+
+            
+            <!-- Input Type Radio Button -->
+            <label for="gender-3">
+                <input type="radio"
+                       id="gender-3"
+                       name="gender">Nonbinary</input>
+            </label>
+
+            <!-- Input Type Radio Button -->
+            <label for="gender-4">
+                <input type="radio"
+                       id="gender-4"
+                       name="gender">Do not wish to disclose</input>
+            </label>
+
+
+                        <!-- Input Type Radio Button -->
+            <label for="gender-5">
+                <input type="radio"
+                       id="gender-5"
+                       name="gender">Other(Please Specify)</input>
+
+                       <div class="form-control">
+             
+                        <!-- Input Type Text -->
+                        <input type="text"
+                               id="Other" />
+                    </div>
+            </label>
+
+
+        </div>
+
+
+
+
+
+
+        <div class="form-control">
+        <label>
+            Race
+        </label>
+
+        <!-- Input Type Radio Button -->
+        <label for="R-1">
+            <input type="radio"
+                   id="R-1"
+                   name="R">White</input>
+        </label>
+
+
+
+        <!-- Input Type Radio Button -->
+        <label for="R-2">
+            <input type="radio"
+                   id="R-2"
+                   name="R">Black or African American</input>
+        </label>
+
+
+        
+        <!-- Input Type Radio Button -->
+        <label for="R-3">
+            <input type="radio"
+                   id="R-3"
+                   name="R">Hispanic or Latino</input>
+        </label>
+
+        <!-- Input Type Radio Button -->
+        <label for="R-4">
+            <input type="radio"
+                   id="R-4"
+                   name="R">Asian or Asian American</input>
+        </label>
+
+        <!-- Input Type Radio Button -->
+        <label for="R-5">
+            <input type="radio"
+                   id="R-5"
+                   name="R">American Infian or Alaska Native</input>
+        </label>
+
+
+        <!-- Input Type Radio Button -->
+        <label for="R-6">
+            <input type="radio"
+                   id="R-6"
+                   name="R">Native Jawaiian or other Pacific Islander</input>
+        </label>
+
+
+        <!-- Input Type Radio Button -->
+            <label for="R-7">
+                <input type="radio"
+                    id="R-6"
+                    name="R">Middle Eastern/North African/input>
+            </label>
+
+
+         <!-- Input Type Radio Button -->
+        <label for="R-8">
+            <input type="radio"
+                   id="R-8"
+                   name="gender">Other(Please Specify)</input>
+
+                   <div class="form-control">
+         
+                    <!-- Input Type Text -->
+                    <input type="text"
+                           id="Other" />
+                </div>
+        </label>
+
+
+    </div>
+
+
+
+
+
+
+    <div class="form-control">
+        <label>
+            Religon
+        </label>
+
+        <!-- Input Type Radio Button -->
+        <label for="Rl-1">
+            <input type="radio"
+                   id="Rl-1"
+                   name="Rl">Christian</input>
+        </label>
+
+
+
+        <!-- Input Type Radio Button -->
+        <label for="Rl-2">
+            <input type="radio"
+                   id="Rl-2"
+                   name="Rl">Muslim</input>
+        </label>
+
+
+        <!-- Input Type Radio Button -->
+        <label for="Rl-3">
+            <input type="radio"
+                   id="Rl-3"
+                   name="Rl">Jew</input>
+        </label>
+
+
+         <!-- Input Type Radio Button -->
+         <label for="RL-4">
+            <input type="radio"
+                   id="RL-4"
+                   name="gender">Other(Please Specify)</input>
+
+                   <div class="form-control">
+         
+                    <!-- Input Type Text -->
+                    <input type="text"
+                           id="Other" />
+                </div>
+        </label>
+
+
+
+        <!-- Input Type Radio Button -->
+        <label for="Rl-5">
+            <input type="radio"
+                   id="Rl-5"
+                   name="Rl">None of the above</input>
+        </label>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="form-control">
+        <label>
+         8.What is the highest level of education?
+        </label>
+
+        <!-- Input Type Radio Button -->
+        <label for="E-1">
+            <input type="radio"
+                   id="E-1"
+                   name="E">Highschool</input>
+        </label>
+
+
+
+        <!-- Input Type Radio Button -->
+        <label for="E-2">
+            <input type="radio"
+                   id="E-2"
+                   name="E">Bachelors Degree (In-Progress)</input>
+        </label>
+
+
+        <!-- Input Type Radio Button -->
+        <label for="E-3">
+            <input type="radio"
+                   id="E-3"
+                   name="E">Bachelors Degree (Completed) </input>
+        </label>
+
+
+                <!-- Input Type Radio Button -->
+        <label for="E-4">
+            <input type="radio"
+                   id="E-4"
+                   name="E">Masters Degree</input>
+        </label>
+
+
+                        <!-- Input Type Radio Button -->
+        <label for="E-5">
+            <input type="radio"
+                   id="E-5"
+                   name="E">PHD</input>
+        </label>
+
+
+         <!-- Input Type Radio Button -->
+         <label for="RL-4">
+            <input type="radio"
+                   id="RL-4"
+                   name="gender">Other(Please Specify)</input>
+
+                   <div class="form-control">
+         
+                    <!-- Input Type Text -->
+                    <input type="text"
+                           id="Other" />
+                </div>
+        </label>
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+  
+        <div class="form-control">
+            <label>Languages and Frameworks known 
+                <small>(Check all that apply)</small>
+            </label>
+            <!-- Input Type Checkbox -->
+            <label for="inp-1">
+                <input type="checkbox"
+                       name="inp">C</input></label>
+            <label for="inp-2">
+                <input type="checkbox"
+                       name="inp">C++</input></label>
+            <label for="inp-3">
+                <input type="checkbox"
+                       name="inp">C#</input></label>
+            <label for="inp-4">
+                <input type="checkbox"
+                       name="inp">Java</input></label>
+            <label for="inp-5">
+                <input type="checkbox"
+                       name="inp">Python</input></label>
+            <label for="inp-6">
+                <input type="checkbox"
+                       name="inp">JavaScript</input></label>
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="inp">React</input></label>
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="inp">Angular</input></label>
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="inp">Django</input></label>
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="inp">Spring</input></label>
+        </div>
+  
+        <div class="form-control">
+            <label for="comment">
+                Any comments or suggestions
+            </label>
+ 
+            <!-- multi-line text input control -->
+            <textarea name="comment" id="comment"
+                placeholder="Enter your comment here">
+            </textarea>
+        </div>
+  
+        <!-- Multi-line Text Input Control -->
+        <button type="submit" value="submit">
+            Submit
+        </button>
+    </form>
+
+</body>
+</html>
