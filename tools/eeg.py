@@ -12,6 +12,7 @@ def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
 
 def on_brain_bit_signal_data_received(sensor, data):
+    print(type(data))
     logger.debug(data)
 
 logger.debug("Create Headband Scanner")
