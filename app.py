@@ -13,15 +13,15 @@ import datetime
 import bcrypt
 import traceback
 
-from tools.eeg import get_head_band_sensor_object
+#from tools.eeg import get_head_band_sensor_object      #comment/uncomment for test
 
 
-from db_con import get_db_instance, get_db
+#from db_con import get_db_instance, get_db             #comment/uncomment for test
 
 from tools.token_required import token_required
 
 #used if you want to store your secrets in the aws valut
-from tools.get_aws_secrets import get_secrets
+#from tools.get_aws_secrets import get_secrets          #comment/uncomment for test
 
 from tools.logging import logger
 
