@@ -12,7 +12,7 @@
 
 	<script>
 		function play_start(){
-			$.post("/open_api/play_movie", { "data":"somedata", "any":"data"},
+			$.post("/open_calls/play_movie", { "data":"somedata", "any":"data"},
 				function(data, textStatus) {
 					//this gets called when browser receives response from server
 					console.log(data);
@@ -24,11 +24,23 @@
 	</script>
 
 
-	<video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
+	<video id="video" width="70%" playsinline style="pointer-events: none;">
 		  <source src="/static/pics/정국 (Jung Kook) '3D (feat. Jack Harlow)' Official MV.mp4" type="video/mp4">
 			Your browser does not support the video tag.
 	</video>
+	
+	<button id="playButton">Play</button>
 
+	<script>
+		const video = document.getElementById("video");
+		const playButton = document.getElementById("playButton");
+
+		playButton.addEventListener("click", function () {
+    		video.play(); // Play the video when the "Play" button is clicked
+    		playButton.style.display = "none"; // Hide the "Play" button after it's clicked
+  		});
+
+	</script>
 
 	<script>
 		video.addEventListener("play", (event) => {
