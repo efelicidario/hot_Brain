@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>hotBrain</title>
-        <link rel="stylesheet" href="static/globals.css" />
-        <link rel="stylesheet" href="static/style.css" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/static/globals.css" />
+        <link rel="stylesheet" href="/static/styleguide.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
@@ -32,7 +30,7 @@
                         </li>
                         -->
                         <li class="nav-item">
-                            <a href="{{ url_for('login') }}" class="nav-link">Sign In</a>
+                            <a href="/templates/login.html" class="nav-link">Sign In</a>
                         </li>
                     </ul>
                 </div>
@@ -43,7 +41,7 @@
         <!-- OG Body -->
         <div class="desktop">
             <div class="div">
-                <img class="logo" src="static/pics/logo.png" />
+                <img class="logo" src="/static/pics/logo.png" />
                 <div class="name">
                   <span class="hotText">hot<span style="color: #FE8F87;">Brain</span></span>
                 </div>
@@ -51,16 +49,16 @@
                     <div class="overlap-group">
                         <div class="flexcontainer">
                             <p class="text">
-                                <a href="/video" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Videos</a>
+                                <a href="/templates/video.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Videos</a>
                             </p> 
                             <p class="text">
                                 <a href="#" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Connect</a>
                             </p>
                             <p class="text">
-                                <a href="{{ url_for('login') }}" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Login</a>
+                                <a href="/templates/login.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Login</a>
                             </p>
                             <p class="text">
-                                <a href="{{ url_for('signup') }}" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Signup</a>
+                                <a href="/templates/signup.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Signup</a>
                             </p>
 
                             <!-- <p class="text">
@@ -78,9 +76,7 @@
                             </p>
                             <p class="text">
                                 <a href="{{ url_for('survey') }}" class="text-wrapper">Survey</a><br />
-                            </p> -->
-
-
+                            </p>
                         </div>
                     </div>
                 </div>
