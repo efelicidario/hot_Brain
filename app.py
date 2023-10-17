@@ -125,6 +125,12 @@ def login():
 def dashboard():
     return render_template('dashboard.html')
 
+#Page where the user can edit their profile
+@app.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    return render_template('account.html')
+
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
