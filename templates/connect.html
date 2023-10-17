@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Brain</title>
+    <style>
+        .container {
+            display: flex;
+            align-items: center; /* Vertically center content */
+        }
+
+        .video {
+            flex: 1; /* Expand to fill available space */
+        }
+
+        .text {
+            flex: 1; /* Expand to fill available space */
+            padding: 20px; /* Add some space around the text */
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Instraction on how to connect the brainbit</h1>
+    <br>
+
+
+
+    <p>How to wear a BrainBit Headband:</p>
+
+    
+    <div class="container">
+        <div class="video">
+            <video width="480" height="360" controls>
+                <source src="/static/pics/how-to-wear-a-brainbit-headband.mp4" type="video/mp4">
+            </video>
+        </div>
+            <div class="text">
+<pre>
+Preparation:
+    Ensure that your BrainBit headband is charged and functioning correctly.
+                
+    Cleanliness:
+        Make sure your forehead is clean and free of any lotions, oils, or sweat, 
+        as these can affect the headband's ability to make good contact with your skin.
+        
+    Positioning:
+        Position the headband so that the BrainBit logo is at the front and centered on your forehead.
+            The headband should sit snugly on your forehead, just above your eyebrows. The sensors need 
+            good skin contact to work effectively.
+                
+    Adjusting the Straps:
+        Use the adjustable straps on the headband to ensure a comfortable but secure fit. The headband 
+        should be tight enough to stay in place during your activity but not so tight that it causes 
+        discomfort.
+    </pre>
+            </div>
+    </div>
+
+
+
+    
+    <button id="connect">Connect</button>
+
+    <p id="connectionStatus">Checking connection status...</p>
+
+    <script>
+        const connectionStatusElement = document.getElementById("connectionStatus");
+
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+            connectionStatusElement.textContent = "    Y This part will show the status of brainbit connection";
+            } else {
+            connectionStatusElement.textContent = "    N This part will show the status of brainbit connection";
+            }
+        }
+
+        window.addEventListener("online", updateConnectionStatus);
+        window.addEventListener("offline", updateConnectionStatus);
+
+        // Initial check when the page loads
+        updateConnectionStatus();
+    </script>
+
+
+
+
+
+</body>
+</html>
