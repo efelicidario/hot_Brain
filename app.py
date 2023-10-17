@@ -113,7 +113,7 @@ def index():
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked
-@app.route('/connect.html') #endpoint
+@app.route('/connect') #endpoint
 def connect():
     return render_template('connect.html')
 
