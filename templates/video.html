@@ -21,6 +21,22 @@
                     console.log("error");
                 console.log(response);});
         }
+
+        function stop_movie() {
+        $.post("/open_api/stop_movie", { "data": "somedata", "any": "data" },
+            function(data, textStatus) {
+                // This gets called when the browser receives a response from the server
+                console.log(data);
+
+                //takes user back to dashboard when the video finishes playing
+                window.location.href = "/dashboard";
+
+            }, "json").fail(function(response) {
+                // This gets called if the server throws an error
+                console.log("error");
+                console.log(response);
+            });
+    }
     </script>
 
     <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
@@ -32,7 +48,15 @@
 	video.addEventListener("play", (event) => {
 		play_start();
 	});
+
+    // For when the video ends
+    video.addEventListener("ended", (event) => {
+        stop_movie();
+    });
 	</script>
+
+    <a href="{{url_for('index')}}">Cancel</a>
+
 
     </body>
 </html>

@@ -54,9 +54,14 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)#Identity column for user
-    username = db.Column(db.String(20), nullable = False, unique=True)#User's name (20 char max, can't be empty, must be unique)
-    password = db.Column(db.String(80), nullable = False)#Password (80 char max, can't be empty)
+    id = db.Column(db.Integer, primary_key=True) #Identity column for user
+    username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
+    name = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
+    lastname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
+    email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
+    password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
+    bio = db.Column(db.Text) #Bio (can be empty)
+    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
 #class BrainwaveData(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
@@ -68,17 +73,53 @@ class User(db.Model, UserMixin):
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
+
+    #If username exists, give an error
+    def validate_username(self, username):
+        existing_user_username = User.query.filter_by(
+            username=username.data).first()
+        if existing_user_username:
+            raise ValidationError(
+                "That username already exists. Please choose a different one.")
     
-#If username exists, give an error
-def validate_username(self, username):
-    existing_user_username = User.query.filter_by(
-        username=username.data).first()
-    if existing_user_username:
-        raise ValidationError(
-            "That username already exists. Please choose a different one.")
+    #If email exists, give an error
+    def validate_email(self, email):
+        existing_user_email = User.query.filter_by(
+            email=email.data).first()
+        if existing_user_email:
+            raise ValidationError(
+                "That email already exists. Please choose a different one.")
+
+#Update form
+class UpdateForm(FlaskForm):
+    username = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
+    submit = SubmitField("Update")
+    
+    #If username exists, give an error
+    def validate_username(self, username):
+        if username.data != current_user.username:
+            existing_user_username = User.query.filter_by(
+                username=username.data).first()
+            if existing_user_username:
+                raise ValidationError(
+                    "That username already exists. Please choose a different one.")
+    
+    #If email exists, give an error
+    def validate_email(self, email):
+        if email.data != current_user.email:
+            existing_user_email = User.query.filter_by(
+                email=email.data).first()
+            if existing_user_email:
+                raise ValidationError(
+                    "That email already exists. Please choose a different one.")
     
 #Login form
 class LoginForm(FlaskForm):
@@ -113,7 +154,7 @@ def index():
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked
-@app.route('/connect.html') #endpoint
+@app.route('/connect') #endpoint
 def connect():
     return render_template('connect.html')
 
@@ -134,23 +175,22 @@ def login():
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
-    user_id = session.get('user_id')
-    username = session.get('user_name')
-    return render_template('survey.html', user_id = user_id, username = username)
+    return render_template('survey.html')
 
 #Once the use is logged in, they go to the logged in dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    user_id = session.get('user_id')
-    username = session.get('user_name')
-    return render_template('dashboard.html', user_id = user_id, username = username)
+    return render_template('dashboard.html')
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html')
+    form = UpdateForm()
+    image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+    return render_template('account.html', image_file = image, form=form)
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
