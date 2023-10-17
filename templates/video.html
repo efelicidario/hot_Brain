@@ -27,6 +27,10 @@
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
+
+                //takes user back to dashboard when the video finishes playing
+                window.location.href = "/dashboard";
+
             }, "json").fail(function(response) {
                 // This gets called if the server throws an error
                 console.log("error");

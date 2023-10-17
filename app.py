@@ -54,9 +54,13 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)#Identity column for user
-    username = db.Column(db.String(20), nullable = False, unique=True)#User's name (20 char max, can't be empty, must be unique)
-    password = db.Column(db.String(80), nullable = False)#Password (80 char max, can't be empty)
+    id = db.Column(db.Integer, primary_key=True) #Identity column for user
+    username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
+    name = db.Column(db.String(20)) #User's name (20 char max, can be empty)
+    lastname = db.Column(db.String(20)) #User's last name (20 char max)
+    email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
+    password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
+    bio = db.Column(db.Text) #Bio (can be empty)
 
 #class BrainwaveData(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
@@ -150,7 +154,12 @@ def dashboard():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html')
+    user_id = session.get('user_id')
+    username = session.get('user_name')
+    name = session.get('name')
+    lastname = session.get('lastname')
+    bio = session.get('bio')
+    return render_template('account.html', user_id = user_id, username = username, name = name, lastname = lastname, bio = bio)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
