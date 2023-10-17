@@ -20,11 +20,11 @@
     <form id="form">
 
         <a href="{{url_for('survey')}}">We want to gather infomation about you now </a>
-
+        
         <!-- Details -->
         <div class="form-control">
             <label for="first name" id="label-name">
-                Name
+                First Name
             </label>
  
             <!-- Input Type Text -->
@@ -33,13 +33,9 @@
                    placeholder="Enter your first name" />
         </div>
 
-
-
-
-
         <div class="form-control">
             <label for="last name" id="label-name">
-                Name
+                Last Name
             </label>
  
             <!-- Input Type Text -->
@@ -71,9 +67,6 @@
                    id="age"
                    placeholder="Enter your age" />
         </div>
-  
-
-
   
         <div class="form-control">
             <label>
@@ -208,11 +201,6 @@
 
     </div>
 
-
-
-
-
-
     <div class="form-control">
         <label>
             Religon
@@ -269,16 +257,6 @@
 
 
     </div>
-
-
-
-
-
-
-
-
-
-
 
     <div class="form-control">
         <label>
@@ -339,23 +317,8 @@
                            id="Other" />
                 </div>
         </label>
-
-
-
-
-
-
     </div>
 
-
-
-
-
-
-
-
-
-  
         <div class="form-control">
             <label>Languages and Frameworks known 
                 <small>(Check all that apply)</small>
@@ -405,9 +368,11 @@
         </div>
   
         <!-- Multi-line Text Input Control -->
-        <button type="submit" value="submit">
-            Submit
-        </button>
+        <div class="next">
+            <button class="next-button" type="button">
+                <a href="/templates/survey3.html">Next</a>
+            </button>
+        </div>
     </form>
 
 </body>

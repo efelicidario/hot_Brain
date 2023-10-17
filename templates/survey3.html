@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>
+        Build a Survey Form using HTML and CSS
+    </title>
+    <link rel="stylesheet" href="/static/survey.css" />
+</head>
+
+
+<body>
+
+    <h1>Hot Brain Survey</h1>
+  
+    <!-- Create Form -->
+    <form id="form">
+
+        <h3>Lifestyle and Preferences</h3>
+
+        <!-- Details -->
+        <div class="form-control">
+            <label for="occupation" id="label-name">
+                What is your current occupation/profession?
+            </label>
+
+        <!-- Input Type Text -->
+        <input type="text"
+                id=" occupation" />
+        </div>
+
+        <div class="form-control">
+                <label>Do you have a preference for your future partner's profession?</label>
+                <!-- Input Type Checkbox -->
+                <label for="inp-1">
+                    <input type="checkbox"
+                            name="inp">Yes</input></label>
+                <label for="inp-2">
+                    <input type="checkbox"
+                            name="inp">No</input></label>
+                <label for="inp-3">
+                    <input type="checkbox"
+                            name="inp">Other (Please specify)</input></label>
+                            <div class="form-control">
+                                <!-- Input Type Text -->
+                                <input type="text"
+                                       id="Other" />
+                            </div>
+        </div>   
+
+        <div class="form-control">
+            <label for="comment">
+                What are hobbies that we can add to your profile?
+            </label>
+ 
+            <!-- multi-line text input control -->
+            <textarea name="comment" id="comment"
+                placeholder="Enter your comment here">
+            </textarea>
+        </div>
+
+        <!-- Details -->
+        <div class="form-control">
+            <label for="personality" id="label-name">
+                Personality Traits: How would you describe your personality in a few words?
+            </label>
+
+        <!-- Input Type Text -->
+        <input type="text"
+                id=" personality" />
+        </div>
+
+        <!-- Details -->
+        <div class="form-control">
+            <label for="goals" id="label-name">
+                What are your long-term goals?
+            </label>
+
+        <!-- Input Type Text -->
+        <input type="text"
+                id=" goals" />
+        </div>
+
+
+        
+        <!-- Multi-line Text Input Control -->
+        <div class="next">
+            <button class="next-button" type="button">
+                <a href="/templates/survey4.html">Next</a>
+            </button>
+        </div>
+
+    </form>
+
+</body>
+</html>
