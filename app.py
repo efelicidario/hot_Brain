@@ -14,7 +14,7 @@ import datetime
 import bcrypt
 import traceback
 
-from tools.eeg import get_head_band_sensor_object #comment out for mac
+#from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
 #from db_con import get_db_instance, get_db
@@ -79,21 +79,21 @@ class SignupForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
 
-    #If username exists, give an error
-    def validate_username(self, username):
-        existing_user_username = User.query.filter_by(
-            username=username.data).first()
-        if existing_user_username:
-            raise ValidationError(
-                "That username already exists. Please choose a different one.")
+#If username exists, give an error
+def validate_username(self, username):
+    existing_user_username = User.query.filter_by(
+        username=username.data).first()
+    if existing_user_username:
+        raise ValidationError(
+            "That username already exists. Please choose a different one.")
     
-    #If email exists, give an error
-    def validate_email(self, email):
-        existing_user_email = User.query.filter_by(
-            email=email.data).first()
-        if existing_user_email:
-            raise ValidationError(
-                "That email already exists. Please choose a different one.")
+#If email exists, give an error
+def validate_email(self, email):
+    existing_user_email = User.query.filter_by(
+        email=email.data).first()
+    if existing_user_email:
+        raise ValidationError(
+            "That email already exists. Please choose a different one.")
 
 #Update form
 class UpdateForm(FlaskForm):
@@ -134,14 +134,12 @@ FlaskJSON(app)
 #g is flask for a global var storage 
 def init_new_env():
     #To connect to DB
-    #if 'db' not in g:
-    #    g.db = get_db()
+    if 'db' not in g:
+        g.db = get_db()
 
-    if 'hb' not in g: #comment for mac
-        g.hb = get_head_band_sensor_object() #comment out for mac
+#    if 'hb' not in g: #comment for mac
+#        g.hb = get_head_band_sensor_object() #comment out for mac
 
-    #g.secrets = get_secrets()
-    #g.sms_client = get_sms_client()
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()
 
