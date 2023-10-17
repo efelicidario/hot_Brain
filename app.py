@@ -115,7 +115,6 @@ def index():
 def connect():
     return render_template('connect.html')
 
-
 #This is the login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -130,6 +129,13 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
+@app.route('/survey', methods=['GET', 'POST'])
+@login_required
+def survey():
+    user_id = session.get('user_id')
+    username = session.get('user_name')
+    return render_template('survey.html', user_id = user_id, username = username)
+
 #Once the use is logged in, they go to the logged in dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -137,12 +143,6 @@ def dashboard():
     user_id = session.get('user_id')
     username = session.get('user_name')
     return render_template('dashboard.html', user_id = user_id, username = username)
-
-#Page where the user can edit their profile
-@app.route('/account', methods=['GET', 'POST'])
-@login_required
-def account():
-    return render_template('account.html')
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
