@@ -15,6 +15,7 @@ import bcrypt
 import traceback
 
 from tools.eeg import get_head_band_sensor_object #comment out for mac
+from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
 #from db_con import get_db_instance, get_db
@@ -64,11 +65,12 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
+#This is for da brainwave
 class BrainwaveData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-#    timestamp = db.Column(db.DateTime, nullable = False, default=datetime.datetime.utcnow)
-#    brainwave_data = db.Column(db.Text, nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    video_id = db.Column(db.Integer, nullable=False)
+    brainwave_data = db.Column(db.JSON, nullable=False)
 
 #Signup form
 class SignupForm(FlaskForm):
