@@ -14,7 +14,7 @@ import datetime
 import bcrypt
 import traceback
 
-#from tools.eeg import get_head_band_sensor_object #comment out for mac
+from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
 #from db_con import get_db_instance, get_db
@@ -60,12 +60,13 @@ class User(db.Model, UserMixin):
     lastname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
     email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
+    age = db.Column(db.Integer, nullable = False) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
-#class BrainwaveData(db.Model):
-#    id = db.Column(db.Integer, primary_key=True)
-#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+class BrainwaveData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 #    timestamp = db.Column(db.DateTime, nullable = False, default=datetime.datetime.utcnow)
 #    brainwave_data = db.Column(db.Text, nullable = False)
 
@@ -79,21 +80,21 @@ class SignupForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
 
-#If username exists, give an error
-def validate_username(self, username):
-    existing_user_username = User.query.filter_by(
-        username=username.data).first()
-    if existing_user_username:
-        raise ValidationError(
-            "That username already exists. Please choose a different one.")
+    #If username exists, give an error
+    def validate_username(self, username):
+        existing_user_username = User.query.filter_by(
+            username=username.data).first()
+        if existing_user_username:
+            raise ValidationError(
+                "That username already exists. Please choose a different one.")
     
-#If email exists, give an error
-def validate_email(self, email):
-    existing_user_email = User.query.filter_by(
-        email=email.data).first()
-    if existing_user_email:
-        raise ValidationError(
-            "That email already exists. Please choose a different one.")
+    #If email exists, give an error
+    def validate_email(self, email):
+        existing_user_email = User.query.filter_by(
+            email=email.data).first()
+        if existing_user_email:
+            raise ValidationError(
+                "That email already exists. Please choose a different one.")
 
 #Update form
 class UpdateForm(FlaskForm):
@@ -134,12 +135,14 @@ FlaskJSON(app)
 #g is flask for a global var storage 
 def init_new_env():
     #To connect to DB
-    if 'db' not in g:
-        g.db = get_db()
+    #if 'db' not in g:
+    #    g.db = get_db()
 
-#    if 'hb' not in g: #comment for mac
-#        g.hb = get_head_band_sensor_object() #comment out for mac
+    if 'hb' not in g: #comment for mac
+        g.hb = get_head_band_sensor_object() #comment out for mac
 
+    #g.secrets = get_secrets()
+    #g.sms_client = get_sms_client()
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()
 
