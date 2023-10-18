@@ -14,7 +14,7 @@ import datetime
 import bcrypt
 import traceback
 
-#from tools.eeg import get_head_band_sensor_object #comment out for mac
+from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
 #from db_con import get_db_instance, get_db
@@ -63,11 +63,12 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
-#class BrainwaveData(db.Model):
-#    id = db.Column(db.Integer, primary_key=True)
-#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-#    timestamp = db.Column(db.DateTime, nullable = False, default=datetime.datetime.utcnow)
-#    brainwave_data = db.Column(db.Text, nullable = False)
+#This is for da brainwave
+class BrainwaveData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    video_id = db.Column(db.Integer, nullable=False)
+    brainwave_data = db.Column(db.JSON, nullable=False)
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -134,11 +135,11 @@ FlaskJSON(app)
 #g is flask for a global var storage 
 def init_new_env():
     #To connect to DB
-    if 'db' not in g:
-        g.db = get_db()
-
-#    if 'hb' not in g: #comment for mac
-#        g.hb = get_head_band_sensor_object() #comment out for mac
+    #if 'db' not in g:
+        #g.db = get_db()
+    print("test")
+    if 'hb' not in g: #comment for mac
+        g.hb = get_head_band_sensor_object() #comment out for mac
 
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()

@@ -4,15 +4,17 @@ from neurosdk.brainbit_sensor import BrainBitSensor
 from neurosdk.cmn_types import *
 
 from tools.logging import logger   
-
+from flask import request
+import pickle
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
 
-def on_brain_bit_signal_data_received(sensor, data):
-    print(type(data))
+def on_brain_bit_signal_data_received(sensor, data, user_id, video_id):
+    #data is the brainwave shid
+    #pickle.dump(new_data, )
     logger.debug(data)
 
 logger.debug("Create Headband Scanner")

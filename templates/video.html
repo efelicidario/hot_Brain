@@ -10,9 +10,18 @@
     </head>
     <body>
 
+    
+    <span id="user_id" data-value="{{ current_user.id }}"></span>
+    <span id="video_id" data-value="{{ video_id }}"></span>
+
     <script>
-        function play_start(){
-            $.post("/open_api/play_movie", { "data":"somedata", "any":"data"},
+        // Retrieve user ID and video ID from the placeholders
+        const user_id = $("#user_id").data("value");
+        //const video_id = $("#video_id").data("value");
+
+        function play_start(user_id, video_id){
+
+            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 0},
                 function(data, textStatus) {
                     //this gets called when browser receives response from server
                     console.log(data);
@@ -22,8 +31,8 @@
                 console.log(response);});
         }
 
-        function stop_movie() {
-        $.post("/open_api/stop_movie", { "data": "somedata", "any": "data" },
+        function stop_movie(user_id, video_id) {
+        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 0 },
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
