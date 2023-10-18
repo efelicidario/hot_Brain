@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>
+        Build a Survey Form using HTML and CSS
+    </title>
+    <link rel="stylesheet" href="/static/survey.css" />
+</head>
+
+
+<body>
+    <h1>Hot Brain Survey</h1>
+  
+    <!-- Create Form -->
+    <form id="form">
+
+        <h3>Lifestyle and Preferences</h3>
+
+        <div class="form-control">
+            <label>
+                Interaction: What type of interaction are you comfortable with?
+            </label>
+    
+            <!-- Input Type Radio Button -->
+            <label for="R-1">
+                <input type="radio"
+                       id="R-1"
+                       name="R">Messaging</input>
+            </label>
+    
+            <!-- Input Type Radio Button -->
+            <label for="R-2">
+                <input type="radio"
+                       id="R-2"
+                       name="R">Video Calls</input>
+            </label>
+            
+            <!-- Input Type Radio Button -->
+            <label for="R-3">
+                <input type="radio"
+                       id="R-3"
+                       name="R">In-Person</input>
+            </label>
+    
+             <!-- Input Type Radio Button -->
+            <label for="R-4">
+                <input type="radio"
+                       id="R-4"
+                       name="interaction">Other(Please Specify)</input>
+    
+                       <div class="form-control">
+             
+                        <!-- Input Type Text -->
+                        <input type="text"
+                               id="Other" />
+                    </div>
+            </label>
+
+            <div class="form-control">
+                <label>
+                    Are you open to virtual dating before meeting in person?
+                </label>
+        
+                <!-- Input Type Radio Button -->
+                <label for="R-1">
+                    <input type="radio"
+                           id="R-1"
+                           name="R">Yes</input>
+                </label>
+                <label for="R-2">
+                    <input type="radio"
+                           id="R-2"
+                           name="R">No</input>
+                </label>
+            </div>    
+
+            <div class="form-control">
+                <label>
+                    Safety and Privacy? Do you want us to show your social media accounts on your profile or not?
+                </label>
+        
+                <!-- Input Type Radio Button -->
+                <label for="R-1">
+                    <input type="radio"
+                           id="R-1"
+                           name="R">Yes</input>
+                </label>
+                <label for="R-2">
+                    <input type="radio"
+                           id="R-2"
+                           name="R">No</input>
+                </label>
+            </div>  
+
+        <!-- Multi-line Text Input Control -->
+        <div class="next">
+            <button class="submit-button" type="button">
+                <a href="/templates/survey4.html">Submit</a>
+            </button>
+        </div>
+    </form>
+
+</body>
+</html>

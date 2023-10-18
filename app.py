@@ -14,10 +14,10 @@ import datetime
 import bcrypt
 import traceback
 
-#from tools.eeg import get_head_band_sensor_object      #comment/uncomment for test
+#from tools.eeg import get_head_band_sensor_object #comment out for mac
 
 
-#from db_con import get_db_instance, get_db             #comment/uncomment for test
+#from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
@@ -54,18 +54,31 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)#Identity column for user
-    username = db.Column(db.String(20), nullable = False, unique=True)#User's name (20 char max, can't be empty, must be unique)
-    password = db.Column(db.String(80), nullable = False)#Password (80 char max, can't be empty)
+    id = db.Column(db.Integer, primary_key=True) #Identity column for user
+    username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
+    name = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
+    lastname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
+    email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
+    password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
+    bio = db.Column(db.Text) #Bio (can be empty)
+    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+
+#class BrainwaveData(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+#    timestamp = db.Column(db.DateTime, nullable = False, default=datetime.datetime.utcnow)
+#    brainwave_data = db.Column(db.Text, nullable = False)
 
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
-    
+
 #If username exists, give an error
 def validate_username(self, username):
     existing_user_username = User.query.filter_by(
@@ -73,6 +86,40 @@ def validate_username(self, username):
     if existing_user_username:
         raise ValidationError(
             "That username already exists. Please choose a different one.")
+    
+#If email exists, give an error
+def validate_email(self, email):
+    existing_user_email = User.query.filter_by(
+        email=email.data).first()
+    if existing_user_email:
+        raise ValidationError(
+            "That email already exists. Please choose a different one.")
+
+#Update form
+class UpdateForm(FlaskForm):
+    username = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Username"})
+    email = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
+    submit = SubmitField("Update")
+    
+    #If username exists, give an error
+    def validate_username(self, username):
+        if username.data != current_user.username:
+            existing_user_username = User.query.filter_by(
+                username=username.data).first()
+            if existing_user_username:
+                raise ValidationError(
+                    "That username already exists. Please choose a different one.")
+    
+    #If email exists, give an error
+    def validate_email(self, email):
+        if email.data != current_user.email:
+            existing_user_email = User.query.filter_by(
+                email=email.data).first()
+            if existing_user_email:
+                raise ValidationError(
+                    "That email already exists. Please choose a different one.")
     
 #Login form
 class LoginForm(FlaskForm):
@@ -90,8 +137,8 @@ def init_new_env():
     if 'db' not in g:
         g.db = get_db()
 
-    if 'hb' not in g:
-        g.hb = get_head_band_sensor_object()
+#    if 'hb' not in g: #comment for mac
+#        g.hb = get_head_band_sensor_object() #comment out for mac
 
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()
@@ -100,13 +147,14 @@ def init_new_env():
 #So.. we redirect to the endpoint we want to load the base page
 @app.route('/') #endpoint
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked
-@app.route('/connect.html') #endpoint
+@app.route('/connect') #endpoint
 def connect():
     return render_template('connect.html')
-
 
 #This is the login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -122,13 +170,25 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
+@app.route('/survey', methods=['GET', 'POST'])
+@login_required
+def survey():
+    return render_template('survey.html')
+
 #Once the use is logged in, they go to the logged in dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    user_id = session.get('user_id')
-    username = session.get('user_name')
-    return render_template('dashboard.html', user_id = user_id, username = username)
+    return render_template('dashboard.html')
+
+#Page where the user can edit their profile
+@app.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    form = UpdateForm()
+    image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+    return render_template('account.html', image_file = image, form=form)
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -184,6 +244,7 @@ def exec_secure_proc(proc_name):
 @app.route("/open_api/<proc_name>",methods=['GET', 'POST'])
 def exec_proc(proc_name):
     logger.debug(f"Call to {proc_name}")
+    print("here lol")
 
     #setup the env
     init_new_env()
@@ -198,11 +259,14 @@ def exec_proc(proc_name):
         ex_data = ex_data + str(err) + '\n'
         ex_data = ex_data + traceback.format_exc()
         logger.error(ex_data)
+        print("here lol2")
         return json_response(status_=500 ,data=ERROR_MSG)
-
+    print("It is:", resp)
+    print(type(resp))
     return resp
 
 
 if __name__ == '__main__':
+    db.create_all()
+    db.session.commit()
     app.run(debug=True, host='0.0.0.0', port=80)
-

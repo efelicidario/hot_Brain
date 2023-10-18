@@ -8,4 +8,3 @@ def handle_request():
 
     g.hb.exec_command(SensorCommand.CommandStartSignal)
     return ["Data Flowing"]
-

@@ -1,0 +1,84 @@
+body {
+    background-color: #FE8F87 ;
+    font-family: Verdana;
+    text-align: center;
+}
+
+/* Styling the Form (Color, Padding, Shadow) */
+form {
+    background-color: #fff;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px 20px;
+    box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Styling form-control Class */
+.form-control {
+    text-align: left;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+/* Styling form-control Label */ 
+.form-control label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Styling form-control input, 
+select, textarea */
+.form-control input,
+.form-control select,
+.form-control textarea {
+    border: 1px solid #777;
+    border-radius: 2px;
+    font-family: inherit;
+    padding: 10px;
+    display: block;
+    width: 95%;
+    border-radius: 3px;
+}
+
+/* Styling form-control Radio 
+button and Checkbox */
+.form-control input[type="radio"],
+.form-control input[type="checkbox"] {
+    display: inline-block;
+    width: auto;
+}
+
+/* Styling Button */
+.next-button {
+    background-color: #242424;
+    border: 1px solid #777;
+    border-radius: 3px;
+    font-family: Verdana;
+    font-size: 21px;
+    display: block;
+    width: 20%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: 200px;
+}
+
+.next button:hover {
+    background-color: #565656; 
+}
+
+.submit-button {
+    background-color: #242424;
+    border: 1px solid #777;
+    border-radius: 3px;
+    font-family: Verdana;
+    font-size: 21px;
+    display: block;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
