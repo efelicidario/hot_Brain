@@ -33,7 +33,7 @@
                             <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                            <a href="/templates/login.html" class="nav-link">Sign In</a>
                         </li>
                     </ul>
                 </div>
@@ -51,10 +51,26 @@
                     <div class="overlap-group">
                         <div class="flexcontainer">
                             <p class="text">
-                                <a href="{{ url_for('connect') }}" class="btn btn-danger btn-lg btn-block text-light" role="button" aria-pressed="true">Connect</a>
+                                <a href="/templates/video.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Videos</a>
                             </p> 
                             <p class="text">
-                                <a href="{{ url_for('login') }}" class="btn btn-danger btn-lg text-light" role="button" aria-pressed="true">Login</a>
+                                <a href="/templates/login.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Login</a>
+                            </p>
+                            <p class="text">
+                                <a href="/templates/signup.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Signup</a>
+                            </p>
+                            <p class="text">
+                                <a href="/templates/survey.html" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Questions</a>
+                            </p>
+
+                            <!-- <p class="text">
+                              <a href="/video" class="text-wrapper">Videos</a><br />
+                            </p>
+                            <p class="text">
+                                <a href="{{ url_for('connect') }}" class="text-wrapper">Connect</a><br />
+                              </p>
+                            <p class="text">
+                              <a href="{{ url_for('login') }}" class="text-wrapper">Login</a><br />
                             </p>
                             <p class="text">
                                 <a href="{{ url_for('signup') }}" class="btn btn-danger btn-lg text-light" role="button" aria-pressed="true">Sign Up</a>
