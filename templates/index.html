@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dashboard | hotBrain</title>
         <link rel="stylesheet" href="/static/style.css" />
         <link rel="stylesheet" href="/static/globals.css" />
         <link rel="stylesheet" href="/static/styleguide.css" />
@@ -11,9 +14,9 @@
     </head>
     <body>
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
             <div class="container">
-                <a href="#" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
+                <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
                     <span class="navbar-toggler-icon"></span>
@@ -25,12 +28,12 @@
                         <li class="nav-item">
                             <a href="#learn" class="nav-link">Videos</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#questions" class="nav-link">Connect</a>
-                        </li>
                         -->
                         <li class="nav-item">
-                            <a href="{{ url_for('login') }}" class="nav-link">Sign In</a>
+                            <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
                         </li>
                     </ul>
                 </div>
@@ -38,7 +41,6 @@
         </nav>
 
 
-        <!-- OG Body -->
         <div class="desktop">
             <div class="div">
                 <img class="logo" src="/static/pics/logo.png" />
@@ -50,7 +52,7 @@
                         <div class="flexcontainer">
                             
                             <p class="text">
-                                <a href="{{ url_for('connect') }}" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Videos</a>
+                                <a href="{{ url_for('video') }}" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Videos</a>
                             </p> 
                             
                             <p class="text">
@@ -60,22 +62,11 @@
                             <p class="text">
                                 <a href="{{ url_for('signup') }}" class="btn btn-dark btn-lg text-light" role="button" aria-pressed="true">Signup</a>
                             </p>
-
-                            <!-- <p class="text">
-                              <a href="/video" class="text-wrapper">Videos</a><br />
+                            <p class="text">
+                                <a href="{{ url_for('signup') }}" class="btn btn-danger btn-lg text-light" role="button" aria-pressed="true">Sign Up</a>
                             </p>
                             <p class="text">
-                                <a href="{{ url_for('connect') }}" class="text-wrapper">Connect</a><br />
-                              </p>
-                            <p class="text">
-                              <a href="{{ url_for('login') }}" class="text-wrapper">Login</a><br />
-                            </p>
-                            <p class="text">
-                                <a href="{{ url_for('signup') }}" class="text-wrapper">Sign Up</a><br />
-
-                            </p>
-                            <p class="text">
-                                <a href="{{ url_for('survey') }}" class="text-wrapper">Survey</a><br />
+                                <a href="{{ url_for('survey') }}" class="btn btn-danger btn-lg btn-block text-light">Survey</a><br />
                             </p>
                         -->
                         </div>
