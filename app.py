@@ -8,15 +8,14 @@ from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import jwt
 
-
 import sys
 import datetime
 import bcrypt
 import traceback
 
-#from tools.eeg import get_head_band_sensor_object #comment out for mac
+#from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
-#from db_con import get_db_instance, get_db
+from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
@@ -139,7 +138,7 @@ def init_new_env():
         g.db = get_db()
 
     #if 'hb' not in g: #comment for mac
-        #g.hb = get_head_band_sensor_object() #comment out for mac
+    #    g.hb = get_head_band_sensor_object() #comment out for mac
 
     #g.secrets = get_secrets()
     #g.sms_client = get_sms_client()
@@ -150,11 +149,14 @@ def init_new_env():
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
+    #for testinf purposes when user isnt logged in
+    #change_user_and_vid("guest.pkl") #comment out for mac
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked
 @app.route('/connect') #endpoint
 def connect():
+    #test() #for testing purposes
     return render_template('connect.html')
 
 #This is the login page
@@ -168,6 +170,8 @@ def login():
                 login_user(user)
                 session['user_id'] = user.id
                 session['user_name'] = user.username
+                #creates the file name & passes it to eeg.py
+                #change_user_and_vid(str(user.id) + "_" + str(1) + ".pkl") #comment out for mac
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
