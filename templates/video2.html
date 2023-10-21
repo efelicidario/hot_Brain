@@ -51,12 +51,13 @@
 
     <script>
         // Retrieve user ID and video ID from the placeholders
-        const user_id = $("#user_id").data("value");
+        //const user_id = $("#user_id").data("value");
         //const video_id = $("#video_id").data("value");
+        const user_id = "GUEST";
 
         function play_start(user_id, video_id){
 
-            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 0},
+            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 1},
                 function(data, textStatus) {
                     //this gets called when browser receives response from server
                     console.log(data);
@@ -67,13 +68,13 @@
         }
 
         function stop_movie(user_id, video_id) {
-        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 0 },
+        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 1 },
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/dashboard";
+                    window.location.href = "/";
 
                 }, "json").fail(function(response) {
             
