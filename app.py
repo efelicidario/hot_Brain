@@ -221,6 +221,10 @@ def signup():
 def video():
     return render_template('video.html')
 
+@app.route('/video2')
+def video2():
+    return render_template('video2.html')
+
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
 @token_required

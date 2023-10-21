@@ -41,18 +41,19 @@
             <div class="container">
                 <div class="pt-5 text-center">
                     <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
-                        <source src="/static/pics/movie.mp4" type="video/mp4">
+                        <source src="/static/pics/01.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
-                  <a href="{{url_for('index')}}">Cancel</a>
+                  <a href="{{url_for('video2')}}">Next</a>
                 </div>
             </div>
         </div>
 
     <script>
         // Retrieve user ID and video ID from the placeholders
-        const user_id = $("#user_id").data("value");
+        //const user_id = $("#user_id").data("value");
         //const video_id = $("#video_id").data("value");
+        const user_id = "GUEST";
 
         function play_start(user_id, video_id){
 
@@ -71,9 +72,6 @@
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
-
-                    //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/dashboard";
 
                 }, "json").fail(function(response) {
             
