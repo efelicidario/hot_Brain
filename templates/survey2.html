@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>
+        Build a Survey Form using HTML and CSS
+    </title>
+    <link rel="stylesheet" href="/static/survey.css" />
+</head>
+
+
+<body>
+    <h1>Hot Brain Survey</h1>
+  
+    <!-- Create Form -->
+    <form id="form">
+
+        <div class="form-control">
+            <label>
+                What pronouns are you looking for 
+            </label>
+ 
+            <!-- Input Type Radio Button -->
+            <label for="p-1">
+                <input type="radio"
+                       id="p-1"
+                       name="p">she/her/hers</input>
+            </label>
+
+
+
+            <!-- Input Type Radio Button -->
+            <label for="p-2">
+                <input type="radio"
+                       id="p-2"
+                       name="p">he/him/his</input>
+            </label>
+
+
+            <!-- Input Type Radio Button -->
+            <label for="p-3">
+                <input type="radio"
+                       id="p-3"
+                       name="p">they/them/their</input>
+            </label>
+
+
+
+          <!-- Input Type Radio Button -->
+            <label for="p-4">
+                <input type="radio"
+                       id="p-4"
+                       name="p">Other(Please Specify)</input>
+
+                       <div class="form-control">
+             
+                        <!-- Input Type Text -->
+                        <input type="text"
+                               id="Other" />
+                    </div>
+            </label>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <div class="form-control">
+            <label>
+                What is your ideal age range?
+            </label>
+
+
+          <!-- Input Type Radio Button -->
+          <label for="age-1">
+             <input type="radio"
+                 id="age-1"
+                 name="age">18-21</input>
+           </label>
+    
+    
+          <!-- Input Type Radio Button -->
+          <label for="age-2">
+              <input type="radio"
+                 id="age-2"
+                  name="age">21-25</input>
+           </label> 
+
+
+          <!-- Input Type Radio Button -->
+          <label for="age-3">
+             <input type="radio"
+                 id="age-3"
+                  name="age">26-30</input>
+          </label> 
+
+          <!-- Input Type Radio Button -->
+          <label for="age-4">
+              <input type="radio"
+                  id="age-4"
+                  name="age">26-34</input>
+          </label> 
+
+
+          <!-- Input Type Radio Button -->
+          <label for="age-5">
+             <input type="radio"
+                  id="age-5"
+                  name="age">35-44</input>
+           </label> 
+
+    
+          <!-- Input Type Radio Button -->
+          <label for="age-6">
+              <input type="radio"
+                 id="age-5"
+                 name="age">45-54</input>
+           </label> 
+
+    
+          <!-- Input Type Radio Button -->
+          <label for="age-6">
+              <input type="radio"
+                 id="age-5"
+                 name="age">55-64</input>
+         </label> 
+    
+
+    
+    
+         <!-- Input Type Radio Button -->
+            <label for="age-7">
+                <input type="radio"
+                   id="age-7"
+                    name="age">Other(Please Specify)</input>
+    
+                    <div class="form-control">
+                      <!-- Input Type Text -->
+                     <input type="text"
+                     id="Other" />
+                    </div>
+             </label>
+        </div>
+    
+
+
+
+
+
+
+
+
+
+
+        <div class="form-control">
+            <label>What races(s) are you looking for?
+                <small>(Check all that apply)</small>
+            </label>
+            <!-- Input Type Checkbox -->
+            <label for="inp-1">
+                <input type="checkbox"
+                       name="inp">White</input></label>
+            <label for="inp-2">
+                <input type="checkbox"
+                       name="inp">Black or African American</input></label>
+            <label for="inp-3">
+                <input type="checkbox"
+                       name="inp">Hispanic or Latino</input></label>
+            <label for="inp-4">
+                <input type="checkbox"
+                       name="inp">Asian or Asian American</input></label>
+            <label for="inp-5">
+                <input type="checkbox"
+                       name="inp">American Indian or Alaska Native</input></label>
+            <label for="inp-6">
+                <input type="checkbox"
+                       name="inp">Native Hawaiian or Pacific Islander</input></label>
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="inp">Middle Eastern/ North African</input></label>
+                <input type="checkbox"
+                       name="Other">Spring</input></label>
+
+                      <div class="form-control">
+                         <!-- Input Type Text -->
+                         <input type="text"
+                          id="Other" />
+                        </div>
+        </div>
+
+
+
+        <div class="form-control">
+            <label>Do you have a religious prefrence
+                <small>(Check all that apply)</small>
+            </label>
+
+
+
+          <!-- Input Type Checkbox -->
+            <label for="rel-1">
+                <input type="checkbox"
+                       name="inp">Yes, Christian</input></label>
+            <label for="inp-2">
+                <input type="checkbox"
+                       name="inp">Yes, Muslim</input></label>
+            <label for="inp-3">
+                <input type="checkbox"
+                       name="inp">Yes, Jew</input></label>
+
+            <label for="inp-7">
+                <input type="checkbox"
+                       name="Other">Other</input></label>
+
+                      <div class="form-control">
+                         <!-- Input Type Text -->
+                         <input type="text"
+                          id="Other" />
+                        </div>
+        </div>
+
+
+
+        <div class="form-control">
+            <label>Anything else that you're looking for?
+            </label>
+
+            <div class="form-control">
+                <!-- Input Type Text -->
+                <input type="text"
+                 id="Other" />
+               </div>
+        </div>
+
+
+
+
+        <!-- Multi-line Text Input Control -->
+        <div class="next">
+            <button class="next-button" type="button">
+                <a href="/templates/survey3.html">Next</a>
+            </button>
+        </div>
+
+
+
+
+
+
+
+
+    </form>
+</body>
+</html>
