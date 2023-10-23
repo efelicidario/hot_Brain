@@ -1,12 +1,12 @@
 body {
-    background-color: #FE8F87 ;
+    background: linear-gradient(45deg, #e72e2e, #e2bcc2); ;
     font-family: Verdana;
     text-align: center;
 }
 
 /* Styling the Form (Color, Padding, Shadow) */
 form {
-    background-color: #fff;
+    background-color:  #fddddd;
     max-width: 500px;
     margin: 50px auto;
     padding: 30px 20px;
@@ -31,6 +31,7 @@ select, textarea */
 .form-control input,
 .form-control select,
 .form-control textarea {
+    color: #8b002e !important;
     border: 1px solid #777;
     border-radius: 2px;
     font-family: inherit;
@@ -39,6 +40,10 @@ select, textarea */
     width: 95%;
     border-radius: 3px;
 }
+
+
+
+
 
 /* Styling form-control Radio 
 button and Checkbox */
@@ -50,7 +55,7 @@ button and Checkbox */
 
 /* Styling Button */
 .next-button {
-    background-color: #242424;
+    background-color:  #8b002e;
     border: 1px solid #777;
     border-radius: 3px;
     font-family: Verdana;
@@ -66,19 +71,38 @@ button and Checkbox */
     background-color: #565656; 
 }
 
+
+
+
+
 .submit-button {
     background-color: #242424;
     border: 1px solid #777;
-    border-radius: 3px;
     font-family: Verdana;
     font-size: 21px;
     display: block;
     width: 100%;
     margin-top: 50px;
     margin-bottom: 20px;
+
+    border: none;
+    padding: 10px 20px; /* Added padding for a wider button */
+    cursor: pointer;
+    border-radius: 20px; /* Rounded corners for the button */
+
+
+
 }
 
 a{
-    text-decoration: none;
     color: white;
 }
+
+
+    h4 {
+      color: #8b002e;
+    }
+    h1{
+        color: #8b002e;
+ 
+    }
