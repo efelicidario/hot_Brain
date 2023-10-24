@@ -56,9 +56,10 @@ def change_user_and_vid(newfilename):
     print("successfully changed filename to " + filename)
 
 def test():
-    with open(filename, 'wb') as file:
-        st = "this filename is: " + filename
-        pickle.dump(st, file)
+    with filename_lock:
+        with open(filename, 'wb') as file:
+            st = "this filename is: " + filename
+            pickle.dump(st, file)
 
-    with open(filename, 'rb') as file:
-        print("Please work: "+ pickle.load(file))
+        with open(filename, 'rb') as file:
+            print("Please work: "+ pickle.load(file))

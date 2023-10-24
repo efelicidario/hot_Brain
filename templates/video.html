@@ -44,6 +44,7 @@
                         <source src="/static/pics/01.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
+                    <p id="user-id">{{ current_user.id }}</p>
                   <a href="{{url_for('video2')}}">Next</a>
                 </div>
             </div>
@@ -51,12 +52,9 @@
 
     <script>
         // Retrieve user ID and video ID from the placeholders
-        //const user_id = $("#user_id").data("value");
-        //const video_id = $("#video_id").data("value");
-        const user_id = "GUEST";
+        //const user_id = "GUEST";
 
         function play_start(user_id, video_id){
-
             $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 0},
                 function(data, textStatus) {
                     //this gets called when browser receives response from server
@@ -83,8 +81,10 @@
         </script>
 
         <script>
+            const user_id = document.getElementById('user-id').textContent;
+
             video.addEventListener("play", (event) => {
-                play_start();
+                play_start(user_id, 0)
             });
 
             // For when the video ends

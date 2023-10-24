@@ -153,8 +153,6 @@ def init_new_env():
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    #for testinf purposes when user isnt logged in
-    #change_user_and_vid("guest.pkl") #comment out for mac
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked

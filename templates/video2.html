@@ -50,10 +50,6 @@
         </div>
 
     <script>
-        // Retrieve user ID and video ID from the placeholders
-        //const user_id = $("#user_id").data("value");
-        //const video_id = $("#video_id").data("value");
-        const user_id = "GUEST";
 
         function play_start(user_id, video_id){
 
@@ -86,8 +82,10 @@
         </script>
 
         <script>
+            const user_id = document.getElementById('user-id').textContent;
+
             video.addEventListener("play", (event) => {
-                play_start();
+                play_start(500, 1);
             });
 
             // For when the video ends
