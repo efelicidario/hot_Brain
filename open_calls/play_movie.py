@@ -5,8 +5,8 @@ from flask import request
 from tools.eeg import on_brain_bit_signal_data_received, Sensor, test, change_user_and_vid
 
 def handle_request():
-    if g.hb == None:
-        return ["Data Flowing"]
+    #if g.hb == None:
+    #    return ["Data Flowing"]
 
     video_id = request.form.get('video_id')
     user_id = request.form.get('user_id')

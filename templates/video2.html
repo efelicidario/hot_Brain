@@ -44,6 +44,7 @@
                         <source src="/static/pics/02.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
+                    <p id="user-id">{{ current_user.id }}</p>
                   <a href="{{url_for('index')}}">Done</a>
                 </div>
             </div>
@@ -85,7 +86,7 @@
             const user_id = document.getElementById('user-id').textContent;
 
             video.addEventListener("play", (event) => {
-                play_start(500, 1);
+                play_start(user_id, 1);
             });
 
             // For when the video ends
