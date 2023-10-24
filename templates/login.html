@@ -89,15 +89,23 @@
 </head>
 <body>
 	<div class="login-container">
-        <img src="/static/pics/logo-small.png" alt="Logo"> 
-        <div>
-            <h2>Login</h2>
-            <form action="your_server_endpoint.php" method="post">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="submit" value="Login">
-            </form>
-        </div>
-    </div>
+		<img src="/static/pics/logo-small.png" alt="Logo">
+		<div>
+			<h2>Login</h2>
+			<form action="" method="post">
+				{{ form.hidden_tag() }}
+	
+				<div class="txt_field">
+					{{ form.username(placeholder="Username", required="required") }}
+				</div>
+	
+				<div class="txt_field">
+					{{ form.password(placeholder="Password", required="required") }}
+				</div>
+	
+				{{ form.submit(value="Login") }}
+			</form>
+		</div>
+	</div>
 </body>
 </html>

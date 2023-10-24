@@ -54,11 +54,11 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True) #Identity column for user
     username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
-    name = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
-    lastname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
+    fname = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
+    lname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
     email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
-    age = db.Column(db.Integer, nullable = False) #age of the user this will be used to restrict user from creating an account
+    age = db.Column(db.Integer) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
@@ -72,6 +72,10 @@ class BrainwaveData(db.Model):
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Username"})
+    fname = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Username"})
+    lname = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Username"})
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Email"})
@@ -209,7 +213,8 @@ def signup():
     if form.validate_on_submit():
         #creates hashed password to encrypt it
         hashed_password= bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data,password=hashed_password)
+        new_user = User(username=form.username.data,password=hashed_password,lname=
+                        form.lname.data,fname=form.fname.data,email=form.email.data)
         #new user is created
         db.session.add(new_user)
         db.session.commit()
