@@ -62,13 +62,6 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
 
-#This is for da brainwave
-class BrainwaveData(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    video_id = db.Column(db.Integer, nullable=False)
-    brainwave_data = db.Column(db.JSON, nullable=False)
-
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
@@ -225,6 +218,17 @@ def video():
 @app.route('/video2')
 def video2():
     return render_template('video2.html')
+
+@app.route('/match', methods=['GET'])
+@login_required
+def match():
+    #Retrieve all users from the database except the current user
+    users = User.query.filter(User.id != session['user_id']).all()
+
+    #Get they usernames
+    usernames = [user.username for user in users]
+
+    return render_template('match.html', usernames=usernames)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
