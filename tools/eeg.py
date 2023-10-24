@@ -1,17 +1,17 @@
-from neurosdk.scanner import Scanner
-from neurosdk.sensor import Sensor
-from neurosdk.brainbit_sensor import BrainBitSensor
-from neurosdk.cmn_types import *
+#from neurosdk.scanner import Scanner #comment out for mac
+#from neurosdk.sensor import Sensor #comment out for mac
+#from neurosdk.brainbit_sensor import BrainBitSensor #comment out for mac
+#from neurosdk.cmn_types import *
 
 from tools.logging import logger   
 from flask import request
 import pickle
 import threading
+import random #for testing
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 filename = ""
 filename_lock = threading.Lock()
-#print("filename is " + filename)
 
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
@@ -24,7 +24,7 @@ def on_brain_bit_signal_data_received(sensor, data):
         logger.debug(data)
 
 logger.debug("Create Headband Scanner")
-gl_scanner = Scanner([SensorFamily.SensorLEBrainBit])
+#gl_scanner = Scanner([SensorFamily.SensorLEBrainBit]) #comment out for mac
 gl_sensor = None
 logger.debug("Sensor Found Callback")
 def sensorFound(scanner, sensors):
@@ -40,10 +40,10 @@ def sensorFound(scanner, sensors):
         gl_scanner.stop()
         del gl_scanner
 
-gl_scanner.sensorsChanged = sensorFound
+#gl_scanner.sensorsChanged = sensorFound #comment out for mac
 
 logger.debug("Start scan")
-gl_scanner.start()
+#gl_scanner.start() #comment out for mac
 
 
 def get_head_band_sensor_object():
@@ -56,9 +56,13 @@ def change_user_and_vid(newfilename):
     print("successfully changed filename to " + filename)
 
 def test():
-    with open(filename, 'wb') as file:
-        st = "this filename is: " + filename
-        pickle.dump(st, file)
+    with filename_lock:
+        with open(filename, 'ab+') as file:
+            for i in range(0, 5):
+                num1 = random.uniform(0, 1)
+                num2 = random.uniform(0, 1)
 
-    with open(filename, 'rb') as file:
-        print("Please work: "+ pickle.load(file))
+                pickle.dump([num1, num2], file)
+
+        #with open(filename, 'rb') as file:
+        #    print("Please work: "+ pickle.load(file))

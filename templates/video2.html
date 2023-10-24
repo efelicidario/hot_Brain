@@ -44,16 +44,13 @@
                         <source src="/static/pics/02.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
-                  <a href="{{url_for('index')}}">Done</a>
+                    <p id="user-id" style="display: none;">{{ current_user.id }}</p>
+                  <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
                 </div>
             </div>
         </div>
 
     <script>
-        // Retrieve user ID and video ID from the placeholders
-        //const user_id = $("#user_id").data("value");
-        //const video_id = $("#video_id").data("value");
-        const user_id = "GUEST";
 
         function play_start(user_id, video_id){
 
@@ -86,13 +83,17 @@
         </script>
 
         <script>
+            const user_id = document.getElementById('user-id').textContent;
+            var nextButton = document.getElementById("next");
+
             video.addEventListener("play", (event) => {
-                play_start();
+                play_start(user_id, 1);
             });
 
             // For when the video ends
             video.addEventListener("ended", (event) => {
                 stop_movie();
+                nextButton.style.display = "block";
             });
         </script>
 

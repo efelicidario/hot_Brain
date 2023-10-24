@@ -7,6 +7,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import jwt
+import numpy as np
+import pickle
 
 import sys
 import datetime
@@ -61,13 +63,6 @@ class User(db.Model, UserMixin):
     age = db.Column(db.Integer) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
-
-#This is for da brainwave
-class BrainwaveData(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    video_id = db.Column(db.Integer, nullable=False)
-    brainwave_data = db.Column(db.JSON, nullable=False)
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -153,8 +148,6 @@ def init_new_env():
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    #for testinf purposes when user isnt logged in
-    #change_user_and_vid("guest.pkl") #comment out for mac
     return render_template('index.html')
 
 #This gets exeduted when connect is clicked
@@ -174,8 +167,6 @@ def login():
                 login_user(user)
                 session['user_id'] = user.id
                 session['user_name'] = user.username
-                #creates the file name & passes it to eeg.py
-                #change_user_and_vid(str(user.id) + "_" + str(1) + ".pkl") #comment out for mac
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
@@ -230,6 +221,20 @@ def video():
 def video2():
     return render_template('video2.html')
 
+@app.route('/match', methods=['GET'])
+@login_required
+def match():
+    #Retrieve all users from the database except the current user
+    users = User.query.filter(User.id != session['user_id']).all()
+
+    #calculate compatability for each user
+    scores = [(user, compare(current_user, user)) for user in users]
+
+    #sort list of users by compatability in tuples in ascending order
+    sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
+
+    return render_template('match.html', sorted_users=sorted_users)
+
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
 @token_required
@@ -258,7 +263,6 @@ def exec_secure_proc(proc_name):
 @app.route("/open_api/<proc_name>",methods=['GET', 'POST'])
 def exec_proc(proc_name):
     logger.debug(f"Call to {proc_name}")
-    print("here lol")
 
     #setup the env
     init_new_env()
@@ -273,12 +277,89 @@ def exec_proc(proc_name):
         ex_data = ex_data + str(err) + '\n'
         ex_data = ex_data + traceback.format_exc()
         logger.error(ex_data)
-        print("here lol2")
         return json_response(status_=500 ,data=ERROR_MSG)
     print("It is:", resp)
     print(type(resp))
     return resp
 
+
+#this will return the avg percentage of the user's brainwave similarity 
+def compare(user1, user2):
+    #get the id's
+    id1 = user1.id
+    id2 = user2.id
+
+    #a percentage
+    score = -1
+
+    #now compare for each video
+    for i in range(0, 2):
+        #get the file names
+        filename1 = str(id1) + "_" + str(i) + ".pkl"
+        filename2 = str(id2) + "_" + str(i) + ".pkl"
+
+        #open the files
+        with open(filename1, 'rb') as file1:
+            with open(filename2, 'rb') as file2:
+                #load the data
+                data1 = []
+                data2 = []
+                
+                with open(filename1, 'rb') as f:
+                    try:
+                        while True:
+                            data1.append(pickle.load(f))
+                    except EOFError:
+                        pass
+
+                with open(filename2, 'rb') as f:
+                    try:
+                        while True:
+                            data2.append(pickle.load(f))
+                    except EOFError:
+                        pass
+
+                #get the score
+                score = euclidean_distance(data1, data2)
+
+    print("comparing user: ", user1.username, " and user: ", user2.username)
+    return score
+
+def euclidean_distance(thang1, thang2):
+    avgs = 0
+
+    #parse the data or some shid
+    #there are four different types of brainwaves so we need to compare each one
+    #delta, theta, alpha, beta
+
+    #for each brainwave
+    for i in range(len(thang1)):
+        #I guess we can compare one by one and add it to the avgs
+        
+        #while both index's exist
+        if thang1[i] is None or thang2[i] is None:
+            if i == 0:
+                return -1
+            else:
+                return avgs
+
+        ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
+        #THIS MIGHT WORK?!
+        #o1 = thang1[i].01 - thang2[i].01
+        #o2 = thang1[i].02 - thang2[i].02
+        #t3 = thang1[i].03 - thang2[i].03
+        #t4 = thang1[i].04 - thang2[i].04  
+        #array1 = np.array([o1, o2])
+        #array2 = np.array([t3, t4])
+
+        array1 = np.array(thang1[i])
+        array2 = np.array(thang2[i])
+
+        #print("array1: ", array1, " array2: ", array2)
+
+        avgs += np.sqrt(np.sum((array1 - array2)**2))
+
+    return avgs
 
 if __name__ == '__main__':
     db.create_all()
