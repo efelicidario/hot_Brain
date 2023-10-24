@@ -17,7 +17,7 @@ def handle_request():
     name = user_id + "_" + video_id + ".pkl"
     change_user_and_vid(name)
 
-    #if file exists, delete it
+    #if file exists, delete it to overwrite
     if os.path.exists(name):
         os.remove(name)
 

@@ -44,8 +44,8 @@
                         <source src="/static/pics/02.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
-                    <p id="user-id">{{ current_user.id }}</p>
-                  <a href="{{url_for('index')}}">Done</a>
+                    <p id="user-id" style="display: none;">{{ current_user.id }}</p>
+                  <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
                 </div>
             </div>
         </div>
@@ -84,6 +84,7 @@
 
         <script>
             const user_id = document.getElementById('user-id').textContent;
+            var nextButton = document.getElementById("next");
 
             video.addEventListener("play", (event) => {
                 play_start(user_id, 1);
@@ -92,6 +93,7 @@
             // For when the video ends
             video.addEventListener("ended", (event) => {
                 stop_movie();
+                nextButton.style.display = "block";
             });
         </script>
 
