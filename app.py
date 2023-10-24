@@ -14,6 +14,7 @@ import sys
 import datetime
 import bcrypt
 import traceback
+import os
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -227,11 +228,14 @@ def match():
     #Retrieve all users from the database except the current user
     users = User.query.filter(User.id != session['user_id']).all()
 
-    #calculate compatability for each user
-    scores = [(user, compare(current_user, user)) for user in users]
+    #calculate compatability for each user while ignoring the -1's
+    scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
+    #scores = [(user, compare(current_user, user)) for user in users]
+
 
     #sort list of users by compatability in tuples in ascending order
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
+
 
     return render_template('match.html', sorted_users=sorted_users)
 
@@ -298,29 +302,33 @@ def compare(user1, user2):
         filename1 = str(id1) + "_" + str(i) + ".pkl"
         filename2 = str(id2) + "_" + str(i) + ".pkl"
 
-        #open the files
-        with open(filename1, 'rb') as file1:
-            with open(filename2, 'rb') as file2:
-                #load the data
-                data1 = []
-                data2 = []
-                
-                with open(filename1, 'rb') as f:
-                    try:
-                        while True:
-                            data1.append(pickle.load(f))
-                    except EOFError:
-                        pass
+        #open the files if they exist
+        if os.path.exists(filename1) and os.path.exists(filename2):
+            with open(filename1, 'rb') as file1:
+                with open(filename2, 'rb') as file2:
+                    #load the data
+                    data1 = []
+                    data2 = []
+                    
+                    with open(filename1, 'rb') as f:
+                        try:
+                            while True:
+                                data1.append(pickle.load(f))
+                        except EOFError:
+                            pass
 
-                with open(filename2, 'rb') as f:
-                    try:
-                        while True:
-                            data2.append(pickle.load(f))
-                    except EOFError:
-                        pass
+                    with open(filename2, 'rb') as f:
+                        try:
+                            while True:
+                                data2.append(pickle.load(f))
+                        except EOFError:
+                            pass
 
-                #get the score
-                score = euclidean_distance(data1, data2)
+                    #get the score
+                    score = euclidean_distance(data1, data2)
+        else:
+            print("file does not exist")
+            return -1
 
     print("comparing user: ", user1.username, " and user: ", user2.username)
     return score
