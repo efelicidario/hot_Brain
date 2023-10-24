@@ -256,7 +256,6 @@ def exec_secure_proc(proc_name):
 @app.route("/open_api/<proc_name>",methods=['GET', 'POST'])
 def exec_proc(proc_name):
     logger.debug(f"Call to {proc_name}")
-    print("here lol")
 
     #setup the env
     init_new_env()
@@ -271,7 +270,6 @@ def exec_proc(proc_name):
         ex_data = ex_data + str(err) + '\n'
         ex_data = ex_data + traceback.format_exc()
         logger.error(ex_data)
-        print("here lol2")
         return json_response(status_=500 ,data=ERROR_MSG)
     print("It is:", resp)
     print(type(resp))
