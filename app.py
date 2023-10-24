@@ -230,8 +230,8 @@ def match():
     #calculate compatability for each user
     scores = [(user, compare(current_user, user)) for user in users]
 
-    #sort list of users by compatability in tuples in descending order
-    sorted_users = sorted(scores, key=lambda x: x[1], reverse=True)
+    #sort list of users by compatability in tuples in ascending order
+    sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
     return render_template('match.html', sorted_users=sorted_users)
 
