@@ -172,8 +172,6 @@ def login():
                 login_user(user)
                 session['user_id'] = user.id
                 session['user_name'] = user.username
-                #creates the file name & passes it to eeg.py
-                #change_user_and_vid(str(user.id) + "_" + str(1) + ".pkl") #comment out for mac
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
