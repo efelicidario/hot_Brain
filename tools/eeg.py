@@ -6,9 +6,11 @@ from neurosdk.cmn_types import *
 from tools.logging import logger   
 from flask import request
 import pickle
+import threading
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 filename = ""
+filename_lock = threading.Lock()
 #print("filename is " + filename)
 
 def on_sensor_state_changed(sensor, state):
@@ -16,9 +18,10 @@ def on_sensor_state_changed(sensor, state):
 
 def on_brain_bit_signal_data_received(sensor, data):
     #data is the brainwave shid
-    with open(filename, 'ab+') as f:
-        pickle.dump(data, f)
-    logger.debug(data)
+    with filename_lock:
+        with open(filename, 'ab+') as f:
+            pickle.dump(data, f)
+        logger.debug(data)
 
 logger.debug("Create Headband Scanner")
 gl_scanner = Scanner([SensorFamily.SensorLEBrainBit])
@@ -48,7 +51,8 @@ def get_head_band_sensor_object():
 
 def change_user_and_vid(newfilename):
     global filename
-    filename = newfilename
+    with filename_lock:
+        filename = newfilename
     print("successfully changed filename to " + filename)
 
 def test():
