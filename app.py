@@ -7,6 +7,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import jwt
+import numpy as np
+import pickle
 
 import sys
 import datetime
@@ -225,10 +227,13 @@ def match():
     #Retrieve all users from the database except the current user
     users = User.query.filter(User.id != session['user_id']).all()
 
-    #Get they usernames
-    usernames = [user.username for user in users]
+    #calculate compatability for each user
+    scores = [(user, compare(current_user, user)) for user in users]
 
-    return render_template('match.html', usernames=usernames)
+    #sort list of users by compatability in tuples in descending order
+    sorted_users = sorted(scores, key=lambda x: x[1], reverse=True)
+
+    return render_template('match.html', sorted_users=sorted_users)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
@@ -277,6 +282,84 @@ def exec_proc(proc_name):
     print(type(resp))
     return resp
 
+
+#this will return the avg percentage of the user's brainwave similarity 
+def compare(user1, user2):
+    #get the id's
+    id1 = user1.id
+    id2 = user2.id
+
+    #a percentage
+    score = -1
+
+    #now compare for each video
+    for i in range(0, 2):
+        #get the file names
+        filename1 = str(id1) + "_" + str(i) + ".pkl"
+        filename2 = str(id2) + "_" + str(i) + ".pkl"
+
+        #open the files
+        with open(filename1, 'rb') as file1:
+            with open(filename2, 'rb') as file2:
+                #load the data
+                data1 = []
+                data2 = []
+                
+                with open(filename1, 'rb') as f:
+                    try:
+                        while True:
+                            data1.append(pickle.load(f))
+                    except EOFError:
+                        pass
+
+                with open(filename2, 'rb') as f:
+                    try:
+                        while True:
+                            data2.append(pickle.load(f))
+                    except EOFError:
+                        pass
+
+                #get the score
+                score = euclidean_distance(data1, data2)
+
+    print("comparing user: ", user1.username, " and user: ", user2.username)
+    return score
+
+def euclidean_distance(thang1, thang2):
+    avgs = 0
+
+    #parse the data or some shid
+    #there are four different types of brainwaves so we need to compare each one
+    #delta, theta, alpha, beta
+
+    #for each brainwave
+    for i in range(len(thang1)):
+        #I guess we can compare one by one and add it to the avgs
+        
+        #while both index's exist
+        if thang1[i] is None or thang2[i] is None:
+            if i == 0:
+                return -1
+            else:
+                return avgs
+
+        ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
+        #THIS MIGHT WORK?!
+        #o1 = thang1[i].01 - thang2[i].01
+        #o2 = thang1[i].02 - thang2[i].02
+        #t3 = thang1[i].03 - thang2[i].03
+        #t4 = thang1[i].04 - thang2[i].04  
+        #array1 = np.array([o1, o2])
+        #array2 = np.array([t3, t4])
+
+        array1 = np.array(thang1[i])
+        array2 = np.array(thang2[i])
+
+        #print("array1: ", array1, " array2: ", array2)
+
+        avgs += np.sqrt(np.sum((array1 - array2)**2))
+
+    return avgs
 
 if __name__ == '__main__':
     db.create_all()

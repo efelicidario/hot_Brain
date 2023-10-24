@@ -7,6 +7,7 @@ from tools.logging import logger
 from flask import request
 import pickle
 import threading
+import random #for testing
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 filename = ""
@@ -58,10 +59,11 @@ def change_user_and_vid(newfilename):
 def test():
     with filename_lock:
         with open(filename, 'ab+') as file:
-            st = "this filename is: " + filename
-            pickle.dump(st, file)
             for i in range(0, 5):
-                pickle.dump(i, file)
+                num1 = random.uniform(0, 1)
+                num2 = random.uniform(0, 1)
 
-        with open(filename, 'rb') as file:
-            print("Please work: "+ pickle.load(file))
+                pickle.dump([num1, num2], file)
+
+        #with open(filename, 'rb') as file:
+        #    print("Please work: "+ pickle.load(file))
