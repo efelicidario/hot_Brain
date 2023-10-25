@@ -101,6 +101,12 @@ class UpdateForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Username"})
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Email"})
+    fname = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "First Name"})
+    lname = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+    bio = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Bio"})
     submit = SubmitField("Update")
     
     #If username exists, give an error
@@ -190,6 +196,29 @@ def account():
     image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
     return render_template('account.html', image_file = image, form=form)
 
+#edit the user's profile
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = UpdateForm()
+    if form.validate_on_submit():
+        #update the user's info
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.fname = form.fname.data
+        current_user.lname = form.lname.data
+        current_user.bio = form.bio.data
+        db.session.commit()
+        return redirect(url_for('account'))
+    return render_template('edit_profile.html', form=form)
+
+#Page that displays another user's profile
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def user_profile(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    image = url_for('static', filename='pics/profile/' + user.profile_pic)
+    return render_template('user.html', image_file = image, user=user)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required

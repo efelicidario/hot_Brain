@@ -1,3 +1,5 @@
+<!-- Assuming that the user's information is passed to the template as a dictionary named 'user_info' -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -88,19 +90,16 @@
 <body>
     <div class="user-profile">
         <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
-        <h1 class="user-name">{{ current_user.username }}</h1>
-        <p class="username">{{ current_user.name }} {{ current_user.lname }}</p>
-        <p class="bio">{{ current_user.bio }}</p>
-        <p class="email">{{ current_user.email }}</p>
-        <div class="d-flex justify-content-between">
-            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
-            <button class="edit-button btn btn-primary" onclick="editProfile()">Edit</button>
-        </div>
+        <h1 class="user-name">{{ user['username'] }}</h1>
+        <p class="username">{{ user['fname'] }} {{ user['lname'] }}</p>
+        <p class="bio">{{ user['bio'] }}</p>
+        <p class="email">{{ user['email'] }}</p>
+        <button class="back-button" onclick="goBack()">Back</button>
     </div>
 
     <script>
-        function editProfile() {
-            window.location.href = "{{ url_for('edit_profile') }}";
+        function goBack() {
+            window.history.back();
         }
     </script>
 
