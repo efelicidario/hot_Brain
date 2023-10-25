@@ -55,15 +55,39 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
+
+    #core info
     id = db.Column(db.Integer, primary_key=True) #Identity column for user
     username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
     fname = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
     lname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
     email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
-    age = db.Column(db.Integer) #age of the user this will be used to restrict user from creating an account
+    age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
+
+    #survey answers
+    gender = db.Column(db.string(20)) #gender
+    race = db.Column(db.string(20)) #race
+    religion = db.Column(db.string(20)) #religion
+    education = db.Column(db.string(20)) #education
+    occupation = db.Column(db.string(20)) #occupation
+    hobbies = db.Column(db.string(20)) #hobbies
+    personality = db.Column(db.string(20)) #personality
+    long_term = db.Column(db.string(20)) #long term goals
+    virtual = db.Column(db.Boolean) #virtual?
+    social = db.Column(db.Boolean) #social?
+
+    #preferences from survey
+    pronoun_pref = db.Column(db.string(20)) #looking for
+    age_range = db.Column(db.string(20)) #age range preference
+    race_pref = db.Column(db.string(20)) #race preference say wut
+    religion_pref = db.Column(db.string(20)) #religion preference
+    additonal_info = db.Column(db.string(20)) #additional info
+    occupation_pref = db.Column(db.string(20)) #occupation preference
+    interaction = db.Column(db.string(20)) #interaction preference
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -182,11 +206,31 @@ def login():
 def survey():
     return render_template('survey.html')
 
+@app.route('/survey2', methods=['GET', 'POST'])
+@login_required
+def survey2():
+    return render_template('survey2.html')
+
+@app.route('/survey3', methods=['GET', 'POST'])
+@login_required
+def survey3():
+    return render_template('survey3.html')
+
+@app.route('/survey4', methods=['GET', 'POST'])
+@login_required
+def survey4():
+    current_user.completed_survey = True
+    return render_template('survey4.html')
+
 #Once the use is logged in, they go to the logged in dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    #if user is new, redirect to survey
+    if current_user.age == -1 and current_user.completed_survey == False:
+        return redirect(url_for('survey'))
+    else:
+        return render_template('dashboard.html')
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
