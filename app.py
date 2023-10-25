@@ -364,6 +364,7 @@ def compare(user1, user2):
 
 def euclidean_distance(thang1, thang2):
     avgs = 0
+    count = 0
 
     #parse the data or some shid
     #there are four different types of brainwaves so we need to compare each one
@@ -395,8 +396,9 @@ def euclidean_distance(thang1, thang2):
         #print("array1: ", array1, " array2: ", array2)
 
         avgs += np.sqrt(np.sum((array1 - array2)**2))
+        count += 1
 
-    return avgs
+    return (avgs / count)
 
 if __name__ == '__main__':
     db.create_all()
