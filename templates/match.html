@@ -47,7 +47,7 @@
         {% for user, score in sorted_users %}
         <div class="user-profile">
             <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture">
-            <p>User: {{ user.username }}, Compatibility Score: {{ score }}</p>
+            <p>User: <a href="/user/{{ user.id }}">{{ user.username }}</a>, Compatibility Score: {{ score }}</p>
         </div>
         {% endfor %}
     {% else %}
