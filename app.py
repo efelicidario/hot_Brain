@@ -69,25 +69,25 @@ class User(db.Model, UserMixin):
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
     #survey answers
-    gender = db.Column(db.string(20)) #gender
-    race = db.Column(db.string(20)) #race
-    religion = db.Column(db.string(20)) #religion
-    education = db.Column(db.string(20)) #education
-    occupation = db.Column(db.string(20)) #occupation
-    hobbies = db.Column(db.string(20)) #hobbies
-    personality = db.Column(db.string(20)) #personality
-    long_term = db.Column(db.string(20)) #long term goals
+    gender = db.Column(db.String(20)) #gender
+    race = db.Column(db.String(20)) #race
+    religion = db.Column(db.String(20)) #religion
+    education = db.Column(db.String(20)) #education
+    occupation = db.Column(db.String(20)) #occupation
+    hobbies = db.Column(db.String(20)) #hobbies
+    personality = db.Column(db.String(20)) #personality
+    long_term = db.Column(db.String(20)) #long term goals
     virtual = db.Column(db.Boolean) #virtual?
     social = db.Column(db.Boolean) #social?
 
     #preferences from survey
-    pronoun_pref = db.Column(db.string(20)) #looking for
-    age_range = db.Column(db.string(20)) #age range preference
-    race_pref = db.Column(db.string(20)) #race preference say wut
-    religion_pref = db.Column(db.string(20)) #religion preference
-    additonal_info = db.Column(db.string(20)) #additional info
-    occupation_pref = db.Column(db.string(20)) #occupation preference
-    interaction = db.Column(db.string(20)) #interaction preference
+    pronoun_pref = db.Column(db.String(20)) #looking for
+    age_range = db.Column(db.String(20)) #age range preference
+    race_pref = db.Column(db.String(20)) #race preference say wut
+    religion_pref = db.Column(db.String(20)) #religion preference
+    additonal_info = db.Column(db.String(20)) #additional info
+    occupation_pref = db.Column(db.String(20)) #occupation preference
+    interaction = db.Column(db.String(20)) #interaction preference
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -219,7 +219,9 @@ def survey3():
 @app.route('/survey4', methods=['GET', 'POST'])
 @login_required
 def survey4():
+    #mark survey as completed
     current_user.completed_survey = True
+    db.session.commit()
     return render_template('survey4.html')
 
 #Once the use is logged in, they go to the logged in dashboard
@@ -227,7 +229,7 @@ def survey4():
 @login_required
 def dashboard():
     #if user is new, redirect to survey
-    if current_user.age == -1 and current_user.completed_survey == False:
+    if current_user.completed_survey == False:
         return redirect(url_for('survey'))
     else:
         return render_template('dashboard.html')
