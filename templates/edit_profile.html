@@ -1,9 +1,11 @@
+<!-- FILEPATH: /c:/Users/Andres/Desktop/Github/CS370 - Software Engineering/Hot Brain (main)/hot_Brain/templates/edit_profile.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User Profile</title>
+    <title>Edit Profile</title>
     <link rel="stylesheet" href="static/globals.css">
     <link rel="stylesheet" href="static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +23,7 @@
             margin: 0;
         }
 
-        .user-profile {
+        .edit-profile {
             background-color: white;
             width: 100%;
             max-width: 500px; /* Limiting the width to avoid overly wide content */
@@ -31,32 +33,12 @@
             text-align: center;
         }
 
-        .profile-picture {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: block;
+        .form-group {
+            text-align: left;
         }
 
-        .user-name {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .username {
-            font-size: 20px;
-            color: #555; /* Text color similar to Facebook's */
-        }
-
-        .bio {
+        .form-control {
             font-size: 18px;
-            margin: 20px 0;
-        }
-
-        .email {
-            font-size: 16px;
-            color: #555; /* Text color similar to Facebook's */
         }
     </style>
 </head>
@@ -72,11 +54,6 @@
 
         <div class="collapse navbar-collapse" id="navmenu">
             <ul class="navbar-nav ms-auto">
-                <!--
-                <li class="nav-item">
-                    <a href="#learn" class="nav-link">Videos</a>
-                </li>
-                -->
                 <li class="nav-item">
                     <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                 </li>
@@ -86,23 +63,31 @@
 </nav>
 
 <body>
-    <div class="user-profile">
-        <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
-        <h1 class="user-name">{{ current_user.username }}</h1>
-        <p class="username">{{ current_user.name }} {{ current_user.lname }}</p>
-        <p class="bio">{{ current_user.bio }}</p>
-        <p class="email">{{ current_user.email }}</p>
-        <div class="d-flex justify-content-between">
-            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
-            <button class="edit-button btn btn-primary" onclick="editProfile()">Edit</button>
-        </div>
+    <div class="edit-profile">
+        <h1>Edit Profile</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="username">Username</label>
+                {{ form.username(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="fname">First Name</label>
+                {{ form.fname(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="lname">Last Name</label>
+                {{ form.lname(class="form-control") }}
+            <div class="form-group">
+                <label for="email">Email</label>
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                {{ form.bio(class="form-control") }}
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
     </div>
-
-    <script>
-        function editProfile() {
-            window.location.href = "{{ url_for('edit_profile') }}";
-        }
-    </script>
-
 </body>
 </html>

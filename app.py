@@ -55,15 +55,39 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
+
+    #core info
     id = db.Column(db.Integer, primary_key=True) #Identity column for user
     username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
     fname = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
     lname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
     email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
-    age = db.Column(db.Integer) #age of the user this will be used to restrict user from creating an account
+    age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
+
+    #survey answers
+    gender = db.Column(db.String(20)) #gender
+    race = db.Column(db.String(20)) #race
+    religion = db.Column(db.String(20)) #religion
+    education = db.Column(db.String(20)) #education
+    occupation = db.Column(db.String(20)) #occupation
+    hobbies = db.Column(db.String(20)) #hobbies
+    personality = db.Column(db.String(20)) #personality
+    long_term = db.Column(db.String(20)) #long term goals
+    virtual = db.Column(db.Boolean) #virtual?
+    social = db.Column(db.Boolean) #social?
+
+    #preferences from survey
+    pronoun_pref = db.Column(db.String(20)) #looking for
+    age_range = db.Column(db.String(20)) #age range preference
+    race_pref = db.Column(db.String(20)) #race preference say wut
+    religion_pref = db.Column(db.String(20)) #religion preference
+    additonal_info = db.Column(db.String(20)) #additional info
+    occupation_pref = db.Column(db.String(20)) #occupation preference
+    interaction = db.Column(db.String(20)) #interaction preference
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -101,6 +125,12 @@ class UpdateForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Username"})
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Email"})
+    fname = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "First Name"})
+    lname = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+    bio = StringField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Bio"})
     submit = SubmitField("Update")
     
     #If username exists, give an error
@@ -176,11 +206,33 @@ def login():
 def survey():
     return render_template('survey.html')
 
+@app.route('/survey2', methods=['GET', 'POST'])
+@login_required
+def survey2():
+    return render_template('survey2.html')
+
+@app.route('/survey3', methods=['GET', 'POST'])
+@login_required
+def survey3():
+    return render_template('survey3.html')
+
+@app.route('/survey4', methods=['GET', 'POST'])
+@login_required
+def survey4():
+    #mark survey as completed
+    current_user.completed_survey = True
+    db.session.commit()
+    return render_template('survey4.html')
+
 #Once the use is logged in, they go to the logged in dashboard
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    #if user is new, redirect to survey
+    if current_user.completed_survey == False:
+        return redirect(url_for('survey'))
+    else:
+        return render_template('dashboard.html')
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
@@ -190,6 +242,29 @@ def account():
     image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
     return render_template('account.html', image_file = image, form=form)
 
+#edit the user's profile
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = UpdateForm()
+    if form.validate_on_submit():
+        #update the user's info
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.fname = form.fname.data
+        current_user.lname = form.lname.data
+        current_user.bio = form.bio.data
+        db.session.commit()
+        return redirect(url_for('account'))
+    return render_template('edit_profile.html', form=form)
+
+#Page that displays another user's profile
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def user_profile(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    image = url_for('static', filename='pics/profile/' + user.profile_pic)
+    return render_template('user.html', image_file = image, user=user)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
