@@ -21,7 +21,7 @@ def handle_request():
     if os.path.exists(name):
         os.remove(name)
 
-    #test data
+    #test data comment out for real thing
     test()
 
     g.hb.exec_command(SensorCommand.CommandStartSignal)

@@ -13,15 +13,24 @@ import random #for testing
 filename = ""
 filename_lock = threading.Lock()
 
+#will be used to store the data
+pdata = []
+
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
 
 def on_brain_bit_signal_data_received(sensor, data):
+    global filename
+    #old method
     #data is the brainwave shid
-    with filename_lock:
-        with open(filename, 'ab+') as f:
-            pickle.dump(data, f)
-        logger.debug(data)
+    #with filename_lock:
+    #    with open(filename, 'ab+') as f:
+    #        pickle.dump(data, f)
+
+    #new method, hopefully works
+    pdata.append(data)
+
+    logger.debug(data)
 
 logger.debug("Create Headband Scanner")
 #gl_scanner = Scanner([SensorFamily.SensorLEBrainBit]) #comment out for mac
@@ -49,6 +58,16 @@ logger.debug("Start scan")
 def get_head_band_sensor_object():
     return gl_sensor
 
+#returns the data
+def get_data():
+    global pdata
+    print("pdata is: " + str(pdata))
+    return pdata
+
+def clear_data():
+    global pdata
+    pdata = []
+
 def change_user_and_vid(newfilename):
     global filename
     with filename_lock:
@@ -56,13 +75,21 @@ def change_user_and_vid(newfilename):
     print("successfully changed filename to " + filename)
 
 def test():
-    with filename_lock:
-        with open(filename, 'ab+') as file:
-            for i in range(0, 5):
-                num1 = random.uniform(0, 1)
-                num2 = random.uniform(0, 1)
+    #with filename_lock:
+    #    with open(filename, 'ab+') as file:
+    #        for i in range(0, 5):
+    #            num1 = random.uniform(0, 1)
+    #            num2 = random.uniform(0, 1)
 
-                pickle.dump([num1, num2], file)
+    #            pickle.dump([num1, num2], file)
 
         #with open(filename, 'rb') as file:
         #    print("Please work: "+ pickle.load(file))
+    print("test")
+    global pdata
+    for i in range(0, 5):
+        num1 = random.uniform(0, 1)
+        num2 = random.uniform(0, 1)
+        print("num1: " + str(num1) + " num2: " + str(num2))
+
+        pdata.append([num1, num2])
