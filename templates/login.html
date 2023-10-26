@@ -121,7 +121,7 @@
 					{{ form.password(placeholder="Password", required="required") }}
 				</div>
 
-				<a href="#" class="">Forgot password?</a>
+				<a href="{{ url_for('reset_request') }}" class="">Forgot password?</a>
 	
 				{{ form.submit(value="Login") }}
 			</form>
