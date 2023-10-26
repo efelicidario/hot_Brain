@@ -201,6 +201,11 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
+# Password Reset page
+@app.route('/reset_password')
+def reset_request():
+    return render_template('passwordReset.html')
+
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
