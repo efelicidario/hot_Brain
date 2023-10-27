@@ -16,6 +16,8 @@ import bcrypt
 import traceback
 import os
 
+from flask_socketio import SocketIO, send, emit # for chat
+
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
 from db_con import get_db_instance, get_db
@@ -44,6 +46,8 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 app.app_context().push()
 
+#chat inttegration
+socketio = SocketIO(app)
 
 login_manager = LoginManager() 
 login_manager.init_app(app)
@@ -412,16 +416,26 @@ def euclidean_distance(thang1, thang2):
     avgs = 0
     count = 0
 
+    #one of them is empty
+    if not thang1 or not thang2:
+        return -1
+
     #parse the data or some shid
     #there are four different types of brainwaves so we need to compare each one
     #delta, theta, alpha, beta
 
+    #FIRST get all brainbit objects into one list
+    all1 = [thang for sublist in thang1 for thang in sublist]
+    all2 = [thang for sublist in thang2 for thang in sublist]
+
+    #see the data
+    print("all1: ", all1, " all2: ", all2)
+
     #for each brainwave
-    for i in range(len(thang1)):
+    for i in range(len(all1)):
         #I guess we can compare one by one and add it to the avgs
-        
         #while both index's exist
-        if thang1[i] is None or thang2[i] is None:
+        if all1[i] is None or all2[i] is None:
             if i == 0:
                 return -1
             else:
@@ -429,17 +443,14 @@ def euclidean_distance(thang1, thang2):
 
         ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
         #THIS MIGHT WORK?!
-        #o1 = thang1[i].01 - thang2[i].01
-        #o2 = thang1[i].02 - thang2[i].02
-        #t3 = thang1[i].03 - thang2[i].03
-        #t4 = thang1[i].04 - thang2[i].04  
-        #array1 = np.array([o1, o2])
-        #array2 = np.array([t3, t4])
+        o1 = all1[i][0].O1 - all2[i][0].O1
+        o2 = all1[i][0].O2 - all2[i][0].O2
+        t3 = all1[i][0].T3 - all2[i][0].T3
+        t4 = all1[i][0].T4 - all2[i][0].T4  
+        array1 = np.array([o1, o2])
+        array2 = np.array([t3, t4])
 
-        array1 = np.array(thang1[i])
-        array2 = np.array(thang2[i])
-
-        #print("array1: ", array1, " array2: ", array2)
+        print("array1: ", array1, " array2: ", array2)
 
         avgs += np.sqrt(np.sum((array1 - array2)**2))
         count += 1
@@ -449,4 +460,5 @@ def euclidean_distance(thang1, thang2):
 if __name__ == '__main__':
     db.create_all()
     db.session.commit()
-    app.run(debug=True, host='0.0.0.0', port=80)
+    #app.run(debug=True, host='0.0.0.0', port=80)
+    socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
