@@ -21,6 +21,7 @@ def on_sensor_state_changed(sensor, state):
 
 def on_brain_bit_signal_data_received(sensor, data):
     global filename
+    global pdata
     #old method
     #data is the brainwave shid
     #with filename_lock:
@@ -87,9 +88,7 @@ def test():
         #    print("Please work: "+ pickle.load(file))
     print("test")
     global pdata
-    for i in range(0, 5):
-        num1 = random.uniform(0, 1)
-        num2 = random.uniform(0, 1)
-        print("num1: " + str(num1) + " num2: " + str(num2))
 
-        pdata.append([num1, num2])
+    pdata.append([BrainBitSignalData(PackNum=0, Marker=0, O1=-0.4, O2=-0.4000037, T3=0.4, T4=0.4), BrainBitSignalData(PackNum=0, Marker=0, O1=-0.4, O2=-0.400000389037, T3=0.387499905967, T4=0.3968326538397349)])
+    pdata.append([BrainBitSignalData(PackNum=1, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.2790278234747157, T4=0.321679776793), BrainBitSignalData(PackNum=1, Marker=0, O1=-0.4, O2=-0.400000009037, T3=0.26652781155377536, T4=0.30917921941682763), BrainBitSignalData(PackNum=2, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.2049890565767828, T4=0.2390840903130439), BrainBitSignalData(PackNum=2, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.19248904465584246, T4=0.22658407839210357)])
+    pdata.append([BrainBitSignalData(PackNum=3, Marker=0, O1=-0.3743003600123978, O2=-0.40000038147009037, T3=0.16431420702, T4=0.1933008), BrainBitSignalData(PackNum=3, Marker=0, O1=-0.3618056154785, O2=-0.40000038147009037, T3=0.15181479627112987, T4=0.1808015640273705)])
