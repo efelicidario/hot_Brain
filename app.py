@@ -158,6 +158,16 @@ class LoginForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Login")
+    
+
+class ResetRequestForm(FlaskForm):
+    #username = StringField(validators=[InputRequired(), Length(
+    #    min=4, max=20)], render_kw={"placeholder": "Username"})
+    #password = PasswordField(validators=[InputRequired(), Length(
+    #    min=4, max=20)], render_kw={"placeholder": "Password"})
+    email = StringField(label='Email')
+    submit = SubmitField(label='Reset Password')
+    
 
 FlaskJSON(app)
 
@@ -199,12 +209,13 @@ def login():
                 session['user_id'] = user.id
                 session['user_name'] = user.username
                 return redirect(url_for('dashboard'))
-    return render_template('login.html', form=form)
+    return render_template('login.html', title='Login', form=form)
 
 # Password Reset page
 @app.route('/reset_password')
 def reset_request():
-    return render_template('passwordReset.html')
+    form=ResetRequestForm()
+    return render_template('passwordReset.html', title='Reset Request', form=form, legend="Reset Password")
 
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
