@@ -9,6 +9,8 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
+from tkinter import *
+from tkinter import ttk
 
 import sys
 import datetime
@@ -161,13 +163,9 @@ class LoginForm(FlaskForm):
     
 
 class ResetRequestForm(FlaskForm):
-    #username = StringField(validators=[InputRequired(), Length(
-    #    min=4, max=20)], render_kw={"placeholder": "Username"})
-    #password = PasswordField(validators=[InputRequired(), Length(
-    #    min=4, max=20)], render_kw={"placeholder": "Password"})
-    email = StringField(label='Email')
+    email = StringField(label="Email",validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
     submit = SubmitField(label='Reset Password')
-    
 
 FlaskJSON(app)
 
@@ -211,11 +209,20 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', title='Login', form=form)
 
+def send_mail():
+    pass
+
 # Password Reset page
-@app.route('/reset_password')
+@app.route('/reset_password',methods=['GET', 'POST'])
 def reset_request():
     form=ResetRequestForm()
-    return render_template('passwordReset.html', title='Reset Request', form=form, legend="Reset Password")
+    if form.validate_on_submit():
+        user=User.query.filter_by(email=form.email.data)#.first()
+        if user:
+            send_mail()
+            #flash('Reset request sent. Check your email.','success')
+            return redirect(url_for('login'))
+    return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
 
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
