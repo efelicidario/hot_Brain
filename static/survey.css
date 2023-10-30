@@ -56,8 +56,6 @@ button and Checkbox */
 /* Styling Button */
 .next-button {
     background-color:  #8b002e;
-    border: 1px solid #777;
-    border-radius: 3px;
     font-family: Verdana;
     font-size: 21px;
     display: block;
@@ -65,11 +63,17 @@ button and Checkbox */
     margin-top: 50px;
     margin-bottom: 20px;
     margin-left: 200px;
+    border: none;
+    padding: 10px 20px; /* Added padding for a wider button */
+    cursor: pointer;
+    border-radius: 20px; /* Rounded corners for the button */
 }
 
 .next button:hover {
-    background-color: #565656; 
+    background-color: #8b002e;
 }
+
+
 
 
 
