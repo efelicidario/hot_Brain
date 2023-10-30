@@ -13,15 +13,10 @@ def handle_request():
     video_id = request.form.get('video_id')
     user_id = request.form.get('user_id')
 
-    #changes the filename to the user_id + video_id
+    #gets the filename
     name = user_id + "_" + video_id + ".pkl"
-    change_user_and_vid(name)
 
-    #if file exists, delete it to overwrite
-    if os.path.exists(name):
-        os.remove(name)
-
-    #test data
+    #test data comment out for real thing
     test()
 
     g.hb.exec_command(SensorCommand.CommandStartSignal)
