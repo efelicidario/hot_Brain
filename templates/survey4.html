@@ -21,7 +21,7 @@
     <h1>Hot Brain Survey</h1>
   
     <!-- Create Form -->
-    <form id="form">
+    <form id="form" action="/survey4" method="post">
 
         <h3>Lifestyle and Preferences</h3>
 
@@ -32,37 +32,24 @@
     
             <!-- Input Type Radio Button -->
             <label for="R-1">
-                <input type="radio"
-                       id="R-1"
-                       name="R">Messaging</input>
+                <input type="radio" id="R-1" name="Interaction_pref" value="Messaging">Messaging
             </label>
-    
+
+
             <!-- Input Type Radio Button -->
             <label for="R-2">
-                <input type="radio"
-                       id="R-2"
-                       name="R">Video Calls</input>
+                <input type="radio" id="R-2" name="Interaction_pref" value="Video Calls">Video Calls
             </label>
             
             <!-- Input Type Radio Button -->
             <label for="R-3">
-                <input type="radio"
-                       id="R-3"
-                       name="R">In-Person</input>
+                <input type="radio" id="R-3" name="Interaction_pref" value="In-Person">In-Person
             </label>
     
              <!-- Input Type Radio Button -->
             <label for="R-4">
-                <input type="radio"
-                       id="R-4"
-                       name="interaction">Other(Please Specify)</input>
-    
-                       <div class="form-control">
-             
-                        <!-- Input Type Text -->
-                        <input type="text"
-                               id="Other" />
-                    </div>
+                <input type="radio" id="R-4" name="Interaction_pref">Other(Please Specify)
+                <input type="text" id="Interaction_pref_other" name="Interaction_pref_other">
             </label>
 
             <div class="form-control">
@@ -72,14 +59,10 @@
         
                 <!-- Input Type Radio Button -->
                 <label for="R-1">
-                    <input type="radio"
-                           id="R-1"
-                           name="R">Yes</input>
+                    <input type="radio" id="vr_date-1" name="Virtual" value="True">Yes
                 </label>
                 <label for="R-2">
-                    <input type="radio"
-                           id="R-2"
-                           name="R">No</input>
+                    <input type="radio" id="vr_date-2" name="Virtual" value="False">No
                 </label>
             </div>    
 
@@ -90,23 +73,21 @@
         
                 <!-- Input Type Radio Button -->
                 <label for="R-1">
-                    <input type="radio"
-                           id="R-1"
-                           name="R">Yes</input>
+                    <input type="radio" id="R-1" name="Safety" value="True">Yes
                 </label>
                 <label for="R-2">
-                    <input type="radio"
-                           id="R-2"
-                           name="R">No</input>
+                    <input type="radio" id="R-2" name="Safety" value="False">No
                 </label>
             </div>  
 
         <!-- Multi-line Text Input Control -->
+
+
         <div class="next">
-            <button class="submit-button" type="button">
-                <a href="dashboard">Submit</a>
-            </button>
+            <button class="next-button" type="submit">Submit</button>
         </div>
+        
+
     </form>
 
 </body>

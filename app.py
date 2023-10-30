@@ -9,6 +9,8 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
+import sqlite3
+import json
 
 import sys
 import datetime
@@ -58,6 +60,8 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+
 class User(db.Model, UserMixin):
 
     #core info
@@ -86,12 +90,15 @@ class User(db.Model, UserMixin):
 
     #preferences from survey
     pronoun_pref = db.Column(db.String(20)) #looking for
-    age_range = db.Column(db.String(20)) #age range preference
+    age_range_min = db.Column(db.String(20)) #age range preference
+    age_range_max = db.Column(db.String(20)) #age range preference
     race_pref = db.Column(db.String(20)) #race preference say wut
     religion_pref = db.Column(db.String(20)) #religion preference
     additonal_info = db.Column(db.String(20)) #additional info
     occupation_pref = db.Column(db.String(20)) #occupation preference
     interaction = db.Column(db.String(20)) #interaction preference
+
+
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -208,24 +215,92 @@ def login():
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        
+        user_survey = User.query.filter_by(id=user_id).first()
+
+        if user_survey:
+            user_survey.fname = request.form['first_name']
+            user_survey.lname = request.form['last_name']
+            user_survey.email = request.form['email']
+            user_survey.age = request.form['age']
+            user_survey.gender = request.form.get('gender')
+            #user_survey.other_gender = request.form.get('other_gender', '')
+            user_survey.race = request.form.get('race')
+            #user_survey.other_race = request.form.get('other_race', '')
+            user_survey.religion = request.form.get('religion')
+            #user_survey.other_religon = request.form.get('other_religion')
+            user_survey.education = request.form.get('education')
+
+            db.session.commit()
+            return redirect(url_for('survey2'))
     return render_template('survey.html')
 
+
+    
 @app.route('/survey2', methods=['GET', 'POST'])
 @login_required
 def survey2():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.pronoun_pref = request.form.get('gender_pref')
+        #user_survey.pronoun_pref = request.form.get('other_race_text')
+        user_survey.age_range_min = request.form.get('minAge')
+        user_survey.age_range_max = request.form.get('maxAge')
+        race = request.form.getlist('race')
+        religion = request.form.getlist('rel')
+        #other_selected_race = request.form.get('other_race_text')
+        user_survey.race_pref = json.dumps(race)
+        user_survey.religion_pref = json.dumps(religion)
+
+        db.session.commit()
+        return redirect(url_for('survey3'))
     return render_template('survey2.html')
 
 @app.route('/survey3', methods=['GET', 'POST'])
 @login_required
 def survey3():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.occupation = request.form.get('occupation')
+        user_survey.occupation_pref = request.form.get('occupation_list')
+        user_survey.hobbies = request.form.get('hobbies')
+        user_survey.personality = request.form.get('personality')
+        user_survey.long_term = request.form.get('goals')
+        db.session.commit()
+        return redirect(url_for('survey4'))
     return render_template('survey3.html')
 
 @app.route('/survey4', methods=['GET', 'POST'])
 @login_required
 def survey4():
     #mark survey as completed
-    current_user.completed_survey = True
-    db.session.commit()
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.interaction = request.form.get('Interaction_pref')
+        virtual_dating = request.form.get('Virtual')
+        if virtual_dating == "True":
+            user_survey.virtual = True
+        else:
+            user_survey.virtual = False
+
+        safty = request.form.get('Safety')
+        if safty == "True":
+            user_survey.social = True
+        else:
+            user_survey.social = False
+
+        user_survey.completed_survey = True
+        db.session.commit()
+
+        if user_survey.completed_survey == True:
+            return render_template('dashboard.html')
+        else:
+            return redirect(url_for('survey'))
     return render_template('survey4.html')
 
 #Once the use is logged in, they go to the logged in dashboard
