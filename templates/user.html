@@ -92,6 +92,7 @@
 </nav>
 
 <body>
+   
     <div class="user-profile">
         <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
         <h1 class="user-name">{{ user['username'] }}</h1>
@@ -100,6 +101,16 @@
         <p class="email">{{ user['email'] }}</p>
         <button class="back-button" onclick="goBack()">Back</button>
     </div>
+    <!---
+    <div class="user-profile">
+        <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
+        <h1 class="user-name">{{ user['username'] }}</h1>
+        <p class="username">{{ user['fname'] }} {{ user['lname'] }}</p>
+        <p class="bio">{{ user['bio'] }}</p>
+        <p class="email">{{ user['email'] }}</p>
+        <button class="back-button" onclick="goBack()">Back</button>
+    </div>
+    -->
 
     <script>
         function goBack() {
