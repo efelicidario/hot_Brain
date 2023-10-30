@@ -20,62 +20,31 @@
     >
     <h1>Hot Brain Survey</h1>
   
+
     <!-- Create Form -->
-    <form id="form">
+    <form id="form" action="/survey2" method="post">
+
 
         <div class="form-control">
-            <label>
-                What pronouns are you looking for 
-            </label>
- 
-            <!-- Input Type Radio Button -->
-            <label for="p-1">
-                <input type="radio"
-                       id="p-1"
-                       name="p">she/her/hers</input>
+            <label>What pronouns are you looking for</label>
+    
+            <label for="P-1">
+                <input type="radio" id="P-1" name="gender_pref" value="Female">she/her/hers
             </label>
 
-
-
-            <!-- Input Type Radio Button -->
-            <label for="p-2">
-                <input type="radio"
-                       id="p-2"
-                       name="p">he/him/his</input>
+            <label for="P-2">
+                <input type="radio" id="P-2" name="gender_pref" value="Male">he/him/his
             </label>
 
-
-            <!-- Input Type Radio Button -->
-            <label for="p-3">
-                <input type="radio"
-                       id="p-3"
-                       name="p">they/them/their</input>
+            <label for="P-3">
+                <input type="radio" id="P-3" name="gender_pref" value="Nonbinary ">they/them/their
             </label>
 
-
-
-          <!-- Input Type Radio Button -->
-            <label for="p-4">
-                <input type="radio"
-                       id="p-4"
-                       name="p">Other(Please Specify)</input>
-
-                       <div class="form-control">
-             
-                        <!-- Input Type Text -->
-                        <input type="text"
-                               id="Other" />
-                    </div>
+            <label for="P-4">
+                <input type="radio" id="P-4" name="gender_pref" value="None ">Do not wish to disclose
             </label>
+  
         </div>
-
-
-
-
-
-
-
-
 
 
 
@@ -84,184 +53,101 @@
                 What is your ideal age range?
             </label>
 
+            <form onsubmit="return validateForm()">
+                <label for="minAge">Minimum Age:</label>
+                <input type="number" id="minAge" name="minAge" min="18" placeholder="Minimum Age">
+            
+                <label for="maxAge">Maximum Age:</label>
+                <input type="number" id="maxAge" name="maxAge" min="18" placeholder="Maximum Age">
+            
+            </form>
+            
+            <script>
+                function validateForm() {
+                    const minAge = parseInt(document.getElementById('minAge').value);
+                    const maxAge = parseInt(document.getElementById('maxAge').value);
 
-          <!-- Input Type Radio Button -->
-          <label for="age-1">
-             <input type="radio"
-                 id="age-1"
-                 name="age">18-21</input>
-           </label>
-    
-    
-          <!-- Input Type Radio Button -->
-          <label for="age-2">
-              <input type="radio"
-                 id="age-2"
-                  name="age">21-25</input>
-           </label> 
+                    if (maxAge <= minAge) {
+                        alert("Maximum age should be greater than or equal to the minimum age");
+                        return false; // Prevent form submission
+                    }
 
-
-          <!-- Input Type Radio Button -->
-          <label for="age-3">
-             <input type="radio"
-                 id="age-3"
-                  name="age">26-30</input>
-          </label> 
-
-          <!-- Input Type Radio Button -->
-          <label for="age-4">
-              <input type="radio"
-                  id="age-4"
-                  name="age">26-34</input>
-          </label> 
-
-
-          <!-- Input Type Radio Button -->
-          <label for="age-5">
-             <input type="radio"
-                  id="age-5"
-                  name="age">35-44</input>
-           </label> 
-
-    
-          <!-- Input Type Radio Button -->
-          <label for="age-6">
-              <input type="radio"
-                 id="age-5"
-                 name="age">45-54</input>
-           </label> 
-
-    
-          <!-- Input Type Radio Button -->
-          <label for="age-6">
-              <input type="radio"
-                 id="age-5"
-                 name="age">55-64</input>
-         </label> 
-    
-
-    
-    
-         <!-- Input Type Radio Button -->
-            <label for="age-7">
-                <input type="radio"
-                   id="age-7"
-                    name="age">Other(Please Specify)</input>
-    
-                    <div class="form-control">
-                      <!-- Input Type Text -->
-                     <input type="text"
-                     id="Other" />
-                    </div>
-             </label>
-        </div>
-    
-
-
-
-
-
-
-
-
-
+                    if (minAge < 18) {
+                        alert("Minimum age should be 18 or more");
+                        return false; // Prevent form submission
+                    }
+                    return true; // Allow form submission
+                }
+            </script>
+                        
+            
 
         <div class="form-control">
-            <label>What races(s) are you looking for?
+            <label>What race(s) are you looking for?
                 <small>(Check all that apply)</small>
             </label>
-            <!-- Input Type Checkbox -->
             <label for="inp-1">
-                <input type="checkbox"
-                       name="inp">White</input></label>
+                <input type="checkbox" name="race" value="White"> White
+            </label>
             <label for="inp-2">
-                <input type="checkbox"
-                       name="inp">Black or African American</input></label>
+                <input type="checkbox" name="race" value="Black or African American"> Black or African American
+            </label>
             <label for="inp-3">
-                <input type="checkbox"
-                       name="inp">Hispanic or Latino</input></label>
+                <input type="checkbox" name="race" value="Hispanic or Latino"> Hispanic or Latino
+            </label>
             <label for="inp-4">
-                <input type="checkbox"
-                       name="inp">Asian or Asian American</input></label>
+                <input type="checkbox" name="race" value="Asian or Asian American"> Asian or Asian American
+            </label>
             <label for="inp-5">
-                <input type="checkbox"
-                       name="inp">American Indian or Alaska Native</input></label>
+                <input type="checkbox" name="race" value="American Infian or Alaska Native"> American Infian or Alaska Native
+            </label>
             <label for="inp-6">
-                <input type="checkbox"
-                       name="inp">Native Hawaiian or Pacific Islander</input></label>
+                <input type="checkbox" name="race" value="Native Jawaiian or other Pacific Islander"> Native Jawaiian or other Pacific Islander
+            </label>
             <label for="inp-7">
-                <input type="checkbox"
-                       name="inp">Middle Eastern/ North African</input></label>
-                <input type="checkbox"
-                       name="Other">Spring</input></label>
+                <input type="checkbox" name="race" value="Middle Eastern/North African"> Middle Eastern/North African
+            </label>
 
-                      <div class="form-control">
-                         <!-- Input Type Text -->
-                         <input type="text"
-                          id="Other" />
-                        </div>
+            <label for="inp-8">
+                <input type="checkbox" name="other_rel" id="other-checkbox"> Other
+                <input type="text" id="other_religion" name="other_religion">
+            </label>
+
         </div>
 
-
-
+ 
         <div class="form-control">
             <label>Do you have a religious prefrence
                 <small>(Check all that apply)</small>
             </label>
 
-
-
-          <!-- Input Type Checkbox -->
+            <!-- Input Type Checkbox -->
             <label for="rel-1">
-                <input type="checkbox"
-                       name="inp">Yes, Christian</input></label>
-            <label for="inp-2">
-                <input type="checkbox"
-                       name="inp">Yes, Muslim</input></label>
-            <label for="inp-3">
-                <input type="checkbox"
-                       name="inp">Yes, Jew</input></label>
-
-            <label for="inp-7">
-                <input type="checkbox"
-                       name="Other">Other</input></label>
-
-                      <div class="form-control">
-                         <!-- Input Type Text -->
-                         <input type="text"
-                          id="Other" />
-                        </div>
-        </div>
-
-
-
-        <div class="form-control">
-            <label>Anything else that you're looking for?
+                <input type="checkbox" name="rel" value="Muslim"> Muslim 
             </label>
 
-            <div class="form-control">
-                <!-- Input Type Text -->
-                <input type="text"
-                 id="Other" />
-               </div>
+            <label for="rel-2">
+                <input type="checkbox" name="rel" value="Christian"> Christian
+            </label>
+
+            <label for="rel-3">
+                <input type="checkbox" name="rel" value="Jew"> Jew
+            </label>
+
+            <label for="rel-4">
+                <input type="checkbox" name="rel" value="None"> None of the above
+            </label>
+
+            <label for="rel-5">
+                <input type="checkbox" name="other_rel" id="other-checkbox"> Other
+                <input type="text" id="other_religion" name="other_religion">
+            </label>
+
         </div>
 
-
-
-
-        <!-- Multi-line Text Input Control -->
         <div class="next">
-            <button class="next-button" type="button">
-                <a href="survey3">Next</a>
-            </button>
+            <button class="next-button" type="submit">Next</button>
         </div>
-
-
-
-
-
-
-
 
     </form>
 </body>
