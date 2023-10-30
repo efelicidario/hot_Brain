@@ -30,7 +30,7 @@
     position: relative;
     width: 418px;
     height: 43px;
-    top: 280px;
+    top: 180px;
     left: 585px;
 
     color: #fff;
@@ -49,7 +49,7 @@
     width: 500;
     height: 350px;
     border-radius: 6px;
-    background-color: rgb(255, 155, 155);
+    background-color: rgb(235, 204, 204);
     background-size: 100% 100%;
 }
 
