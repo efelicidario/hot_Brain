@@ -45,7 +45,7 @@
                           Your browser does not support the video tag.
                     </video>
                     <p id="user-id" style="display: none;">{{ current_user.id }}</p>
-                  <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
+                  <a id="next" style="display: none;" href="{{url_for('video3')}}">Done</a>
                 </div>
             </div>
         </div>
@@ -70,8 +70,8 @@
                 // This gets called when the browser receives a response from the server
                 console.log(data);
 
-                    //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/";
+                    //takes user to the next video when the video finishes playing
+                    window.location.href = "/video3"
 
                 }, "json").fail(function(response) {
             

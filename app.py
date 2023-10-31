@@ -376,6 +376,10 @@ def video():
 def video2():
     return render_template('video2.html')
 
+@app.route('/video3')
+def video3():
+    return render_template('video3.html')
+
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
