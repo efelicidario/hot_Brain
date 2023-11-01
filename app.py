@@ -125,17 +125,16 @@ class User(db.Model, UserMixin):
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "First Name"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
+
     email = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Email"})
+        min=4, max=40)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Password"})
-    #confirm_password = PasswordField(validators=[InputRequired(), Length(
-    #    min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
+        min=4, max=40)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
 
     #If username exists, give an error
@@ -157,15 +156,15 @@ class SignupForm(FlaskForm):
 #Update form
 class UpdateForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     email = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Email"})
+        min=4, max=40)], render_kw={"placeholder": "Email"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "First Name"})
+        min=4, max=40)], render_kw={"placeholder": "First Name"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+        min=4, max=40)], render_kw={"placeholder": "Last Name"})
     bio = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Bio"})
+        min=4, max=40)], render_kw={"placeholder": "Bio"})
     submit = SubmitField("Update")
     
     #If username exists, give an error
