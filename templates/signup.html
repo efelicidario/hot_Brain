@@ -72,15 +72,6 @@
 		background-color: #8b002e;
 	}
 </style>
-
-
-
-
-
-
-
-
-
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
@@ -158,8 +149,9 @@
             </div>
         
             {{ form.submit(class="submit-button") }}
-        
+            {{ url_for('reset_request') }}
             <div class="signup_link">Already have an account?<a href="/templates/login.html"> Login now</a></div>
+            <div class="signup_link">Already have an account?<a href="{{ url_for('login') }}"> Login now</a></div>
         </form>
     </div>
 
