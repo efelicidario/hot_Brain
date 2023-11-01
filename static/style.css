@@ -43,6 +43,7 @@
     width: 370px;
     height: 208px;
     top: 433px;
+    background-color: rgb(55, 49, 49);
     left: 569px;
 }
 
@@ -50,7 +51,7 @@
     width: 500;
     height: 350px;
     border-radius: 6px;
-    background-color: rgb(235, 204, 204);
+    background-color: rgb(55, 49, 49);
     background-size: 100% 100%;
 }
 
@@ -81,7 +82,7 @@
 .desktop .text-wrapper {
     font-family: 'Rubik', sans-serif;
     font-weight: 1000;
-    color: #8b002e;
+    color: #43363b;
     font-size: 35px;
     letter-spacing: 0;
 }
