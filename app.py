@@ -78,7 +78,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
     age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
-    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    #profile_pic = FileField("Profile Pic")
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
     #survey answers
@@ -127,8 +128,8 @@ class SignupForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
-    confirm_password = PasswordField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
+    #confirm_password = PasswordField(validators=[InputRequired(), Length(
+    #    min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
     submit = SubmitField("Sign Up")
 
     #If username exists, give an error
