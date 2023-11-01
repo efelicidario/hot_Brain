@@ -102,11 +102,15 @@
         </div>
     </nav>
 
+
+
+    
+
     <div class="center">
         <h1>Sign Up
             <a href="index.html">
-            <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 100px; width: 150px">
-        </a></h1>
+            <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 100px; width: 200px; ">
+        </h1>
 
         <form method="POST" action="">
             {{ form.hidden_tag() }}
@@ -147,8 +151,9 @@
             </div>
         
             {{ form.submit(class="submit-button") }}
-        
+            {{ url_for('reset_request') }}
             <div class="signup_link">Already have an account?<a href="/templates/login.html"> Login now</a></div>
+            <div class="signup_link">Already have an account?<a href="{{ url_for('login') }}"> Login now</a></div>
         </form>
     </div>
 

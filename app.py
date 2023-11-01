@@ -9,8 +9,10 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
+from flask_mail import Mail
 import sqlite3
 import json
+
 
 import sys
 import datetime
@@ -52,8 +54,16 @@ app.app_context().push()
 socketio = SocketIO(app)
 
 login_manager = LoginManager() 
+#login_manager = LoginManager(app) 
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+#app.config['MAIL_USE_SSL'] = 
+app.config['MAIL_USERNAME'] = 'teewhylerr@gmail.com'
+app.config['MAIL_PASSWORD'] = 'TeeWhy661!'
 
 #reload user from stored id in the session
 @login_manager.user_loader
@@ -73,7 +83,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
     age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
-    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    #profile_pic = FileField("Profile Pic")
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
     #survey answers
@@ -98,7 +109,18 @@ class User(db.Model, UserMixin):
     occupation_pref = db.Column(db.String(20)) #occupation preference
     interaction = db.Column(db.String(20)) #interaction preference
 
-
+    def get_token(self,expires_sec=300):
+        serial=Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
+        return serial.dumps({'user_id':user.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_token(token):
+        serial=Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id=serial.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -108,6 +130,7 @@ class SignupForm(FlaskForm):
         min=4, max=40)], render_kw={"placeholder": "Username"})
     lname = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Username"})
+
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
@@ -169,6 +192,20 @@ class LoginForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Login")
+    
+
+class ResetRequestForm(FlaskForm):
+    email = StringField(label="Email",validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Email"})
+    submit = SubmitField(label='Reset Password')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
+    #submit = SubmitField("Login")
+    submit = SubmitField(label='Change Password')
 
 FlaskJSON(app)
 
@@ -210,7 +247,50 @@ def login():
                 session['user_id'] = user.id
                 session['user_name'] = user.username
                 return redirect(url_for('dashboard'))
-    return render_template('login.html', form=form)
+    return render_template('login.html', title='Login', form=form)
+
+def send_mail(user):
+    token=user.get_token()
+    msg = Message('Password Reset Request',recipients=[user.email],sender='noreply@hotbrain.com')
+    msg.body=f''' To reset your password. Please follow the link below.
+    
+    
+    {url_for('reset_token',token=token,_external=True)}
+    
+    If you didn't send a password reset request. Please igore this message.
+    
+    '''
+    mail.send(msg)
+    # pass
+
+# Password Reset page
+@app.route('/reset_password',methods=['GET', 'POST'])
+def reset_request():
+    form=ResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data)
+        #user=User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_mail(user)
+            #flash('Reset request sent. Check your email.','success')
+            return redirect(url_for('login'))
+    return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
+
+@app.route('/reset_password/<token>',methods=['GET', 'POST'])
+def reset_token(token): 
+    user = User.verify_token(token)
+    if user is None:
+        #flash('This is an invalid or expired token. Please try again.', 'warning')
+        return redirect(url_for('reset_request'))
+    
+    form=ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password=hashed_password
+        db.session.commit()
+        #flash('Password changed! Please login.','success')
+        return redirect(url_for('login'))
+    return render_template('change_password.html',title="Change Password",legend="Change Password",form=form)
 
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required

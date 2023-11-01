@@ -11,7 +11,7 @@
     width: 1440px;
     height: 1024px;
     position: relative; 
-}
+ }
 
 .desktop .logo {
     position: absolute;
@@ -43,6 +43,7 @@
     width: 370px;
     height: 208px;
     top: 433px;
+    background-color:#8b002e;
     left: 569px;
 }
 
@@ -50,7 +51,7 @@
     width: 500;
     height: 350px;
     border-radius: 6px;
-    background-color: rgb(235, 204, 204);
+    background-color: #fddddd;
     background-size: 100% 100%;
 }
 
@@ -81,7 +82,7 @@
 .desktop .text-wrapper {
     font-family: 'Rubik', sans-serif;
     font-weight: 1000;
-    color: #8b002e;
+    color:  #fddddd;
     font-size: 35px;
     letter-spacing: 0;
 }
@@ -97,7 +98,7 @@
 }
 
 .desktop .text-wrapper:hover {
-  color:rgb(65, 65, 65);
+  color: #fddddd;
   font-size: 40px;
   transition: all 0.3s ease; 
 }
