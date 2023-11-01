@@ -9,8 +9,11 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
-from tkinter import *
-from tkinter import ttk
+#from tkinter import *
+#from tkinter import ttk
+#from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+#from itsdangerous import JSONWebSignatureSerializer as Serializer
+from flask_mail import Mail
 
 import sys
 import datetime
@@ -48,8 +51,16 @@ app.app_context().push()
 
 
 login_manager = LoginManager() 
+#login_manager = LoginManager(app) 
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+#app.config['MAIL_USE_SSL'] = 
+app.config['MAIL_USERNAME'] = 'teewhylerr@gmail.com'
+app.config['MAIL_PASSWORD'] = 'TeeWhy661!'
 
 #reload user from stored id in the session
 @login_manager.user_loader
@@ -91,18 +102,33 @@ class User(db.Model, UserMixin):
     occupation_pref = db.Column(db.String(20)) #occupation preference
     interaction = db.Column(db.String(20)) #interaction preference
 
+    def get_token(self,expires_sec=300):
+        serial=Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
+        return serial.dumps({'user_id':user.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_token(token):
+        serial=Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id=serial.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
+    
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Username"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=20)], render_kw={"placeholder": "First Name"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=20)], render_kw={"placeholder": "Last Name"})
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
         min=4, max=20)], render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
     submit = SubmitField("Sign Up")
 
     #If username exists, give an error
@@ -167,6 +193,14 @@ class ResetRequestForm(FlaskForm):
         min=4, max=20)], render_kw={"placeholder": "Email"})
     submit = SubmitField(label='Reset Password')
 
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField(validators=[InputRequired(), Length(
+        min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
+    #submit = SubmitField("Login")
+    submit = SubmitField(label='Change Password')
+
 FlaskJSON(app)
 
 #g is flask for a global var storage 
@@ -209,20 +243,48 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', title='Login', form=form)
 
-def send_mail():
-    pass
+def send_mail(user):
+    token=user.get_token()
+    msg = Message('Password Reset Request',recipients=[user.email],sender='noreply@hotbrain.com')
+    msg.body=f''' To reset your password. Please follow the link below.
+    
+    
+    {url_for('reset_token',token=token,_external=True)}
+    
+    If you didn't send a password reset request. Please igore this message.
+    
+    '''
+    mail.send(msg)
+    # pass
 
 # Password Reset page
 @app.route('/reset_password',methods=['GET', 'POST'])
 def reset_request():
     form=ResetRequestForm()
     if form.validate_on_submit():
-        user=User.query.filter_by(email=form.email.data)#.first()
+        user = User.query.filter_by(email=form.email.data)
+        #user=User.query.filter_by(email=form.email.data).first()
         if user:
-            send_mail()
+            send_mail(user)
             #flash('Reset request sent. Check your email.','success')
             return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
+
+@app.route('/reset_password/<token>',methods=['GET', 'POST'])
+def reset_token(token): 
+    user = User.verify_token(token)
+    if user is None:
+        #flash('This is an invalid or expired token. Please try again.', 'warning')
+        return redirect(url_for('reset_request'))
+    
+    form=ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password=hashed_password
+        db.session.commit()
+        #flash('Password changed! Please login.','success')
+        return redirect(url_for('login'))
+    return render_template('change_password.html',title="Change Password",legend="Change Password",form=form)
 
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
