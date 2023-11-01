@@ -30,7 +30,8 @@
     position: relative;
     width: 418px;
     height: 43px;
-    top: 280px;
+    /*here*/
+    top: 250px;
     left: 585px;
 
     color: #fff;
@@ -42,6 +43,7 @@
     width: 370px;
     height: 208px;
     top: 433px;
+    background-color: rgb(55, 49, 49);
     left: 569px;
 }
 
@@ -49,7 +51,7 @@
     width: 500;
     height: 350px;
     border-radius: 6px;
-    background-color: white;
+    background-color: rgb(55, 49, 49);
     background-size: 100% 100%;
 }
 
@@ -80,7 +82,7 @@
 .desktop .text-wrapper {
     font-family: 'Rubik', sans-serif;
     font-weight: 1000;
-    color: #8b002e;
+    color: #43363b;
     font-size: 35px;
     letter-spacing: 0;
 }

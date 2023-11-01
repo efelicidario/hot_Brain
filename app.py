@@ -9,17 +9,18 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
-#from tkinter import *
-#from tkinter import ttk
-#from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-#from itsdangerous import JSONWebSignatureSerializer as Serializer
 from flask_mail import Mail
+import sqlite3
+import json
+
 
 import sys
 import datetime
 import bcrypt
 import traceback
 import os
+
+from flask_socketio import SocketIO, send, emit # for chat
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -49,6 +50,8 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 app.app_context().push()
 
+#chat inttegration
+socketio = SocketIO(app)
 
 login_manager = LoginManager() 
 #login_manager = LoginManager(app) 
@@ -66,6 +69,8 @@ app.config['MAIL_PASSWORD'] = 'TeeWhy661!'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
 
 class User(db.Model, UserMixin):
 
@@ -96,7 +101,8 @@ class User(db.Model, UserMixin):
 
     #preferences from survey
     pronoun_pref = db.Column(db.String(20)) #looking for
-    age_range = db.Column(db.String(20)) #age range preference
+    age_range_min = db.Column(db.String(20)) #age range preference
+    age_range_max = db.Column(db.String(20)) #age range preference
     race_pref = db.Column(db.String(20)) #race preference say wut
     religion_pref = db.Column(db.String(20)) #religion preference
     additonal_info = db.Column(db.String(20)) #additional info
@@ -115,7 +121,7 @@ class User(db.Model, UserMixin):
         except:
             return None
         return User.query.get(user_id)
-    
+
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
@@ -290,24 +296,92 @@ def reset_token(token):
 @app.route('/survey', methods=['GET', 'POST'])
 @login_required
 def survey():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        
+        user_survey = User.query.filter_by(id=user_id).first()
+
+        if user_survey:
+            user_survey.fname = request.form['first_name']
+            user_survey.lname = request.form['last_name']
+            user_survey.email = request.form['email']
+            user_survey.age = request.form['age']
+            user_survey.gender = request.form.get('gender')
+            #user_survey.other_gender = request.form.get('other_gender', '')
+            user_survey.race = request.form.get('race')
+            #user_survey.other_race = request.form.get('other_race', '')
+            user_survey.religion = request.form.get('religion')
+            #user_survey.other_religon = request.form.get('other_religion')
+            user_survey.education = request.form.get('education')
+
+            db.session.commit()
+            return redirect(url_for('survey2'))
     return render_template('survey.html')
 
+
+    
 @app.route('/survey2', methods=['GET', 'POST'])
 @login_required
 def survey2():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.pronoun_pref = request.form.get('gender_pref')
+        #user_survey.pronoun_pref = request.form.get('other_race_text')
+        user_survey.age_range_min = request.form.get('minAge')
+        user_survey.age_range_max = request.form.get('maxAge')
+        race = request.form.getlist('race')
+        religion = request.form.getlist('rel')
+        #other_selected_race = request.form.get('other_race_text')
+        user_survey.race_pref = json.dumps(race)
+        user_survey.religion_pref = json.dumps(religion)
+
+        db.session.commit()
+        return redirect(url_for('survey3'))
     return render_template('survey2.html')
 
 @app.route('/survey3', methods=['GET', 'POST'])
 @login_required
 def survey3():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.occupation = request.form.get('occupation')
+        user_survey.occupation_pref = request.form.get('occupation_list')
+        user_survey.hobbies = request.form.get('hobbies')
+        user_survey.personality = request.form.get('personality')
+        user_survey.long_term = request.form.get('goals')
+        db.session.commit()
+        return redirect(url_for('survey4'))
     return render_template('survey3.html')
 
 @app.route('/survey4', methods=['GET', 'POST'])
 @login_required
 def survey4():
     #mark survey as completed
-    current_user.completed_survey = True
-    db.session.commit()
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey.interaction = request.form.get('Interaction_pref')
+        virtual_dating = request.form.get('Virtual')
+        if virtual_dating == "True":
+            user_survey.virtual = True
+        else:
+            user_survey.virtual = False
+
+        safty = request.form.get('Safety')
+        if safty == "True":
+            user_survey.social = True
+        else:
+            user_survey.social = False
+
+        user_survey.completed_survey = True
+        db.session.commit()
+
+        if user_survey.completed_survey == True:
+            return render_template('dashboard.html')
+        else:
+            return redirect(url_for('survey'))
     return render_template('survey4.html')
 
 #Once the use is logged in, they go to the logged in dashboard
@@ -498,16 +572,26 @@ def euclidean_distance(thang1, thang2):
     avgs = 0
     count = 0
 
+    #one of them is empty
+    if not thang1 or not thang2:
+        return -1
+
     #parse the data or some shid
     #there are four different types of brainwaves so we need to compare each one
     #delta, theta, alpha, beta
 
+    #FIRST get all brainbit objects into one list
+    all1 = [thang for sublist in thang1 for thang in sublist]
+    all2 = [thang for sublist in thang2 for thang in sublist]
+
+    #see the data
+    print("all1: ", all1, " all2: ", all2)
+
     #for each brainwave
-    for i in range(len(thang1)):
+    for i in range(len(all1)):
         #I guess we can compare one by one and add it to the avgs
-        
         #while both index's exist
-        if thang1[i] is None or thang2[i] is None:
+        if all1[i] is None or all2[i] is None:
             if i == 0:
                 return -1
             else:
@@ -515,17 +599,14 @@ def euclidean_distance(thang1, thang2):
 
         ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
         #THIS MIGHT WORK?!
-        #o1 = thang1[i].01 - thang2[i].01
-        #o2 = thang1[i].02 - thang2[i].02
-        #t3 = thang1[i].03 - thang2[i].03
-        #t4 = thang1[i].04 - thang2[i].04  
-        #array1 = np.array([o1, o2])
-        #array2 = np.array([t3, t4])
+        o1 = all1[i][0].O1 - all2[i][0].O1
+        o2 = all1[i][0].O2 - all2[i][0].O2
+        t3 = all1[i][0].T3 - all2[i][0].T3
+        t4 = all1[i][0].T4 - all2[i][0].T4  
+        array1 = np.array([o1, o2])
+        array2 = np.array([t3, t4])
 
-        array1 = np.array(thang1[i])
-        array2 = np.array(thang2[i])
-
-        #print("array1: ", array1, " array2: ", array2)
+        print("array1: ", array1, " array2: ", array2)
 
         avgs += np.sqrt(np.sum((array1 - array2)**2))
         count += 1
@@ -535,4 +616,5 @@ def euclidean_distance(thang1, thang2):
 if __name__ == '__main__':
     db.create_all()
     db.session.commit()
-    app.run(debug=True, host='0.0.0.0', port=80)
+    #app.run(debug=True, host='0.0.0.0', port=80)
+    socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
