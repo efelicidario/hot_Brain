@@ -4,10 +4,7 @@
 #from neurosdk.cmn_types import *
 
 from tools.logging import logger   
-from flask import request
-import pickle
 import threading
-import random #for testing
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 filename = ""

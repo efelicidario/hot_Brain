@@ -20,11 +20,7 @@ import bcrypt
 import traceback
 import os
 
-# from flask_socketio import SocketIO, send, emit # for chat
-
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
-
-from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
@@ -34,7 +30,6 @@ from tools.token_required import token_required
 from tools.logging import logger
 
 ERROR_MSG = "Ooops.. Didn't work!"
-
 
 #Create our app
 app = Flask(__name__)
@@ -92,7 +87,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
     age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
-    # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
     #profile_pic = FileField("Profile Pic")
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
@@ -222,7 +217,7 @@ FlaskJSON(app)
 def init_new_env():
     #To connect to DB
     if 'db' not in g:
-        g.db = get_db()
+        print("Connecting to DB")
 
     #if 'hb' not in g: #comment for mac
     #    g.hb = get_head_band_sensor_object() #comment out for mac
@@ -469,6 +464,22 @@ def video2():
 def video3():
     return render_template('video3.html')
 
+@app.route('/video4')
+def video4():
+    return render_template('video4.html')
+
+@app.route('/video5')
+def video5():
+    return render_template('video5.html')
+
+@app.route('/video6')
+def video6():
+    return render_template('video6.html')
+
+@app.route('/video7')
+def video7():
+    return render_template('video7.html')
+
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
@@ -546,8 +557,8 @@ def compare(user1, user2):
     #now compare for each video
     for i in range(0, 2):
         #get the file names
-        filename1 = str(id1) + "_" + str(i) + ".pkl"
-        filename2 = str(id2) + "_" + str(i) + ".pkl"
+        filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
+        filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
 
         #open the files if they exist
         if os.path.exists(filename1) and os.path.exists(filename2):

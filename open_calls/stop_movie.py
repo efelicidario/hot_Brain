@@ -13,7 +13,7 @@ def handle_request():
     video_id = request.form.get('video_id')
     user_id = request.form.get('user_id')
 
-    name = user_id + "_" + video_id + ".pkl"
+    filename = user_id + "_" + video_id + ".pkl"
 
 
     #old method
@@ -21,11 +21,19 @@ def handle_request():
     #with open(filename, 'rb') as file:
     #    data = pickle.load(file)
     #    print("Data is: "+ str(data))
-       
-
 
     #new method, hopefully works
-    #g.hb.exec_command(SensorCommand.CommandStopSignal)
+    #g.hb.exec_command(SensorCommand.CommandStopSignal) #comment out for mac
+
+    #data goes here
+    data_folder = "data/"
+
+    #path
+    name = os.path.join(data_folder, filename)
+
+    #Check if folder exists, if not, create it
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder)
 
     #if file exists, delete it to overwrite
     if os.path.exists(name):

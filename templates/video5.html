@@ -41,7 +41,7 @@
             <div class="container">
                 <div class="pt-5 text-center">
                     <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
-                        <source src="/static/videos/03.mp4" type="video/mp4">
+                        <source src="/static/videos/05.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
                     <p id="user-id" style="display: none;">{{ current_user.id }}</p>
@@ -54,7 +54,7 @@
 
         function play_start(user_id, video_id){
 
-            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 2},
+            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 4},
                 function(data, textStatus) {
                     //this gets called when browser receives response from server
                     console.log(data);
@@ -65,13 +65,13 @@
         }
 
         function stop_movie(user_id, video_id) {
-        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 2 },
+        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 4 },
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video4";
+                    window.location.href = "/video6";
 
                 }, "json").fail(function(response) {
             
@@ -80,7 +80,7 @@
                     console.log(response);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video4";
+                    window.location.href = "/video6";
                 });
         }
         </script>
