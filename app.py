@@ -12,6 +12,8 @@ import pickle
 from flask_mail import Mail
 import sqlite3
 import json
+from twilio.rest import Client
+from keys import account_sid, auth_token, twilio_number
 #from itsdangerous import JSONWebSignatureSerializer
 
 import sys
@@ -37,6 +39,8 @@ app = Flask(__name__)
 #connects app file to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
+
+client = Client(account_sid, auth_token)
 
 #Bcrypt instance
 bcrypt = Bcrypt(app)
@@ -89,6 +93,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
     #profile_pic = FileField("Profile Pic")
+    phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
     #survey answers
@@ -134,7 +139,8 @@ class SignupForm(FlaskForm):
         min=4, max=40)], render_kw={"placeholder": "Username"})
     lname = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Username"})
-
+    phone_number = StringField(validators=[InputRequired(), Length(
+        min=4, max=40)], render_kw={"placeholder": "Phone Number"})
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
@@ -444,7 +450,7 @@ def signup():
         #creates hashed password to encrypt it
         hashed_password= bcrypt.generate_password_hash(form.password.data)
         new_user = User(username=form.username.data,password=hashed_password,lname=
-                        form.lname.data,fname=form.fname.data,email=form.email.data)
+                        form.lname.data,fname=form.fname.data,email=form.email.data, phone_number=form.phone_number.data)
         #new user is created
         db.session.add(new_user)
         db.session.commit()
@@ -635,6 +641,24 @@ def euclidean_distance(thang1, thang2):
         count += 1
 
     return (avgs / count)
+
+@app.route('/send_sms/<int:user_id>', methods=['POST'])
+@login_required
+def send_sms(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    phone_number = '+1' + user.phone_number
+    message = request.form['text-input']  # Retrieve the message from the form
+
+    print("sending sms to: ", phone_number, " with message: ", message)
+
+    # Send the SMS using Twilio
+    message = client.messages.create(
+        to=phone_number,
+        from_=twilio_number,
+        body=message
+    )
+
+    return 'SMS sent with SID: ' + message.sid
 
 if __name__ == '__main__':
     db.create_all()

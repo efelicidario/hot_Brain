@@ -102,7 +102,15 @@
         <p class="bio">{{ user['bio'] }}</p>
         <p class="email">{{ user['email'] }}</p>
         <button class="back-button" onclick="goBack()">Back</button>
+        <button class="text-button" onclick="textbox()">Send SMS</button>
     </div>
+
+    <form action="/send_sms/{{ user['id'] }}" method="post">
+        <input type="text" id="text-input" name="text-input" style="display: none;">
+        <br>
+        <button id="send-button" type="submit" style="display: none">Send SMS</button>  <!-- Submit button -->
+    </form>
+
     <!---
     <div class="user-profile">
         <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
@@ -117,6 +125,19 @@
     <script>
         function goBack() {
             window.history.back();
+        }
+
+        //displays text box and send button for user to enter text message
+        function textbox() {;
+            document.getElementById("text-input").style.display = "block";
+            document.getElementById("send-button").style.display = "block";
+        }
+
+        function send_sms() {
+            //get text input
+            var text_input = document.getElementById("text-input").value;
+            //send text input to send_sms route
+            window.location.href = "/send_sms/{{ user['id'] }}/" + text_input;
         }
     </script>
 
