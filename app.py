@@ -14,6 +14,9 @@ from flask_mail import Message#, Mail
 import sqlite3
 import json
 from time import time
+from twilio.rest import Client
+from keys import account_sid, auth_token, twilio_number
+
 #from itsdangerous import JSONWebSignatureSerializer
 
 import sys
@@ -22,11 +25,7 @@ import bcrypt
 import traceback
 import os
 
-# from flask_socketio import SocketIO, send, emit # for chat
-
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
-
-from db_con import get_db_instance, get_db
 
 from tools.token_required import token_required
 
@@ -37,13 +36,14 @@ from tools.logging import logger
 
 ERROR_MSG = "Ooops.. Didn't work!"
 
-
 #Create our app
 app = Flask(__name__)
 
 #connects app file to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
+
+client = Client(account_sid, auth_token)
 
 #Bcrypt instance
 bcrypt = Bcrypt(app)
@@ -94,8 +94,9 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
     age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
-    # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
+    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
     #profile_pic = FileField("Profile Pic")
+    phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
     
     # Create a string
@@ -152,17 +153,17 @@ class User(db.Model, UserMixin):
 #Signup form
 class SignupForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "First Name"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
+    phone_number = StringField(validators=[InputRequired(), Length(
+        min=4, max=40)], render_kw={"placeholder": "Phone Number"})
     email = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Email"})
+        min=4, max=40)], render_kw={"placeholder": "Email"})
     password = PasswordField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Password"})
-    #confirm_password = PasswordField(validators=[InputRequired(), Length(
-    #    min=4, max=20)], render_kw={"placeholder": "Confirm Password"})
+        min=4, max=40)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Sign Up")
 
     #If username exists, give an error
@@ -184,15 +185,15 @@ class SignupForm(FlaskForm):
 #Update form
 class UpdateForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Username"})
+        min=4, max=40)], render_kw={"placeholder": "Username"})
     email = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Email"})
+        min=4, max=40)], render_kw={"placeholder": "Email"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "First Name"})
+        min=4, max=40)], render_kw={"placeholder": "First Name"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Last Name"})
+        min=4, max=40)], render_kw={"placeholder": "Last Name"})
     bio = StringField(validators=[InputRequired(), Length(
-        min=4, max=20)], render_kw={"placeholder": "Bio"})
+        min=4, max=40)], render_kw={"placeholder": "Bio"})
     submit = SubmitField("Update")
     
     #If username exists, give an error
@@ -241,7 +242,7 @@ FlaskJSON(app)
 def init_new_env():
     #To connect to DB
     if 'db' not in g:
-        g.db = get_db()
+        print("Connecting to DB")
 
     #if 'hb' not in g: #comment for mac
     #    g.hb = get_head_band_sensor_object() #comment out for mac
@@ -475,7 +476,7 @@ def signup():
         #creates hashed password to encrypt it
         hashed_password= bcrypt.generate_password_hash(form.password.data)
         new_user = User(username=form.username.data,password=hashed_password,lname=
-                        form.lname.data,fname=form.fname.data,email=form.email.data)
+                        form.lname.data,fname=form.fname.data,email=form.email.data, phone_number=form.phone_number.data)
         #new user is created
         db.session.add(new_user)
         db.session.commit()
@@ -490,6 +491,26 @@ def video():
 @app.route('/video2')
 def video2():
     return render_template('video2.html')
+
+@app.route('/video3')
+def video3():
+    return render_template('video3.html')
+
+@app.route('/video4')
+def video4():
+    return render_template('video4.html')
+
+@app.route('/video5')
+def video5():
+    return render_template('video5.html')
+
+@app.route('/video6')
+def video6():
+    return render_template('video6.html')
+
+@app.route('/video7')
+def video7():
+    return render_template('video7.html')
 
 @app.route('/match', methods=['GET'])
 @login_required
@@ -568,8 +589,8 @@ def compare(user1, user2):
     #now compare for each video
     for i in range(0, 2):
         #get the file names
-        filename1 = str(id1) + "_" + str(i) + ".pkl"
-        filename2 = str(id2) + "_" + str(i) + ".pkl"
+        filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
+        filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
 
         #open the files if they exist
         if os.path.exists(filename1) and os.path.exists(filename2):
@@ -646,6 +667,24 @@ def euclidean_distance(thang1, thang2):
         count += 1
 
     return (avgs / count)
+
+@app.route('/send_sms/<int:user_id>', methods=['POST'])
+@login_required
+def send_sms(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    phone_number = '+1' + user.phone_number
+    message = request.form['text-input']  # Retrieve the message from the form
+
+    print("sending sms to: ", phone_number, " with message: ", message)
+
+    # Send the SMS using Twilio
+    message = client.messages.create(
+        to=phone_number,
+        from_=twilio_number,
+        body=message
+    )
+
+    return 'SMS sent with SID: ' + message.sid
 
 if __name__ == '__main__':
     db.create_all()
