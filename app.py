@@ -9,9 +9,11 @@ from flask_bcrypt import Bcrypt
 import jwt
 import numpy as np
 import pickle
-from flask_mail import Mail
+from flask_mail import Message#, Mail
+#from app import db, mail
 import sqlite3
 import json
+from time import time
 #from itsdangerous import JSONWebSignatureSerializer
 
 import sys
@@ -118,18 +120,30 @@ class User(db.Model, UserMixin):
     occupation_pref = db.Column(db.String(20)) #occupation preference
     interaction = db.Column(db.String(20)) #interaction preference
 
-    def get_token(self,expires_sec=300):
-        serial=Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
-        return serial.dumps({'user_id':user.id}).decode('utf-8')
+    def get_token(self, expires=500):
+        return jwt.encode({'reset_password': self.username, 'exp': time() + expires},
+                          key=os.getenv('SECRET_KEY_FLASK'))
+    #def get_token(self,expires_sec=300):
+    #    serial=Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
+    #    return serial.dumps({'user_id':user.id}).decode('utf-8')
     
     @staticmethod
     def verify_token(token):
-        serial=Serializer(app.config['SECRET_KEY'])
         try:
-            user_id=serial.loads(token)['user_id']
-        except:
-            return None
-        return User.query.get(user_id)
+            username = jwt.decode(token, key=os.getenv('SECRET_KEY_FLASK'))['reset_password']
+            print(username)
+        except Exception as e:
+            print(e)
+            return
+        return User.query.filter_by(username=username).first()
+    #@staticmethod
+    #def verify_token(token):
+    #    serial=Serializer(app.config['SECRET_KEY'])
+    #    try:
+    #        user_id=serial.loads(token)['user_id']
+    #    except:
+    #        return None
+    #    return User.query.get(user_id)
 
 #Signup form
 class SignupForm(FlaskForm):
@@ -256,12 +270,18 @@ def login():
                 login_user(user)
                 session['user_id'] = user.id
                 session['user_name'] = user.username
+                flash("Login successful.")
                 return redirect(url_for('dashboard'))
     return render_template('login.html', title='Login', form=form)
 
-def send_mail(user):
+def send_email(user):
+    #token=user.get_token()
     token=user.get_token()
-    msg = Message('Password Reset Request',recipients=[user.email],sender='noreply@hotbrain.com')
+    msg = Message()
+    msg.subject="hotBrain Password Reset"
+    msg.sender=os.getenv('MAIL_USERNAME')
+    msg.recipients=[user.email]
+    #msg = Message('Password Reset Request',recipients=[user.email],sender='noreply@hotbrain.com')
     msg.body=f''' To reset your password. Please follow the link below.
     
     
@@ -281,7 +301,7 @@ def reset_request():
         user = User.query.filter_by(email=form.email.data)
         user=User.query.filter_by(email=form.email.data).first()
         if user:
-            send_mail(user)
+            send_email(user)
             flash('Reset request sent. Check your email.','success')
             return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
@@ -439,6 +459,7 @@ def user_profile(user_id):
 @login_required
 def logout():
     logout_user()
+    flash('You have successfully logged out.')
     return redirect(url_for('login'))
 
 #This is the Signup page
