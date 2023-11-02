@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template,request, redirect, url_for, session, g
+from flask import Flask, flash, render_template, request, redirect, url_for, session, g
 from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -97,7 +97,11 @@ class User(db.Model, UserMixin):
     # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
     #profile_pic = FileField("Profile Pic")
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
-
+    
+    # Create a string
+    def __repr__(self):
+        return '<Username %r>' % self.username
+    
     #survey answers
     gender = db.Column(db.String(20)) #gender
     race = db.Column(db.String(20)) #race
@@ -302,7 +306,7 @@ def reset_request():
         user=User.query.filter_by(email=form.email.data).first()
         if user:
             send_email(user)
-            flash('Reset request sent. Check your email.','success')
+            # flash('Reset request sent. Check your email.','success')
             return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
 
@@ -428,8 +432,8 @@ def dashboard():
 @login_required
 def account():
     form = UpdateForm()
-    image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
-    return render_template('account.html', image_file = image, form=form)
+    #image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+    return render_template('account.html', form=form)
 
 #edit the user's profile
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -459,7 +463,7 @@ def user_profile(user_id):
 @login_required
 def logout():
     logout_user()
-    flash('You have successfully logged out.')
+    #flash('You have successfully logged out.')
     return redirect(url_for('login'))
 
 #This is the Signup page

@@ -71,6 +71,14 @@
 
         <div class="container">
             <section>
+                {% for message in get_flashed_messages() %}
+                    <div class="alert alert-success alert-dismissible fade show pt-1" role="alert">
+                        {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
                 </br/>
                 <h2>Dashboard</h2>
                 </br/>
@@ -81,17 +89,31 @@
                     </div>
                     <div class="card-body">
                       <h5 class="card-title">Name</h5>
-                      <p class="card-text">{{current_user.fname}} {{current_user.lname}}</p>
-                      <h5 class="card-title">User ID</h5>
-                      <p class="card-text">{{current_user.id}}</p>
-                      <h5 class="card-title">Email</h5>
-                      <p class="card-text">{{current_user.email}}</p>
-                      <a href="{{ url_for('logout') }}" class="btn btn-sm btn-danger">Logout</a>
+                      <p class="card-text">
+                        {{current_user.fname}} {{current_user.lname}}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <h5 class="card-title">User ID</h5>
+                                    <p class="card-text">{{current_user.id}}</p>
+                                    <h5 class="card-title">Email</h5>
+                                    <p class="card-text">{{current_user.email}}</p>
+                                    <a href="{{ url_for('edit_profile') }}" class="btn btn-sm btn-secondary">Edit</a>
+                                    <a href="{{ url_for('logout') }}" class="btn btn-sm btn-danger">Logout</a>
+                                </div>
+                                <div class="col-4">
+                                    <img src="{{ url_for('static',
+                                    filename='Default_pfp.png') }}" width="150" align="right">
+                                </div>
+                            </div>
+                        </div>
+                    </p>
+                      
                     </div>
                   </div>
             </section>
         </div>
-
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </body>
 </html>
