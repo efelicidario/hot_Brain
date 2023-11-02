@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request, redirect, url_for, session, g
+from flask import Flask, flash, render_template,request, redirect, url_for, session, g
 from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -12,7 +12,7 @@ import pickle
 from flask_mail import Mail
 import sqlite3
 import json
-
+#from itsdangerous import JSONWebSignatureSerializer
 
 import sys
 import datetime
@@ -20,7 +20,7 @@ import bcrypt
 import traceback
 import os
 
-from flask_socketio import SocketIO, send, emit # for chat
+# from flask_socketio import SocketIO, send, emit # for chat
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -51,19 +51,28 @@ db = SQLAlchemy(app)
 app.app_context().push()
 
 #chat inttegration
-socketio = SocketIO(app)
+#socketio = SocketIO(app)
 
 login_manager = LoginManager() 
 #login_manager = LoginManager(app) 
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# Outlook SMPT Settings
+app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 #app.config['MAIL_USE_SSL'] = 
-app.config['MAIL_USERNAME'] = 'teewhylerr@gmail.com'
-app.config['MAIL_PASSWORD'] = 'TeeWhy661!'
+app.config['MAIL_USERNAME'] = 'felic017@csusm.edu'
+app.config['MAIL_PASSWORD'] = ''
+
+# Google SMPT Settings
+#app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+#app.config['MAIL_PORT'] = 587
+#app.config['MAIL_USE_TLS'] = True
+#app.config['MAIL_USE_SSL'] = 
+#app.config['MAIL_USERNAME'] = 'teewhylerr@gmail.com'
+#app.config['MAIL_PASSWORD'] = ''
 
 #reload user from stored id in the session
 @login_manager.user_loader
@@ -270,10 +279,10 @@ def reset_request():
     form=ResetRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data)
-        #user=User.query.filter_by(email=form.email.data).first()
+        user=User.query.filter_by(email=form.email.data).first()
         if user:
             send_mail(user)
-            #flash('Reset request sent. Check your email.','success')
+            flash('Reset request sent. Check your email.','success')
             return redirect(url_for('login'))
     return render_template('reset_request.html',title='Reset Request',form=form,legend="Reset Password")
 
@@ -616,5 +625,5 @@ def euclidean_distance(thang1, thang2):
 if __name__ == '__main__':
     db.create_all()
     db.session.commit()
-    #app.run(debug=True, host='0.0.0.0', port=80)
-    socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
+    app.run(debug=True, host='0.0.0.0', port=80)
+    #socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)

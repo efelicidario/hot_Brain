@@ -106,7 +106,7 @@
 
     <div class="center">
         <h1>Sign Up
-            <a href="index.html">
+            <a href="index.html"></a>
             <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 100px; width: 200px; ">
         </h1>
 
@@ -149,8 +149,8 @@
             </div>
         
             {{ form.submit(class="submit-button") }}
-            {{ url_for('reset_request') }}
-            <div class="signup_link">Already have an account?<a href="/templates/login.html"> Login now</a></div>
+            <!--{{ url_for('reset_request') }}-->
+            <!--<div class="signup_link">Already have an account?<a href="/templates/login.html"> Login now</a></div>-->
             <div class="signup_link">Already have an account?<a href="{{ url_for('login') }}"> Login now</a></div>
         </form>
     </div>
