@@ -2,6 +2,7 @@
 #from neurosdk.sensor import Sensor #comment out for mac
 #from neurosdk.brainbit_sensor import BrainBitSensor #comment out for mac
 #from neurosdk.cmn_types import *
+from neurosdk.cmn_types import BrainBitSignalData
 
 from tools.logging import logger   
 import threading
