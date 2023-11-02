@@ -1,3 +1,12 @@
+# hotBrain
+Neural dating full-stack web application using `HTML/CSS/JS`, `Python Flask`, and the `BrainBit SDK`  
+Built by Andres Hinajosa, Ased Adus, Kyrstyn Hall, Salmah Rashed and Tyler Felicidario
+![Alt text](README_imgs/index_screenshot.png)
+### Feautures
+- Sign up/Login
+- Survey
+- Connect Headband, Video access
+
 # cs370_fall_2023_REST
 poc to get you started for 370 project
 
