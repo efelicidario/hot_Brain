@@ -41,7 +41,7 @@
 
         <style>
           body {
-             background: linear-gradient(45deg, #FF69B4, #FF1493); /* Pink gradient */
+             background: linear-gradient(45deg, #818181, #0f0309); /* Pink gradient */
              background-attachment: fixed; /* Fixed background */
              font-family: Arial, sans-serif;
               display: flex;
@@ -51,7 +51,19 @@
              margin: 0;
             
             }
+
+
+          #video-title {
+           font-family: 'Rubik', sans-serif;;
+          font-size: 26px;
+           color: #cacaca; /* Adjust the color to your preference */
+           margin-top: 20px;
+          }
         </style>
+
+
+
+       
 
 
 
@@ -64,18 +76,27 @@
 
 
         <!-- Body -->
-        <div class="bg-dark text-light d-flex justify-content-center p-5 vh-100">
+        <div class="text-light d-flex justify-content-center align-items-center p-5 vh-100">
             <div class="container">
                 <div class="pt-5 text-center">
                     <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
                         <source src="/static/videos/01.mp4" type="video/mp4">
-                          Your browser does not support the video tag.
+                        Your browser does not support the video tag.
                     </video>
+
+
+                    <div id="video-title">Video 1/7</div>
+
+
+
                     <p id="user-id" style="display: none;">{{ current_user.id }}</p>
-                  <a id="next" style="display: none;" href="{{url_for('video2')}}">Next</a>
+                    <a id="next" style="display: none;" href="{{url_for('video2')}}">Next</a>
                 </div>
             </div>
         </div>
+
+
+
 
     <script>
         // Retrieve user ID and video ID from the placeholders
