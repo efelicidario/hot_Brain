@@ -69,16 +69,29 @@
 }
 
 .desktop .text {
-    position: relative;
-    align-self: stretch;
-    font-family: 'Rubik', sans-serif;
-    font-weight: 5000;
-    color: #000000;
-    font-size: 35px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: normal;
+  position: relative;
+  align-self: stretch;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 500;
+  color: #ff69b4; /* Hot pink color */
+  font-size: 72px; /* Adjust the font size as needed */
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+
+  animation: fadeIn 1s forwards; /* Apply a fade-in animation to all .text elements */
+
+  /* Define the fade-in animation */
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+      }
+      to {
+          opacity: 1;
+      }
+  }
 }
+
 
 .desktop .text-wrapper {
     font-family: 'Rubik', sans-serif;
