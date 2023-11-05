@@ -137,14 +137,23 @@
                                 <div style="padding-left: 75px;">
                                     <h5 class="card-title">Name</h5>
                                     <p class="card-text">{{current_user.fname}} {{current_user.lname}}</p>
+                                    <h5 class="card-title">Age</h5>
+                                    <p class="card-text">{{current_user.age}}</p>
                                     <h5 class="card-title">Email</h5>
                                     <p class="card-text">{{current_user.email}}</p>
                                     <h5 class="card-title">Bio</h5>
                                     <p class="card-text">{{current_user.bio}}</p>
+                                    <h5 class="card-title">Profile Pic: </h5>
+                                    <p class="card-text">{{current_user.profile_pic}}</p>
                                     <a href="{{ url_for('edit_profile') }}" class="btn btn-sm btn-secondary">Edit</a>
                                     <a href="{{ url_for('logout') }}" class="btn btn-sm btn-danger">Logout</a>
                                 </div>
-
+                              <div class="col-4">
+                                    <img src="{{ url_for('static',
+                                    filename='Default_pfp.png') }}" width="150" align="right">
+                                    <img src="{{ url_for('',
+                                    filename='Default_pfp.png') }}" width="150" align="right">
+                                </div>
                             </div>
                         </div>
                     </div>

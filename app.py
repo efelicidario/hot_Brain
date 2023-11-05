@@ -3,6 +3,7 @@ from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
@@ -14,8 +15,10 @@ from flask_mail import Message#, Mail
 import sqlite3
 import json
 from time import time
-from twilio.rest import Client
-from keys import account_sid, auth_token, twilio_number
+from werkzeug.utils import secure_filename
+import uuid as uuid
+#from twilio.rest import Client
+#from keys import account_sid, auth_token, twilio_number
 
 #from itsdangerous import JSONWebSignatureSerializer
 
@@ -43,10 +46,13 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
 
-client = Client(account_sid, auth_token)
+#client = Client(account_sid, auth_token)
 
 #Bcrypt instance
 bcrypt = Bcrypt(app)
+
+UPLOAD_FOLDER = 'static/user_imgs'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Creates the database instance
 db = SQLAlchemy(app)
@@ -94,10 +100,9 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
     age = db.Column(db.Integer, default = -1) #age of the user this will be used to restrict user from creating an account
     bio = db.Column(db.Text) #Bio (can be empty)
-    profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
-    #profile_pic = FileField("Profile Pic")
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
+    profile_pic = db.Column(db.String(), nullable=True)
     
     # Create a string
     def __repr__(self):
@@ -186,6 +191,7 @@ class SignupForm(FlaskForm):
 class UpdateForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Username"})
+    profile_pic = FileField("Profile Pic")
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Email"})
     fname = StringField(validators=[InputRequired(), Length(
@@ -194,6 +200,7 @@ class UpdateForm(FlaskForm):
         min=4, max=40)], render_kw={"placeholder": "Last Name"})
     bio = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Bio"})
+    
     submit = SubmitField("Update")
     
     #If username exists, give an error
@@ -444,12 +451,22 @@ def edit_profile():
     if form.validate_on_submit():
         #update the user's info
         current_user.username = form.username.data
+        current_user.profile_pic = form.profile_pic.data
         current_user.email = form.email.data
         current_user.fname = form.fname.data
         current_user.lname = form.lname.data
         current_user.bio = form.bio.data
+        # Grab Image Name
+        pic_filename = secure_filename(current_user.profile_pic.filename)
+        # Set UUID
+        pic_name = str(uuid.uuid1()) + "_" + pic_filename
+        # Save That Image
+        saver = form.profile_pic.data
+        current_user.profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], pic_name))
+        current_user.profile_pic = pic_name
         db.session.commit()
-        return redirect(url_for('account'))
+        current_user.profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], pic_name))
+        return redirect(url_for('dashboard'))
     return render_template('edit_profile.html', form=form)
 
 #Page that displays another user's profile
@@ -678,11 +695,11 @@ def send_sms(user_id):
     print("sending sms to: ", phone_number, " with message: ", message)
 
     # Send the SMS using Twilio
-    message = client.messages.create(
-        to=phone_number,
-        from_=twilio_number,
-        body=message
-    )
+    #message = client.messages.create(
+        #to=phone_number,
+        #from_=twilio_number,
+        #body=message
+    #)
 
     return 'SMS sent with SID: ' + message.sid
 
