@@ -440,8 +440,8 @@ def dashboard():
 @login_required
 def account():
     form = UpdateForm()
-    #image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
-    return render_template('account.html', form=form)
+    image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+    return render_template('account.html', form=form, image_file = image)
 
 #edit the user's profile
 @app.route('/edit_profile', methods=['GET', 'POST'])
