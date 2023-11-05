@@ -1,23 +1,23 @@
 .desktop {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
 
 .desktop .div {
-    width: 1440px;
-    height: 1024px;
-    position: relative; 
- }
+  width: 1440px;
+  height: 900px;
+  position: relative;
+}
 
 .desktop .logo {
-    position: absolute;
-    width: 626px;
-    height: 166px;
-    top: 221px;
-    left: 407px;
-    border-radius: 6px;
+  position: absolute;
+  width: 626px;
+  height: 166px;
+  top: 221px;
+  left: 407px;
+  border-radius: 6px;
 }
 
 
@@ -33,35 +33,36 @@
 
 .desktop .name {
   display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    width: 418px;
-    height: 43px;
-    /*here*/
-    top: 250px;
-    left: 585px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  width: 418px;
+  height: 43px;
+  /*here*/
+  top: 250px;
+  left: 585px;
 
-    color: #000000;
-    text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+  color: #000000;
+  text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .desktop .overlap-group-wrapper {
-    position: absolute;
-    width: 370px;
-    height: 208px;
-    top: 433px;
-    /*background-color:#8b002e*/;
-    left: 569px;
+  position: absolute;
+  width: 370px;
+  height: 208px;
+  top: 433px;
+  /*background-color:#8b002e*/
+  ;
+  left: 569px;
 }
 
 .desktop .overlap-group {
-    width: 500;
-    height: 350px;
-    border-radius: 6px;
-    background-color: transparent;
-    background-size: 100% 100%;
+  width: 500;
+  height: 350px;
+  border-radius: 6px;
+  background-color: transparent;
+  background-size: 100% 100%;
 }
 
 .desktop .flexcontainer {
@@ -87,16 +88,18 @@
   letter-spacing: 0;
   line-height: normal;
 
-  animation: fadeIn 1s forwards; /* Apply a fade-in animation to all .text elements */
+  animation: fadeIn 1s forwards;
+  /* Apply a fade-in animation to all .text elements */
 
   /* Define the fade-in animation */
   @keyframes fadeIn {
-      from {
-          opacity: 0;
-      }
-      to {
-          opacity: 1;
-      }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 }
 
@@ -135,5 +138,6 @@
 }
 
 .desktop .text a:hover {
-  color: black; /* Change the hover color to black if desired */
+  color: black;
+  /* Change the hover color to black if desired */
 }
