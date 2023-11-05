@@ -109,6 +109,7 @@
     color:  transparent;
     font-size: 20px;
     letter-spacing: 0;
+    color:#8b002e
 }
 
 .desktop .hotText {
@@ -130,8 +131,7 @@
 
 /* to remove box surrounding -> ckear and make black font for aesthetic*/
 .desktop .text a {
-  color: black;
-  text-decoration: none; /* Optional: Remove underline */
+  color:  #8b002e;
   border: none;
   background-color: transparent;
 }
