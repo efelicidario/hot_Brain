@@ -12,6 +12,7 @@ import pickle
 from flask_mail import Mail
 import sqlite3
 import json
+import re
 
 
 import sys
@@ -69,15 +70,36 @@ app.config['MAIL_PASSWORD'] = 'TeeWhy661!'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
+"""
+Dictionary 
+Gender: 
+    Female = 1, 
+    Male = 2, 
+    Nonbinary = 3, 
+    Do not wish to disclose = 4
+Race: 
+    White = 1, 
+    Black or African American = 2,
+    Hispanic or Latino = 3
+    Asian or Asian American = 4
+    American Infian or Alaska Native = 5
+    Native Jawaiian or other Pacific Islander = 6
+    Middle Eastern/North African = 7
+    Other = 8 
+Religion: 
+    Muslim = 1,
+    Christian = 2,
+    Jew = 3,
+    None = 4,
+    Other = 5;
+"""
 
 
 class User(db.Model, UserMixin):
-
     #core info
     id = db.Column(db.Integer, primary_key=True) #Identity column for user
     username = db.Column(db.String(20), nullable = False, unique=True) #Username (20 char max, can't be empty, must be unique)
-    fname = db.Column(db.String(20), default = "Name") #User's name (20 char max, can be empty)
+    fname = db.Column(db.String(20), default = "First Name") #User's name (20 char max, can be empty)
     lname = db.Column(db.String(20), default = "Last Name") #User's last name (20 char max)
     email = db.Column(db.String(120), unique=True) #user's email (120 char max, must be unique)
     password = db.Column(db.String(80), nullable = False) #Password (80 char max, can't be empty)
@@ -85,12 +107,13 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     # profile_pic = db.Column(db.String(120), default='default.png') #Profile picture (120 char max, default is default.jpg)
     #profile_pic = FileField("Profile Pic")
+    additonal_info = db.Column(db.String(20)) #additional info
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
 
     #survey answers
-    gender = db.Column(db.String(20)) #gender
-    race = db.Column(db.String(20)) #race
-    religion = db.Column(db.String(20)) #religion
+    gender = db.Column(db.Integer, default = -1) #gender
+    race = db.Column(db.Integer, default = -1) #race
+    religion = db.Column(db.Integer, default = -1) #religion
     education = db.Column(db.String(20)) #education
     occupation = db.Column(db.String(20)) #occupation
     hobbies = db.Column(db.String(20)) #hobbies
@@ -99,15 +122,22 @@ class User(db.Model, UserMixin):
     virtual = db.Column(db.Boolean) #virtual?
     social = db.Column(db.Boolean) #social?
 
+class UserPreferences (db.Model):
     #preferences from survey
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     pronoun_pref = db.Column(db.String(20)) #looking for
-    age_range_min = db.Column(db.String(20)) #age range preference
-    age_range_max = db.Column(db.String(20)) #age range preference
+    age_range_min = db.Column(db.Integer, default = -1) #min age range preference
+    age_range_max = db.Column(db.Integer, default = -1) #max age range preference
     race_pref = db.Column(db.String(20)) #race preference say wut
     religion_pref = db.Column(db.String(20)) #religion preference
-    additonal_info = db.Column(db.String(20)) #additional info
     occupation_pref = db.Column(db.String(20)) #occupation preference
     interaction = db.Column(db.String(20)) #interaction preference
+    #userInfo = db.relationship("User", backref=db.backref("UserPref", uselist=False))
+    user_core_info = db.relationship("User", backref=db.backref("user_preferences", uselist=False))
+
+
+
+
 
     def get_token(self,expires_sec=300):
         serial=Serializer(app.config['SECRET_KEY'], expires_in=expires_sec)
@@ -209,6 +239,8 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField(label='Change Password')
 
 FlaskJSON(app)
+
+
 
 #g is flask for a global var storage 
 def init_new_env():
@@ -325,7 +357,7 @@ def survey():
 def survey2():
     user_id = session.get('user_id')
     if request.method == 'POST':
-        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey = UserPreferences.query.filter_by(id=user_id).first()
         user_survey.pronoun_pref = request.form.get('gender_pref')
         #user_survey.pronoun_pref = request.form.get('other_race_text')
         user_survey.age_range_min = request.form.get('minAge')
@@ -347,7 +379,6 @@ def survey3():
     if request.method == 'POST':
         user_survey = User.query.filter_by(id=user_id).first()
         user_survey.occupation = request.form.get('occupation')
-        user_survey.occupation_pref = request.form.get('occupation_list')
         user_survey.hobbies = request.form.get('hobbies')
         user_survey.personality = request.form.get('personality')
         user_survey.long_term = request.form.get('goals')
@@ -445,6 +476,14 @@ def signup():
         #new user is created
         db.session.add(new_user)
         db.session.commit()
+
+        new_survey_preferences = UserPreferences(
+        id=new_user.id,  # Assign the id from UserCoreInfo to link both tables
+        )
+
+        # Add the new survey preferences to the UserSurveyPreferences table
+        db.session.add(new_survey_preferences)
+        db.session.commit()
         return redirect(url_for('login'))
 
     return render_template('signup.html', form = form)
@@ -457,22 +496,34 @@ def video():
 def video2():
     return render_template('video2.html')
 
+
+
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
-    #Retrieve all users from the database except the current user
-    users = User.query.filter(User.id != session['user_id']).all()
+    # Use a cursor to execute SQL queries
+    user_id = session.get('user_id')
+    userPref = UserPreferences.query.filter_by(id = user_id).first()
+    pronoun_pref_list = re.findall(r'\d+', userPref.pronoun_pref)
+    numbers_pronoun = [int(num) for num in pronoun_pref_list]
+    SQL_fromat_pronoun = '(' + ', '.join(str(num) for num in numbers_pronoun) + ')'
+    race_pref_list = re.findall(r'\d+', userPref.race_pref)
+    numbers_race = [int(num) for num in race_pref_list]
+    SQL_fromat_race = '(' + ', '.join(str(num) for num in numbers_race) + ')'
 
-    #calculate compatability for each user while ignoring the -1's
-    scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
-    #scores = [(user, compare(current_user, user)) for user in users]
+    conn = sqlite3.connect('instance/database.db')  #creat connectoin
+    cursor = conn.cursor()                          
 
+    #create coustome query for the user
+    query = f"Select id, fname, lname, age, bio, gender, hobbies, long_term FROM user WHERE age BETWEEN {userPref.age_range_min} AND {userPref.age_range_max} AND race IN {SQL_fromat_race} AND gender IN{SQL_fromat_pronoun} AND id != {user_id}"
 
-    #sort list of users by compatability in tuples in ascending order
-    sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
+    cursor.execute(query)
+    result = cursor.fetchall()
 
+    print(result)
 
-    return render_template('match.html', sorted_users=sorted_users)
+    conn.close()
+    return render_template('match.html', result = result)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
@@ -614,7 +665,8 @@ def euclidean_distance(thang1, thang2):
     return (avgs / count)
 
 if __name__ == '__main__':
-    db.create_all()
-    db.session.commit()
+    with app.app_context():
+        db.create_all()
+        db.session.commit()
     #app.run(debug=True, host='0.0.0.0', port=80)
     socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
