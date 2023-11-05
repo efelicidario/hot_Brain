@@ -34,7 +34,7 @@
     top: 250px;
     left: 585px;
 
-    color: #fff;
+    color: #000000;
     text-shadow: 2px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
@@ -43,7 +43,7 @@
     width: 370px;
     height: 208px;
     top: 433px;
-    background-color:#8b002e;
+    /*background-color:#8b002e*/;
     left: 569px;
 }
 
@@ -51,7 +51,7 @@
     width: 500;
     height: 350px;
     border-radius: 6px;
-    background-color: #fddddd;
+    background-color: transparent;
     background-size: 100% 100%;
 }
 
@@ -65,24 +65,38 @@
     height: 143px;
     top: 32px;
     left: 25px;
+    color:transparent;
 }
 
 .desktop .text {
-    position: relative;
-    align-self: stretch;
-    font-family: 'Rubik', sans-serif;
-    font-weight: 5000;
-    color: #8b002e;
-    font-size: 35px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: normal;
+  position: relative;
+  align-self: stretch;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 500;
+  color: #8b002e; /* Hot pink color */
+  font-size: 72px; /* Adjust the font size as needed */
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+
+  animation: fadeIn 1s forwards; /* Apply a fade-in animation to all .text elements */
+
+  /* Define the fade-in animation */
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+      }
+      to {
+          opacity: 1;
+      }
+  }
 }
+
 
 .desktop .text-wrapper {
     font-family: 'Rubik', sans-serif;
     font-weight: 1000;
-    color:  #fddddd;
+    color:  transparent;
     font-size: 35px;
     letter-spacing: 0;
 }
@@ -98,7 +112,20 @@
 }
 
 .desktop .text-wrapper:hover {
-  color: #fddddd;
+  color:transparent;
   font-size: 40px;
   transition: all 0.3s ease; 
+}
+
+
+/* to remove box surrounding -> ckear and make black font for aesthetic*/
+.desktop .text a {
+  color: black;
+  text-decoration: none; /* Optional: Remove underline */
+  border: none;
+  background-color: transparent;
+}
+
+.desktop .text a:hover {
+  color: black; /* Change the hover color to black if desired */
 }
