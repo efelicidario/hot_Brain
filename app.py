@@ -584,7 +584,7 @@ def match():
     cursor = conn.cursor()
 
 
-    query = f"SELECT * FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race} AND "
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race}"
 
 
     cursor.execute(query)
@@ -602,7 +602,7 @@ def match():
     #sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
 
-    return render_template('match.html')
+    return render_template('match.html', result = result)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
