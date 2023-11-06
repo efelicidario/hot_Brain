@@ -57,12 +57,20 @@
                         <a href="#learn" class="nav-link">Videos</a>
                     </li>
                     -->
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a href="{{ url_for('connect') }}" class="nav-link active">Connect</a>
+                    </li>-->
+
+                    <!--If user is logged in, show logout, else show login-->
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     </li>
+                    {% else %}
                     <li class="nav-item">
                         <a href="{{ url_for('login') }}" class="nav-link">Login</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
