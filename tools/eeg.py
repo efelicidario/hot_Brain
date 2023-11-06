@@ -2,12 +2,10 @@
 #from neurosdk.sensor import Sensor #comment out for mac
 #from neurosdk.brainbit_sensor import BrainBitSensor #comment out for mac
 #from neurosdk.cmn_types import *
+from neurosdk.cmn_types import BrainBitSignalData
 
 from tools.logging import logger   
-from flask import request
-import pickle
 import threading
-import random #for testing
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 filename = ""

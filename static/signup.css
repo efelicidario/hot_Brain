@@ -3,13 +3,13 @@ body{
     padding: 0;
     font-family: Georgia;
     height: 100vh;
-    background-color: antiquewhite;
+    background-color: rgb(208, 191, 169);
 }
 
 img{
     margin: 0 0 -1% 20%;
-    width: 70px;
-    height: 70px;
+    width: 20px;
+    height: 20px;
 }
 
 .center{
@@ -42,7 +42,7 @@ h1{
 
 form .txt_field{
     position: relative;
-    border-bottom: 2px solid #adadad;
+    border-bottom: 2px solid #030000;
     margin: 30px 0;
 }
 
@@ -61,7 +61,7 @@ form .txt_field{
     position: absolute;
     top: 65%;
     left: 3%;
-    color: #adadad;
+    color: #8b002e;
     /*transform: translateY(-50%);*/
     font-size: 16px;
     pointer-events: none;
@@ -74,7 +74,7 @@ form .txt_field{
     left: 0;
     width: 0%;
     height: 5%;
-    background: #2691d9;
+    background: #8b002e;
 }
 
 .txt_field input:focus ~ span::before,
