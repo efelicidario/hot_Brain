@@ -22,12 +22,14 @@
 
 
 .desktop .dating{
-  position: absolute;
-  width: 626px;
-  height: 166px;
-  top: 221px;
-  left: 407px;
-  border-radius: 6px;
+    position: absolute;
+    width: 626px;
+    height: 166px;
+    top: 221px;
+    left: 10px; /* Adjust the left property to move the image to the left */
+    border-radius: 6px;
+
+
 }
 
 
