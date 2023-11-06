@@ -433,7 +433,8 @@ def dashboard():
     if current_user.completed_survey == False:
         return redirect(url_for('survey'))
     else:
-        return render_template('dashboard.html')
+        image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+        return render_template('dashboard.html', image = image)
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
@@ -467,7 +468,7 @@ def edit_profile():
         db.session.commit()
         current_user.profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], pic_name))
         return redirect(url_for('dashboard'))
-    return render_template('edit_profile.html', form=form)
+    return render_template('edit_profile.html', form=form,)
 
 #Page that displays another user's profile
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -528,6 +529,9 @@ def video6():
 @app.route('/video7')
 def video7():
     return render_template('video7.html')
+@app.route('/video8')
+def video8():
+    return render_template('video8.html')
 
 @app.route('/match', methods=['GET'])
 @login_required

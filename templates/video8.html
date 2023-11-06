@@ -26,11 +26,17 @@
                         </li>
                         -->
                         <li class="nav-item">
-                            <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                        </li>
+                        {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    </li>
+                    {% endif %}
                     </ul>
                 </div>
             </div>
@@ -41,9 +47,11 @@
             <div class="container">
                 <div class="pt-5 text-center">
                     <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
-                        <source src="/static/videos/8.mp4" type="video/mp4">
+                        <source src="/static/videos/08.mp4" type="video/mp4">
                           Your browser does not support the video tag.
                     </video>
+                    <div id="video-title">Video 8/8</div>
+
                     <p id="user-id" style="display: none;">{{ current_user.id }}</p>
                   <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
                 </div>
@@ -54,7 +62,7 @@
 
         function play_start(user_id, video_id){
 
-            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 6},
+            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 7},
                 function(data, textStatus) {
                     //this gets called when browser receives response from server
                     console.log(data);
@@ -65,7 +73,7 @@
         }
 
         function stop_movie(user_id, video_id) {
-        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 6 },
+        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 7 },
             function(data, textStatus) {
                 // This gets called when the browser receives a response from the server
                 console.log(data);
