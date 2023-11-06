@@ -21,15 +21,18 @@
 }
 
 
-.desktop .dating{
-    position: absolute;
-    width: 626px;
-    height: 166px;
-    top: 221px;
-    left: 10px; /* Adjust the left property to move the image to the left */
-    border-radius: 6px;
+/* Position the image container */
+.desktop .dating {
+  position: absolute;
+  top: 221px;
+  left: 0; /* Adjust the left property to move the image to the left */
+}
 
-
+/* Style the image itself */
+.desktop .dating img {
+  width: 626px; /* Adjust the width as needed */
+  height: 166px; /* Adjust the height as needed */
+  border-radius: 6px;
 }
 
 
@@ -55,7 +58,7 @@
   height: 208px;
   top: 433px;
   /*background-color:#8b002e*/
-  ;
+  margin-top:-50px;
   left: 569px;
 }
 
