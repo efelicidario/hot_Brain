@@ -58,6 +58,12 @@
             text-decoration: none;
             /* Remove underlines from links */
         }
+
+        .user-info {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -90,24 +96,17 @@
             </div>
         </div>
     </nav>
-
-    <div class="match-list">
-        <h1>Match List</h1>
-        {% if sorted_users %}
-        {% for user, score in sorted_users %}
-        <div class="user-profile">
-            <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture">
-            <p>User: <a href="/user/{{ user.id }}">{{ user.username }}</a>, Compatibility Score: {{ score }}</p>
-        </div>
-        {% endfor %}
-        {% else %}
-        <p>No data :(</p>
-        {% endif %}
+    
+    {% for row in result %}
+    <div class="user-info">
+        <h2>{{ row[0] }} {{ row[1] }}</h2>
+        <p><strong>Age:</strong> {{ row[2] }}</p>
+        <p><strong>Bio:</strong> {{ row[3] }}</p>
+        <p><strong>Hobbies:</strong> {{ row[4] }}</p>
+        <p><strong>Long Term Goals:</strong> {{ row[5] }}</p>
     </div>
+    {% endfor %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
