@@ -75,14 +75,17 @@
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ url_for('login') }}" class="nav-link active">Login</a>
-                    </li>
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

@@ -26,11 +26,17 @@
                         </li>
                         -->
                         <li class="nav-item">
-                            <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                        </li>
+                        {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    </li>
+                    {% endif %}
                     </ul>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                           Your browser does not support the video tag.
                     </video>
 
-                    <div id="video-title">Video 5/7</div>
+                    <div id="video-title">Video 5/8</div>
 
 
 

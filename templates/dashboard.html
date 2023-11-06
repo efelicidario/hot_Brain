@@ -88,9 +88,9 @@
                     <li class="nav-item">
                         <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     </li>
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
-                    </li>
+                    </li>-->
                     {% else %}
                     <li class="nav-item">
                         <a href="{{ url_for('login') }}" class="nav-link">Login</a>
@@ -128,7 +128,7 @@
                     <div class="card-body" align="center">
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="{{ url_for('static', filename='Default_pfp.png') }}" width="150" align="right"
+                                <img src="{{ image }}" width="200" align="right"
                                     class="rounded-circle">
                                 <h5 class="card-title" align="left">User ID</h5>
                                 <p class="card-text" align="left">{{current_user.id}}</p>
@@ -143,16 +143,12 @@
                                     <p class="card-text">{{current_user.email}}</p>
                                     <h5 class="card-title">Bio</h5>
                                     <p class="card-text">{{current_user.bio}}</p>
-                                    <h5 class="card-title">Profile Pic: </h5>
-                                    <p class="card-text">{{current_user.profile_pic}}</p>
+                                    <!--<h5 class="card-title">Profile Pic: </h5>
+                                    <p class="card-text">{{current_user.profile_pic}}</p>-->
                                     <a href="{{ url_for('edit_profile') }}" class="btn btn-sm btn-secondary">Edit</a>
                                     <a href="{{ url_for('logout') }}" class="btn btn-sm btn-danger">Logout</a>
                                 </div>
                               <div class="col-4">
-                                    <img src="{{ url_for('static',
-                                    filename='Default_pfp.png') }}" width="150" align="right">
-                                    <img src="{{ url_for('',
-                                    filename='Default_pfp.png') }}" width="150" align="right">
                                 </div>
                             </div>
                         </div>
