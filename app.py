@@ -102,7 +102,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
-    profile_pic = db.Column(db.String(), nullable=True)
+    profile_pic = db.Column(db.String(), nullable=True, default='default.png')
     
     # Create a string
     def __repr__(self):
