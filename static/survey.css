@@ -13,11 +13,17 @@ form {
     box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
 }
 
+.survey-container{
+    margin-top: 100px;
+}
+
 /* Styling form-control Class */
 .form-control {
     text-align: left;
     margin-bottom: 20px;
     margin-top: 10px;
+    background-color:  #fddddd;
+    border-color:  #fddddd;;
 }
 
 /* Styling form-control Label */ 
@@ -73,12 +79,6 @@ button and Checkbox */
     background-color: #8b002e;
 }
 
-
-
-
-
-
-
 .submit-button {
     background-color: #242424;
     border: 1px solid #777;
@@ -93,20 +93,17 @@ button and Checkbox */
     padding: 10px 20px; /* Added padding for a wider button */
     cursor: pointer;
     border-radius: 20px; /* Rounded corners for the button */
-
-
-
 }
 
 a{
     color: white;
 }
 
+h4 {
+    color: #8b002e;
+    font-size:large;
+}
+h1{
+    color: #8b002e;
 
-    h4 {
-      color: #8b002e;
-    }
-    h1{
-        color: #8b002e;
- 
-    }
+}
