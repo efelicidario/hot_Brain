@@ -121,9 +121,8 @@
 
 
     <div class="center">
-        <h1>Sign Up
-            <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 100px; width: 200px; ">
-        </h1>
+        <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 100px; width: 200px; ">
+        <h1>Sign Up</h1>
 
         <form method="POST" action="">
             {{ form.hidden_tag() }}
@@ -153,6 +152,7 @@
                 <p>Phone Number:</p>
                 {{ form.phone_number() }}
                 <span></span>
+            </div>
 
                 <div class="txt_field">
                     <p>Username:</p>

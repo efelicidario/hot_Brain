@@ -10,11 +10,36 @@
         Build a Survey Form using HTML and CSS
     </title>
     <link rel="icon" href="/static/pics/logo-small.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/survey.css" />
 </head>
 
 
 <body>
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('signup') }}" class="nav-link active">Sign Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="survey-container">
     <img src="/static/pics/clearlogo.png" 
      alt="Logo" 
      style="height:90; width: 200px;"
@@ -24,11 +49,11 @@
     <!-- Create Form -->
     <form id="form" action="/survey4" method="post">
 
-        <h3>Lifestyle and Preferences</h3>
+        <h4>Lifestyle and Preferences</h4>
 
         <div class="form-control">
             <label>
-                Interaction: What type of interaction are you comfortable with?
+                18. Interaction: What type of interaction are you comfortable with?
             </label>
     
             <!-- Input Type Radio Button -->
@@ -55,7 +80,7 @@
 
             <div class="form-control">
                 <label>
-                    Are you open to virtual dating before meeting in person?
+                    19. Are you open to virtual dating before meeting in person?
                 </label>
         
                 <!-- Input Type Radio Button -->
@@ -69,7 +94,7 @@
 
             <div class="form-control">
                 <label>
-                    Safety and Privacy? Do you want us to show your social media accounts on your profile or not?
+                    20. Safety and Privacy? Do you want us to show your social media accounts on your profile or not?
                 </label>
         
                 <!-- Input Type Radio Button -->
@@ -90,6 +115,6 @@
         
 
     </form>
-
+</div>
 </body>
 </html>
