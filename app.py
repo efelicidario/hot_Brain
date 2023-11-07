@@ -221,9 +221,9 @@ class UpdateForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Email"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=40)], render_kw={"placeholder": "First Name"})
+        min=3, max=40)], render_kw={"placeholder": "First Name"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=40)], render_kw={"placeholder": "Last Name"})
+        min=3, max=40)], render_kw={"placeholder": "Last Name"})
     bio = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Bio"})
     
