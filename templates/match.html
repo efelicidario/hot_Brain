@@ -77,17 +77,18 @@
         <div class="user-profile">
             <div class="profile-picture">
                 <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
-            </div>
-            <div class="user-details">
                 <h1>{{ user.username }}</h1>
                 <h2>{{ user.fname }} {{ user.lname }}</h2>
+            </div>
+
+            <div class="user-details">
                 <p><strong>Age:</strong> {{ user.age }}</p>
                 <p><strong>Bio:</strong> {{ user.bio }}</p>
                 <p><strong>Hobbies:</strong> {{ user.hobbies }}</p>
                 <p><strong>Long Term Goals:</strong> {{ user.long_term }}</p>
             </div>
             <div class="compatibility-score">
-                <p>Compatibility Score: {{ score }}</p>
+                <p>Compatibility Score: {{ score|round(2) }}</p>
             </div>
         </div>
         {% endfor %}
