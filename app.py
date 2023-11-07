@@ -27,6 +27,7 @@ import datetime
 import bcrypt
 import traceback
 import os
+import re
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -89,6 +90,31 @@ def load_user(user_id):
 
 
 
+"""
+Dictionory
+Gender:
+    Female = 1
+    Male = 2
+    NonBinary = 3
+    Do not wich to disclose = 4
+    Other = 5
+Race:
+    White = 1
+    Blackk / African American = 2
+    Hispanic or latino = 3
+    Asian or Asian America = 4
+    American infian = 5
+    Native Jawaiian or other pacific islander = 6
+    Middle Easter = 7
+    Other = 8
+
+Religion:
+    Muslim = 1
+    Christian  = 2
+    Jew = 3
+    Other = 4
+
+"""
 class User(db.Model, UserMixin):
 
     #core info
@@ -109,9 +135,9 @@ class User(db.Model, UserMixin):
         return '<Username %r>' % self.username
     
     #survey answers
-    gender = db.Column(db.String(20)) #gender
-    race = db.Column(db.String(20)) #race
-    religion = db.Column(db.String(20)) #religion
+    gender = db.Column(db.Integer, default = -1) #gender
+    race = db.Column(db.Integer, default = -1) #race
+    religion = db.Column(db.Integer, default = -1) #religion
     education = db.Column(db.String(20)) #education
     occupation = db.Column(db.String(20)) #occupation
     hobbies = db.Column(db.String(20)) #hobbies
@@ -122,8 +148,8 @@ class User(db.Model, UserMixin):
 
     #preferences from survey
     pronoun_pref = db.Column(db.String(20)) #looking for
-    age_range_min = db.Column(db.String(20)) #age range preference
-    age_range_max = db.Column(db.String(20)) #age range preference
+    age_range_min = db.Column(db.Integer, default = 18) #age range preference
+    age_range_max = db.Column(db.Integer, default = 18) #age range preference
     race_pref = db.Column(db.String(20)) #race preference say wut
     religion_pref = db.Column(db.String(20)) #religion preference
     additonal_info = db.Column(db.String(20)) #additional info
@@ -536,13 +562,46 @@ def video8():
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
-    #Retrieve all users from the database except the current user
-    users = User.query.filter(User.id != session['user_id']).all()
+    #Retrieve all users from the database
+    user_id = session.get('user_id')
+    user_pref = User.query.filter_by(id=user_id).first()
 
+    user_religion_pref = user_pref.religion_pref
+    religion_numbers_list = re.findall(r'\d+', user_religion_pref)
+    sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+
+    user_race_pref = user_pref.race_pref
+    race_numbers_list = re.findall(r'\d+', user_race_pref)
+    sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+
+    user_pref_gen = user_pref.pronoun_pref
+    print(sql_formatted_list_race)
+
+
+
+    conn = sqlite3.connect('instance\database.db')  
+    cursor = conn.cursor()
+
+
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race}"
+
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+    
+    conn.close()
+
+    print("Query Result:", result) 
+    
+    #Filter out the current user from result
+    users = [User.query.filter_by(fname=user[0]).first() for user in result if user[0] != current_user.fname]
+    
+    print("Users:", users)
+    
     #calculate compatability for each user while ignoring the -1's
     scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
-    #scores = [(user, compare(current_user, user)) for user in users]
 
+    print("Scores:", scores)   
 
     #sort list of users by compatability in tuples in ascending order
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)

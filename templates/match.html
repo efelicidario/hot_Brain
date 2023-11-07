@@ -26,38 +26,17 @@
             /* Increase the font size for the title */
             margin-top: 100px;
         }
-
         .user-profile {
-            margin: 10px;
-            padding: 10px;
-            background-color: rgba(75, 75, 75, 0.247);
-            /* Semi-transparent greyish background */
-            border: 1px solid rgba(0, 0, 0, 0);
-            border-radius: 10px;
-            /* Add rounded corners */
-            font-size: 20px;
-            /* Increase the font size for user data */
-            text-align: left;
-            /* Left-align the user data */
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            /* Adjust the margin-top */
-        }
-
-        .user-profile img {
-            width: 50px;
-            /* Adjust the image size as needed */
-            height: 50px;
-            margin-right: 10px;
-            /* Add some spacing between the image and the username */
-        }
-
-        .user-profile a {
-            color: #ac106b;
-            text-decoration: none;
-            /* Remove underlines from links */
-        }
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    background-color: rgba(75, 75, 75, 0.247);
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+}
     </style>
 </head>
 
@@ -90,14 +69,26 @@
             </div>
         </div>
     </nav>
-
+    
     <div class="match-list">
         <h1>Match List</h1>
         {% if sorted_users %}
         {% for user, score in sorted_users %}
         <div class="user-profile">
-            <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture">
-            <p>User: <a href="/user/{{ user.id }}">{{ user.username }}</a>, Compatibility Score: {{ score }}</p>
+            <div class="profile-picture">
+                <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
+            </div>
+            <div class="user-details">
+                <h1>{{ user.username }}</h1>
+                <h2>{{ user.fname }} {{ user.lname }}</h2>
+                <p><strong>Age:</strong> {{ user.age }}</p>
+                <p><strong>Bio:</strong> {{ user.bio }}</p>
+                <p><strong>Hobbies:</strong> {{ user.hobbies }}</p>
+                <p><strong>Long Term Goals:</strong> {{ user.long_term }}</p>
+            </div>
+            <div class="compatibility-score">
+                <p>Compatibility Score: {{ score }}</p>
+            </div>
         </div>
         {% endfor %}
         {% else %}
@@ -105,9 +96,6 @@
         {% endif %}
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
