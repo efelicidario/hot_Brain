@@ -3,6 +3,7 @@
 #from neurosdk.brainbit_sensor import BrainBitSensor #comment out for mac
 #from neurosdk.cmn_types import *
 from neurosdk.cmn_types import BrainBitSignalData
+import random
 
 from tools.logging import logger   
 import threading
@@ -87,6 +88,8 @@ def test():
     print("test")
     global pdata
 
-    pdata.append([BrainBitSignalData(PackNum=0, Marker=0, O1=-0.4, O2=-0.4000037, T3=0.4, T4=0.4), BrainBitSignalData(PackNum=0, Marker=0, O1=-0.4, O2=-0.400000389037, T3=0.387499905967, T4=0.3968326538397349)])
-    pdata.append([BrainBitSignalData(PackNum=1, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.2790278234747157, T4=0.321679776793), BrainBitSignalData(PackNum=1, Marker=0, O1=-0.4, O2=-0.400000009037, T3=0.26652781155377536, T4=0.30917921941682763), BrainBitSignalData(PackNum=2, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.2049890565767828, T4=0.2390840903130439), BrainBitSignalData(PackNum=2, Marker=0, O1=-0.4, O2=-0.40000038147009037, T3=0.19248904465584246, T4=0.22658407839210357)])
-    pdata.append([BrainBitSignalData(PackNum=3, Marker=0, O1=-0.3743003600123978, O2=-0.40000038147009037, T3=0.16431420702, T4=0.1933008), BrainBitSignalData(PackNum=3, Marker=0, O1=-0.3618056154785, O2=-0.40000038147009037, T3=0.15181479627112987, T4=0.1808015640273705)])
+    #Appends BrainBitSignalData objects to pdata using random numbers from 0 to 1 5 times
+    for i in range(0, 5):
+        object_list = [BrainBitSignalData(PackNum=i, Marker=0, O1=random.uniform(0, 1), O2=random.uniform(0, 1), T3=random.uniform(0, 1), T4=random.uniform(0, 1)), 
+                       BrainBitSignalData(PackNum=i, Marker=0, O1=random.uniform(0, 1), O2=random.uniform(0, 1), T3=random.uniform(0, 1), T4=random.uniform(0, 1))]
+        pdata.append(object_list)

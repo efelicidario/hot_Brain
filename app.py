@@ -698,11 +698,11 @@ def send_sms(user_id):
 
     print("sending sms to: ", phone_number, " with message: ", message)
 
-    # Send the SMS using Twilio
+    #Send the SMS using Twilio
     #message = client.messages.create(
-        #to=phone_number,
-        #from_=twilio_number,
-        #body=message
+    #    to=phone_number,
+    #   from_=twilio_number,
+    #    body=message
     #)
 
     return 'SMS sent with SID: ' + message.sid
