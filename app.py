@@ -128,7 +128,7 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
-    profile_pic = db.Column(db.String(), nullable=True)
+    profile_pic = db.Column(db.String(), nullable=True, default='default.png')
     
     # Create a string
     def __repr__(self):
@@ -562,10 +562,9 @@ def video8():
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
-    #Retrieve all users from the database except the current user
+    #Retrieve all users from the database
     user_id = session.get('user_id')
     user_pref = User.query.filter_by(id=user_id).first()
-
 
     user_religion_pref = user_pref.religion_pref
     religion_numbers_list = re.findall(r'\d+', user_religion_pref)
@@ -593,16 +592,22 @@ def match():
     conn.close()
 
     print("Query Result:", result) 
+    
+    #Filter out the current user from result
+    users = [User.query.filter_by(fname=user[0]).first() for user in result if user[0] != current_user.fname]
+    
+    print("Users:", users)
+    
     #calculate compatability for each user while ignoring the -1's
-    #scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
-    #scores = [(user, compare(current_user, user)) for user in users]
+    scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
 
+    print("Scores:", scores)   
 
     #sort list of users by compatability in tuples in ascending order
-    #sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
+    sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
 
-    return render_template('match.html', result = result)
+    return render_template('match.html', sorted_users=sorted_users)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
