@@ -199,6 +199,7 @@
         var race_checked = false;
         var religion_checked = false;
         var education_checked = false;
+        var age_checked = false;
 
         var gender_input = document.getElementsByName('gender');
         var race_input = document.getElementsByName('race');
@@ -231,7 +232,7 @@
                 }
             }
 
-        if (age_input < 18) {
+        if (age < 18) {
                 alert("Sorry, you must be 18 or older to proceed.");
                 return false; // Prevent form submission
             }
