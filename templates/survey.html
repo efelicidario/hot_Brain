@@ -46,153 +46,203 @@
     <h1>Hot Brain Survey</h1>
 
     <!-- Create Form -->
-    <form id="form" action="/survey" method="post">
+    <form id="form" action="/survey" method="post" onsubmit="return validateForm()">
 
-    <h4>To get to know you better, please fill out the following questions about yourself.</h4>
-        <!-- Details -->
-    <div class="form-control">
-        <label for="first_name" id="label-name">1. First Name</label>
-        <input type="text" name="first_name" id="first_name" placeholder="Enter your first name" />
-    </div>
 
+        <h4>To get to know you better, please fill out the following questions about yourself.</h4>
+            <!-- Details -->
         <div class="form-control">
-            <label for="last_name" id="label-name">2. Last Name</label>
-            <input type="text" name="last_name" id="last_name" placeholder="Enter your last name" />
-        </div>
-    
-        <div class="form-control">
-            <label for="email" id="label-email">3. Email</label>
-            <input type="text" name="email" id="email" placeholder="Enter your email" />
-        </div>
-    
-        <div class="form-control">
-            <label for="age" id="label-age">4. Age</label>
-            <input type="text" name="age" id="age" placeholder="Enter your age" />
+            <label for="first_name" id="label-name">1. First Name</label>
+            <input type="text" name="first_name" id="first_name" placeholder="Enter your first name" required/>
         </div>
 
-        <div class="form-control">
-            <label>5. Gender</label>
-    
-            <label for="gender-1">
-                <input type="radio" id="gender-1" name="gender" value=1>Female
-            </label>
-    
-            <label for="gender-2">
-                <input type="radio" id="gender-2" name="gender" value=2>Male
-            </label>
-    
-            <label for="gender-3">
-                <input type="radio" id="gender-3" name="gender" value=3>Nonbinary
-            </label>
-    
-            <label for="gender-4">
-                <input type="radio" id="gender-4" name="gender" value=4>Do not wish to disclose
-            </label>
-    
-            <label for="gender-5">
-                <input type="radio" id="gender-5" name="gender" value=5>Other (Please Specify)
-                <input type="text" id="other_gender" name="other_gender">
-            </label>
-        </div>
+            <div class="form-control">
+                <label for="last_name" id="label-name">2. Last Name</label>
+                <input type="text" name="last_name" id="last_name" placeholder="Enter your last name" required/>
+            </div>
+        
+            <div class="form-control">
+                <label for="email" id="label-email">3. Email</label>
+                <input type="text" name="email" id="email" placeholder="Enter your email" required/>
+            </div>
+        
+            <div class="form-control">
+                <label for="age" id="label-age">4. Age</label>
+                <input type="number" name="age" id="age" placeholder="Enter your age" required/>
+            </div>
 
-        <div class="form-control">
-            <label>6. Race</label>
-    
-            <label for="R-1">
-                <input type="radio" id="R-1" name="race" value=1> White
-            </label>
-    
-            <label for="R-2">
-                <input type="radio" id="R-2" name="race" value=2> Black or African American
-            </label>
-    
-            <label for="R-3">
-                <input type="radio" id="R-3" name="race" value=3> Hispanic or Latino
-            </label>
-    
-            <label for="R-4">
-                <input type="radio" id="R-4" name="race" value=4> Asian or Asian American
-            </label>
+            <div class="form-control">
+                <label>5. Gender</label>
+        
+                <label for="gender-1">
+                    <input type="radio" id="gender-1" name="gender" value=1>Female
+                </label>
+        
+                <label for="gender-2">
+                    <input type="radio" id="gender-2" name="gender" value=2>Male
+                </label>
+        
+                <label for="gender-3">
+                    <input type="radio" id="gender-3" name="gender" value=3>Nonbinary
+                </label>
+        
+                <label for="gender-4">
+                    <input type="radio" id="gender-4" name="gender" value=4>Do not wish to disclose
+                </label>
+        
+                <label for="gender-5">
+                    <input type="radio" id="gender-5" name="gender" value=5>Other (Please Specify)
+                    <input type="text" id="other_gender" name="other_gender">
+                </label>
+            </div>
 
-            <label for="R-5">
-                <input type="radio" id="R-5" name="race" value=5> American Infian or Alaska Native
-            </label>
+            <div class="form-control">
+                <label>6. Race</label>
+        
+                <label for="R-1">
+                    <input type="radio" id="R-1" name="race" value=1> White
+                </label>
+        
+                <label for="R-2">
+                    <input type="radio" id="R-2" name="race" value=2> Black or African American
+                </label>
+        
+                <label for="R-3">
+                    <input type="radio" id="R-3" name="race" value=3> Hispanic or Latino
+                </label>
+        
+                <label for="R-4">
+                    <input type="radio" id="R-4" name="race" value=4> Asian or Asian American
+                </label>
 
-            <label for="R-6">
-                <input type="radio" id="R-6" name="race" value=5> Native Jawaiian or other Pacific Islander
-            </label>
+                <label for="R-5">
+                    <input type="radio" id="R-5" name="race" value=5> American Infian or Alaska Native
+                </label>
 
-            <label for="R-7">
-                <input type="radio" id="R-7" name="race" value=6> Middle Eastern/North African
-            </label>
-    
-            <label for="R-8">
-                <input type="radio" id="R-8" name="race" value="Other"> Other (Please Specify)
-                <input type="text" id="other_race" name="other_race">
-            </label>
-        </div>
+                <label for="R-6">
+                    <input type="radio" id="R-6" name="race" value=5> Native Jawaiian or other Pacific Islander
+                </label>
 
-        <div class="form-control">
-            <label>7. Religion</label>
-    
-            <label for="Rl-1">
-                <input type="radio" id="Rl-1" name="religion" value=1>Muslim
-            </label>
-    
-            <label for="Rl-2">
-                <input type="radio" id="Rl-2" name="religion" value=2>Christian
-            </label>
-    
-            <label for="Rl-3">
-                <input type="radio" id="Rl-3" name="religion" value=3>Jew
-            </label>
+                <label for="R-7">
+                    <input type="radio" id="R-7" name="race" value=6> Middle Eastern/North African
+                </label>
+        
+                <label for="R-8">
+                    <input type="radio" id="R-8" name="race" value="Other"> Other (Please Specify)
+                    <input type="text" id="other_race" name="other_race">
+                </label>
+            </div>
 
-            <label for="Rl-4">
-                <input type="radio" id="Rl-4" name="religion" value=4>None
-            </label>
+            <div class="form-control">
+                <label>7. Religion</label>
+        
+                <label for="Rl-1">
+                    <input type="radio" id="Rl-1" name="religion" value=1>Muslim
+                </label>
+        
+                <label for="Rl-2">
+                    <input type="radio" id="Rl-2" name="religion" value=2>Christian
+                </label>
+        
+                <label for="Rl-3">
+                    <input type="radio" id="Rl-3" name="religion" value=3>Jew
+                </label>
 
-            <label for="Rl-5">
-                <input type="radio" id="Rl-5" name="religion" value=5>None of the above
-            </label>
+                <label for="Rl-4">
+                    <input type="radio" id="Rl-4" name="religion" value=4>None
+                </label>
 
-            <label for="Rl-5">
-                <input type="radio" id="Rl-6" name="religion" value="Other">Other (Please Specify)
-                <input type="text" id="other_religion" name="other_religion">
-            </label>
-        </div>
+                <label for="Rl-5">
+                    <input type="radio" id="Rl-5" name="religion" value=5>None of the above
+                </label>
 
-        <div class="form-control">
-            <label>8. Highest level of education</label>
-    
-            <label for="E-1">
-                <input type="radio" id="E-1" name="education" value="Highschool">Highschool
-            </label>
+                <label for="Rl-5">
+                    <input type="radio" id="Rl-6" name="religion" value="Other">Other (Please Specify)
+                    <input type="text" id="other_religion" name="other_religion">
+                </label>
+            </div>
 
-            <label for="E-2">
-                <input type="radio" id="E-2" name="education" value="Bachelors Degree (In-Progress)">Bachelors Degree (In-Progress)
-            </label>
+            <div class="form-control">
+                <label>8. Highest level of education</label>
+        
+                <label for="E-1">
+                    <input type="radio" id="E-1" name="education" value="Highschool">Highschool
+                </label>
 
-            <label for="E-3">
-                <input type="radio" id="E-3" name="education" value="Bachelors Degree (Completed)">Bachelors Degree (Completed)
-            </label>
-            
-            <label for="E-4">
-                <input type="radio" id="E-4" name="education" value="Masters Degree">Masters Degree
-            </label>
+                <label for="E-2">
+                    <input type="radio" id="E-2" name="education" value="Bachelors Degree (In-Progress)">Bachelors Degree (In-Progress)
+                </label>
 
-            <label for="E-5">
-                <input type="radio" id="E-5" name="education" value="PHD">PHD
-            </label>
-            
-        </div>
+                <label for="E-3">
+                    <input type="radio" id="E-3" name="education" value="Bachelors Degree (Completed)">Bachelors Degree (Completed)
+                </label>
+                
+                <label for="E-4">
+                    <input type="radio" id="E-4" name="education" value="Masters Degree">Masters Degree
+                </label>
 
-        <!-- Multi-line Text Input Control -->
-        <div class="next">
-            <button class="next-button" type="submit">Next</button>
-        </div>
+                <label for="E-5">
+                    <input type="radio" id="E-5" name="education" value="PHD">PHD
+                </label>
+                
+            </div>
+
+            <!-- Multi-line Text Input Control -->
+            <div class="next">
+                <button class="next-button" type="submit" value="Submit">Next</button>
+            </div>
     </form>
 </div>
+<script>
+    function validateForm(){
+        var gender_checked = false;
+        var race_checked = false;
+        var religion_checked = false;
+        var education_checked = false;
 
+        var gender_input = document.getElementsByName('gender');
+        var race_input = document.getElementsByName('race');
+        var religion_input = document.getElementsByName('religion');
+        var education_input =document.getElementsByName('education')
+        var age_input = document.getElementById('age').value;
+
+        for (var i = 0; i < gender_input.length; i++) {
+                if (gender_input[i].checked) {
+                    gender_checked = true;
+                    break;
+                }
+            }
+        for (var i = 0; i < race_input.length; i++) {
+                if (race_input[i].checked) {
+                    race_checked = true;
+                    break;
+                }
+            }
+        for (var i = 0; i < religion_input.length; i++) {
+                if (religion_input[i].checked) {
+                    religion_checked = true;
+                    break;
+                }
+            }
+        for (var i = 0; i < education_input.length; i++) {
+                if (education_input[i].checked) {
+                    education_checked = true;
+                    break;
+                }
+            }
+
+        if (age_input < 18) {
+                alert("Sorry, you must be 18 or older to proceed.");
+                return false; // Prevent form submission
+            }
+        if (!gender_checked || !race_checked || !religion_checked || !education_checked){
+            alert('Please answer all the questions before submitting.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>
 

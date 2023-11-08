@@ -80,18 +80,27 @@
 
             <form onsubmit="return validateForm()">
                 <label for="minAge">Minimum Age:</label>
-                <input type="number" id="minAge" name="minAge" min="18" placeholder="Minimum Age">
+                <input type="number" id="minAge" name="minAge" min="18" placeholder="Minimum Age" value=18>
             
                 <label for="maxAge">Maximum Age:</label>
-                <input type="number" id="maxAge" name="maxAge" min="18" placeholder="Maximum Age">
+                <input type="number" id="maxAge" name="maxAge" min="18" placeholder="Maximum Age" value=99>
             
             </form>
             
             <script>
                 function validateForm() {
-                    const minAge = parseInt(document.getElementById('minAge').value);
-                    const maxAge = parseInt(document.getElementById('maxAge').value);
+                    const minAge = document.getElementById('minAge').value;
+                    const maxAge = document.getElementById('maxAge').value;
 
+                    if (minAge === "" || maxAge === "") {
+                        if (minAge === "") {
+                            alert("Please fill in the Minimum age field.");
+                        }
+                        if (maxAge === "") {
+                            alert("Please fill in the Maximum age field.");
+                        }
+                        return false;
+                    }
                     if (maxAge <= minAge) {
                         alert("Maximum age should be greater than or equal to the minimum age");
                         return false; // Prevent form submission
@@ -109,6 +118,9 @@
         <div class="form-control">
             <label>11.What race(s) are you looking for?
                 <small>(Check all that apply)</small>
+            </label>
+            <label for="inp-0">
+                <input type="checkbox" name="race" value=0> I do not have race prefrence (All)
             </label>
             <label for="inp-1">
                 <input type="checkbox" name="race" value=1> White
@@ -146,6 +158,10 @@
             </label>
 
             <!-- Input Type Checkbox -->
+            <label for="rel-0">
+                <input type="checkbox" name="rel" value=0> I do not have religion prefrence (All)
+            </label>
+
             <label for="rel-1">
                 <input type="checkbox" name="rel" value=1> Muslim 
             </label>
