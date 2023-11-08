@@ -17,8 +17,8 @@ import json
 from time import time
 from werkzeug.utils import secure_filename
 import uuid as uuid
-#from twilio.rest import Client
-#from keys import account_sid, auth_token, twilio_number
+from twilio.rest import Client
+from keys import account_sid, auth_token, twilio_number
 
 #from itsdangerous import JSONWebSignatureSerializer
 
@@ -47,7 +47,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
 
-#client = Client(account_sid, auth_token)
+#For sms
+client = Client(account_sid, auth_token)
 
 #Bcrypt instance
 bcrypt = Bcrypt(app)
@@ -579,7 +580,7 @@ def match():
 
 
 
-    conn = sqlite3.connect('instance\database.db')  
+    conn = sqlite3.connect('instance/database.db')  
     cursor = conn.cursor()
 
 
@@ -758,11 +759,11 @@ def send_sms(user_id):
     print("sending sms to: ", phone_number, " with message: ", message)
 
     #Send the SMS using Twilio
-    #message = client.messages.create(
-    #    to=phone_number,
-    #   from_=twilio_number,
-    #    body=message
-    #)
+    message = client.messages.create(
+        to=phone_number,
+       from_=twilio_number,
+        body=message
+    )
 
     return 'SMS sent with SID: ' + message.sid
 
