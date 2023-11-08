@@ -47,7 +47,8 @@
   
 
     <!-- Create Form -->
-    <form id="form" action="/survey2" method="post">
+    <form id="form" action="/survey2" method="post" onsubmit="return validateForm()">
+
 
 
         <div class="form-control">
@@ -80,35 +81,20 @@
 
             <form onsubmit="return validateForm()">
                 <label for="minAge">Minimum Age:</label>
-                <input type="number" id="minAge" name="minAge" min="18" placeholder="Minimum Age">
+                <input type="number" id="minAge" name="minAge" min="18" placeholder="Minimum Age" value=18 required>
             
                 <label for="maxAge">Maximum Age:</label>
-                <input type="number" id="maxAge" name="maxAge" min="18" placeholder="Maximum Age">
+                <input type="number" id="maxAge" name="maxAge" min="18" placeholder="Maximum Age" value=99 required>
             
             </form>
-            
-            <script>
-                function validateForm() {
-                    const minAge = parseInt(document.getElementById('minAge').value);
-                    const maxAge = parseInt(document.getElementById('maxAge').value);
-
-                    if (maxAge <= minAge) {
-                        alert("Maximum age should be greater than or equal to the minimum age");
-                        return false; // Prevent form submission
-                    }
-
-                    if (minAge < 18) {
-                        alert("Minimum age should be 18 or more");
-                        return false; // Prevent form submission
-                    }
-                    return true; // Allow form submission
-                }
-            </script>      
             
 
         <div class="form-control">
             <label>11.What race(s) are you looking for?
                 <small>(Check all that apply)</small>
+            </label>
+            <label for="inp-0">
+                <input type="checkbox" name="race" value=0> I do not have race prefrence (All)
             </label>
             <label for="inp-1">
                 <input type="checkbox" name="race" value=1> White
@@ -146,6 +132,10 @@
             </label>
 
             <!-- Input Type Checkbox -->
+            <label for="rel-0">
+                <input type="checkbox" name="rel" value=0> I do not have religion prefrence (All)
+            </label>
+
             <label for="rel-1">
                 <input type="checkbox" name="rel" value=1> Muslim 
             </label>
@@ -179,5 +169,56 @@
 
     </form>
 </div>
+<script>
+    function validateForm(){
+        var pronouns_pref_check = false;
+        var race_pref_check = false;
+        var religion_pref_check = false;
+
+
+        var gender_pref_input = document.getElementsByName('gender_pref');
+        var race_pref_input = document.getElementsByName('race');
+        var religion_pref_input = document.getElementsByName('rel')
+
+        var age_min_input = document.getElementById('minAge').value;
+        var age_max_input = document.getElementById('maxAge').value;
+
+        for (var i = 0; i < gender_pref_input.length; i++) {
+            if (gender_pref_input[i].checked) {
+                pronouns_pref_check = true;
+                break;
+            }
+        }
+
+        for(var i = 0; i < race_pref_input.length; i++){
+            if(race_pref_input[i].checked){
+                race_pref_check = true;
+                break;
+            }
+        }
+
+        for(var i = 0; i < religion_pref_input.length; i++){
+            if(religion_pref_input[i].checked){
+                religion_pref_check = true;
+                break;
+            }
+        }
+        
+        
+        
+        if(age_max_input < age_min_input || age_max_input < 18 || age_min_input < 18){
+            alert("Please enter valid age ranges (minimum: 18, maximum: 99) and ensure minimum age is not greater than maximum age.");
+            return false;
+        }
+
+        
+        if (!pronouns_pref_check || !race_pref_check || !religion_pref_check ){
+            alert('Please answer all the questions before submitting.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>

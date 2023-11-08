@@ -27,7 +27,7 @@ import datetime
 import bcrypt
 import traceback
 import os
-import re
+import re, ast
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -100,6 +100,7 @@ Gender:
     Do not wich to disclose = 4
     Other = 5
 Race:
+    All = 0
     White = 1
     Blackk / African American = 2
     Hispanic or latino = 3
@@ -110,10 +111,13 @@ Race:
     Other = 8
 
 Religion:
+    All = 0
     Muslim = 1
     Christian  = 2
     Jew = 3
-    Other = 4
+    None = 4
+    Other = 5
+
 
 """
 class User(db.Model, UserMixin):
@@ -136,9 +140,9 @@ class User(db.Model, UserMixin):
         return '<Username %r>' % self.username
     
     #survey answers
-    gender = db.Column(db.Integer, default = -1) #gender
-    race = db.Column(db.Integer, default = -1) #race
-    religion = db.Column(db.Integer, default = -1) #religion
+    gender = db.Column(db.Integer, default = 4) #gender
+    race = db.Column(db.Integer, default = 8) #race
+    religion = db.Column(db.Integer, default = 4) #religion
     education = db.Column(db.String(20)) #education
     occupation = db.Column(db.String(20)) #occupation
     hobbies = db.Column(db.String(20)) #hobbies
@@ -146,16 +150,20 @@ class User(db.Model, UserMixin):
     long_term = db.Column(db.String(20)) #long term goals
     virtual = db.Column(db.Boolean) #virtual?
     social = db.Column(db.Boolean) #social?
+    additonal_info = db.Column(db.String(20)) #additional info
+    preferance_info = db.relationship('UserPreferance', backref='user', uselist=False)
 
     #preferences from survey
-    pronoun_pref = db.Column(db.String(20)) #looking for
+class UserPreferance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    pronoun_pref = db.Column(db.Integer, default = 3) #looking for
     age_range_min = db.Column(db.Integer, default = 18) #age range preference
-    age_range_max = db.Column(db.Integer, default = 18) #age range preference
-    race_pref = db.Column(db.String(20)) #race preference say wut
-    religion_pref = db.Column(db.String(20)) #religion preference
-    additonal_info = db.Column(db.String(20)) #additional info
-    occupation_pref = db.Column(db.String(20)) #occupation preference
-    interaction = db.Column(db.String(20)) #interaction preference
+    age_range_max = db.Column(db.Integer, default = 80) #age range preference
+    race_pref = db.Column(db.String(20), default = "All") #race preference say wut
+    religion_pref = db.Column(db.String(20), default = "All") #religion preference
+    interaction = db.Column(db.String(20), default = "All") #interaction preference
+
 
     def get_token(self, expires=500):
         return jwt.encode({'reset_password': self.username, 'exp': time() + expires},
@@ -393,7 +401,7 @@ def survey():
 def survey2():
     user_id = session.get('user_id')
     if request.method == 'POST':
-        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey = UserPreferance.query.filter_by(id=user_id).first()
         user_survey.pronoun_pref = request.form.get('gender_pref')
         #user_survey.pronoun_pref = request.form.get('other_race_text')
         user_survey.age_range_min = request.form.get('minAge')
@@ -525,6 +533,15 @@ def signup():
         #new user is created
         db.session.add(new_user)
         db.session.commit()
+
+        new_user_pref = UserPreferance(
+            user_id=new_user.id
+        )
+
+        db.session.add(new_user_pref)
+        db.session.commit()
+
+
         return redirect(url_for('login'))
 
     return render_template('signup.html', form = form)
@@ -565,7 +582,7 @@ def video8():
 def match():
     #Retrieve all users from the database
     user_id = session.get('user_id')
-    user_pref = User.query.filter_by(id=user_id).first()
+    user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
     user_religion_pref = user_pref.religion_pref
     religion_numbers_list = re.findall(r'\d+', user_religion_pref)
@@ -584,7 +601,7 @@ def match():
     cursor = conn.cursor()
 
 
-    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race}"
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race} AND id != {user_id}"
 
 
     cursor.execute(query)
