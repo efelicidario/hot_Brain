@@ -17,8 +17,8 @@ import json
 from time import time
 from werkzeug.utils import secure_filename
 import uuid as uuid
-#from twilio.rest import Client
-#from keys import account_sid, auth_token, twilio_number
+from twilio.rest import Client
+from keys import account_sid, auth_token, twilio_number
 
 #from itsdangerous import JSONWebSignatureSerializer
 
@@ -27,6 +27,7 @@ import datetime
 import bcrypt
 import traceback
 import os
+import re, ast
 
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
@@ -46,7 +47,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
 
-#client = Client(account_sid, auth_token)
+#For sms
+client = Client(account_sid, auth_token)
 
 #Bcrypt instance
 bcrypt = Bcrypt(app)
@@ -89,6 +91,35 @@ def load_user(user_id):
 
 
 
+"""
+Dictionory
+Gender:
+    Female = 1
+    Male = 2
+    NonBinary = 3
+    Do not wich to disclose = 4
+    Other = 5
+Race:
+    All = 0
+    White = 1
+    Blackk / African American = 2
+    Hispanic or latino = 3
+    Asian or Asian America = 4
+    American infian = 5
+    Native Jawaiian or other pacific islander = 6
+    Middle Easter = 7
+    Other = 8
+
+Religion:
+    All = 0
+    Muslim = 1
+    Christian  = 2
+    Jew = 3
+    None = 4
+    Other = 5
+
+
+"""
 class User(db.Model, UserMixin):
 
     #core info
@@ -102,16 +133,16 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.Text) #Bio (can be empty)
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
-    profile_pic = db.Column(db.String(), nullable=True)
+    profile_pic = db.Column(db.String(), nullable=True, default='default.png')
     
     # Create a string
     def __repr__(self):
         return '<Username %r>' % self.username
     
     #survey answers
-    gender = db.Column(db.String(20)) #gender
-    race = db.Column(db.String(20)) #race
-    religion = db.Column(db.String(20)) #religion
+    gender = db.Column(db.Integer, default = 4) #gender
+    race = db.Column(db.Integer, default = 8) #race
+    religion = db.Column(db.Integer, default = 4) #religion
     education = db.Column(db.String(20)) #education
     occupation = db.Column(db.String(20)) #occupation
     hobbies = db.Column(db.String(20)) #hobbies
@@ -119,16 +150,20 @@ class User(db.Model, UserMixin):
     long_term = db.Column(db.String(20)) #long term goals
     virtual = db.Column(db.Boolean) #virtual?
     social = db.Column(db.Boolean) #social?
+    additonal_info = db.Column(db.String(20)) #additional info
+    preferance_info = db.relationship('UserPreferance', backref='user', uselist=False)
 
     #preferences from survey
-    pronoun_pref = db.Column(db.String(20)) #looking for
-    age_range_min = db.Column(db.String(20)) #age range preference
-    age_range_max = db.Column(db.String(20)) #age range preference
-    race_pref = db.Column(db.String(20)) #race preference say wut
-    religion_pref = db.Column(db.String(20)) #religion preference
-    additonal_info = db.Column(db.String(20)) #additional info
-    occupation_pref = db.Column(db.String(20)) #occupation preference
-    interaction = db.Column(db.String(20)) #interaction preference
+class UserPreferance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    pronoun_pref = db.Column(db.Integer, default = 3) #looking for
+    age_range_min = db.Column(db.Integer, default = 18) #age range preference
+    age_range_max = db.Column(db.Integer, default = 80) #age range preference
+    race_pref = db.Column(db.String(20), default = "All") #race preference say wut
+    religion_pref = db.Column(db.String(20), default = "All") #religion preference
+    interaction = db.Column(db.String(20), default = "All") #interaction preference
+
 
     def get_token(self, expires=500):
         return jwt.encode({'reset_password': self.username, 'exp': time() + expires},
@@ -195,9 +230,9 @@ class UpdateForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Email"})
     fname = StringField(validators=[InputRequired(), Length(
-        min=4, max=40)], render_kw={"placeholder": "First Name"})
+        min=3, max=40)], render_kw={"placeholder": "First Name"})
     lname = StringField(validators=[InputRequired(), Length(
-        min=4, max=40)], render_kw={"placeholder": "Last Name"})
+        min=3, max=40)], render_kw={"placeholder": "Last Name"})
     bio = StringField(validators=[InputRequired(), Length(
         min=4, max=40)], render_kw={"placeholder": "Bio"})
     
@@ -366,7 +401,7 @@ def survey():
 def survey2():
     user_id = session.get('user_id')
     if request.method == 'POST':
-        user_survey = User.query.filter_by(id=user_id).first()
+        user_survey = UserPreferance.query.filter_by(id=user_id).first()
         user_survey.pronoun_pref = request.form.get('gender_pref')
         #user_survey.pronoun_pref = request.form.get('other_race_text')
         user_survey.age_range_min = request.form.get('minAge')
@@ -433,7 +468,8 @@ def dashboard():
     if current_user.completed_survey == False:
         return redirect(url_for('survey'))
     else:
-        return render_template('dashboard.html')
+        image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
+        return render_template('dashboard.html', image = image)
 
 #Page where the user can edit their profile
 @app.route('/account', methods=['GET', 'POST'])
@@ -467,7 +503,7 @@ def edit_profile():
         db.session.commit()
         current_user.profile_pic.save(os.path.join(app.config['UPLOAD_FOLDER'], pic_name))
         return redirect(url_for('dashboard'))
-    return render_template('edit_profile.html', form=form)
+    return render_template('edit_profile.html', form=form,)
 
 #Page that displays another user's profile
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -497,6 +533,15 @@ def signup():
         #new user is created
         db.session.add(new_user)
         db.session.commit()
+
+        new_user_pref = UserPreferance(
+            user_id=new_user.id
+        )
+
+        db.session.add(new_user_pref)
+        db.session.commit()
+
+
         return redirect(url_for('login'))
 
     return render_template('signup.html', form = form)
@@ -528,17 +573,53 @@ def video6():
 @app.route('/video7')
 def video7():
     return render_template('video7.html')
+@app.route('/video8')
+def video8():
+    return render_template('video8.html')
 
 @app.route('/match', methods=['GET'])
 @login_required
 def match():
-    #Retrieve all users from the database except the current user
-    users = User.query.filter(User.id != session['user_id']).all()
+    #Retrieve all users from the database
+    user_id = session.get('user_id')
+    user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
+    user_religion_pref = user_pref.religion_pref
+    religion_numbers_list = re.findall(r'\d+', user_religion_pref)
+    sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+
+    user_race_pref = user_pref.race_pref
+    race_numbers_list = re.findall(r'\d+', user_race_pref)
+    sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+
+    user_pref_gen = user_pref.pronoun_pref
+    print(sql_formatted_list_race)
+
+
+
+    conn = sqlite3.connect('instance/database.db')  
+    cursor = conn.cursor()
+
+
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race} AND id != {user_id}"
+
+
+    cursor.execute(query)
+    result = cursor.fetchall()
+    
+    conn.close()
+
+    print("Query Result:", result) 
+    
+    #Filter out the current user from result
+    users = [User.query.filter_by(fname=user[0]).first() for user in result if user[0] != current_user.fname]
+    
+    print("Users:", users)
+    
     #calculate compatability for each user while ignoring the -1's
     scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
-    #scores = [(user, compare(current_user, user)) for user in users]
 
+    print("Scores:", scores)   
 
     #sort list of users by compatability in tuples in ascending order
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
@@ -694,12 +775,12 @@ def send_sms(user_id):
 
     print("sending sms to: ", phone_number, " with message: ", message)
 
-    # Send the SMS using Twilio
-    #message = client.messages.create(
-        #to=phone_number,
-        #from_=twilio_number,
-        #body=message
-    #)
+    #Send the SMS using Twilio
+    message = client.messages.create(
+        to=phone_number,
+       from_=twilio_number,
+        body=message
+    )
 
     return 'SMS sent with SID: ' + message.sid
 

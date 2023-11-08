@@ -5,8 +5,15 @@ Neural dating full-stack web application using `HTML/CSS/JS`, `Python Flask`, an
 Built by Andres Hinajosa, Ased Adus, Kyrstyn Hall, Salmah Rashed and Tyler Felicidario  
 
 --------------------
-![Alt text](README_imgs/index_screenshot.png)
+![Alt text](README_imgs/index_screenshot2.png)
 --------------------
+
+
+
+![index_screenshot2](https://github.com/efelicidario/hot_Brain/assets/97812524/f6b2f966-087f-4198-866c-e3c56feb9032)
+
+
+
 ### Feautures
 - Sign up/Login
 - Survey

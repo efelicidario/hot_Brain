@@ -17,5 +17,5 @@ def handle_request():
     #test data comment out for real thing
     test()
 
-    g.hb.exec_command(SensorCommand.CommandStartSignal)
+    #g.hb.exec_command(SensorCommand.CommandStartSignal)
     return ["Data Flowing"]

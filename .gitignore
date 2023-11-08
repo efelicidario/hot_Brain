@@ -7,6 +7,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.DS_Store
 .Python
 build/
 develop-eggs/
@@ -62,7 +63,6 @@ db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
-instance/
 .webassets-cache
 
 # Scrapy stuff:

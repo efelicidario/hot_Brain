@@ -10,11 +10,36 @@
         Build a Survey Form using HTML and CSS
     </title>
     <link rel="icon" href="/static/pics/logo-small.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/survey.css" />
 </head>
 
 
 <body>
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('signup') }}" class="nav-link active">Sign Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="survey-container">
     <img src="/static/pics/clearlogo.png" 
      alt="Logo" 
      style="height:90; width: 200px;"
@@ -22,13 +47,14 @@
     <h1>Hot Brain Survey</h1>
   
     <!-- Create Form -->
-    <form id="form" action="/survey4" method="post">
+    <form id="form" action="/survey4" method="post" onsubmit="return validateForm()">
 
-        <h3>Lifestyle and Preferences</h3>
+
+        <h4>Lifestyle and Preferences</h4>
 
         <div class="form-control">
             <label>
-                Interaction: What type of interaction are you comfortable with?
+                17. Interaction: What type of interaction are you comfortable with?
             </label>
     
             <!-- Input Type Radio Button -->
@@ -46,16 +72,11 @@
             <label for="R-3">
                 <input type="radio" id="R-3" name="Interaction_pref" value="In-Person">In-Person
             </label>
-    
-             <!-- Input Type Radio Button -->
-            <label for="R-4">
-                <input type="radio" id="R-4" name="Interaction_pref">Other(Please Specify)
-                <input type="text" id="Interaction_pref_other" name="Interaction_pref_other">
-            </label>
+                
 
             <div class="form-control">
                 <label>
-                    Are you open to virtual dating before meeting in person?
+                    18. Are you open to virtual dating before meeting in person?
                 </label>
         
                 <!-- Input Type Radio Button -->
@@ -69,7 +90,7 @@
 
             <div class="form-control">
                 <label>
-                    Safety and Privacy? Do you want us to show your social media accounts on your profile or not?
+                    19. Safety and Privacy? Do you want us to show your social media accounts on your profile or not?
                 </label>
         
                 <!-- Input Type Radio Button -->
@@ -90,6 +111,47 @@
         
 
     </form>
+</div>
 
+<script>
+        function validateForm(){
+            var interaction_pref_check = false;
+            var virtual_date = false;
+            var Safety = false;
+
+            var interaction_pref_input = document.getElementsByName('Interaction_pref');
+            var virtual_date_input =  document.getElementsByName('Virtual');
+            var safety_input = document.getElementsByName('Safety');
+
+            for(var i = 0; i < interaction_pref_input.length; i++) {
+                if( interaction_pref_input[i].checked){
+                    interaction_pref_check = true;
+                    break;
+                }
+            }
+
+
+            for(var i = 0; i < virtual_date_input.length; i++) {
+                if( virtual_date_input[i].checked){
+                    virtual_date = true;
+                    break;
+                }
+            }
+
+            for (var i = 0; i < safety_input.length; i++) {
+                if (safety_input[i].checked) {
+                    Safety = true;
+                    break;
+                }
+            }
+
+            if (!interaction_pref_check || !virtual_date || !Safety ){
+                alert('Please answer all the questions before submitting.');
+                return false;
+            }
+
+            return true;
+        }
+</script>
 </body>
 </html>
