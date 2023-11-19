@@ -136,14 +136,16 @@
 
 
 /* Position the image container */
-.desktop .dating {
+.dating {
+   /*
   position: absolute;
   top: 221px;
   left: 0; /* Adjust the left property to move the image to the left */
+  margin-left: 200px;
 }
 
 /* Style the image itself */
-.desktop .dating img {
+.dating img {
   width: 626px; /* Adjust the width as needed */
   height: 166px; /* Adjust the height as needed */
   border-radius: 6px;
