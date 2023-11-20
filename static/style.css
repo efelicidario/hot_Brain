@@ -20,6 +20,23 @@
   border-radius: 6px;
 }
 
+.dating {
+  position: relative;
+  width: 100%; /* Set the width of the container */
+}
+
+/* Style the image itself */
+.dating img {
+  width: 700px; /* Adjust the width as needed */
+  height: 170px; /* Adjust the height as needed */
+  border-radius: 6px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
 
 
 
@@ -69,31 +86,7 @@
     left: 25px;
 }
 
-.desktop .text {
-  position: relative;
-  align-self: stretch;
-  font-family: 'Rubik', sans-serif;
-  font-weight: 500;
-  color: #8b002e; /* Hot pink color */
-  font-size: 20px; /* Adjust the font size as needed */
-  text-align: center;
-  letter-spacing: 0;
-  line-height: normal;
 
-  animation: fadeIn 1s forwards;
-  /* Apply a fade-in animation to all .text elements */
-
-  /* Define the fade-in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-}
 
 
 .desktop .text-wrapper {
@@ -135,18 +128,3 @@
 }
 
 
-/* Position the image container */
-.dating {
-   /*
-  position: absolute;
-  top: 221px;
-  left: 0; /* Adjust the left property to move the image to the left */
-  margin-left: 200px;
-}
-
-/* Style the image itself */
-.dating img {
-  width: 626px; /* Adjust the width as needed */
-  height: 166px; /* Adjust the height as needed */
-  border-radius: 6px;
-}
