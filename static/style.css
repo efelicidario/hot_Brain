@@ -20,21 +20,51 @@
   border-radius: 6px;
 }
 
-.dating {
+/*.dating {
   position: relative;
-  width: 100%; /* Set the width of the container */
+  width: 100%; 
 }
+/*
 
 /* Style the image itself */
 .dating img {
-  width: 700px; /* Adjust the width as needed */
-  height: 170px; /* Adjust the height as needed */
+  width: 20%; /* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
   border-radius: 6px;
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 55%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
 }
+
+
+
+
+
+
+
+
+/* Style the image itself */
+.dating1 .img {
+  width: 20%; /* Adjust the width as needed */
+  max-width: 300px; /* Use either percentage or pixels, not both for max-width */
+  height: auto; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: 60%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+
+
+
+
+
+
 
 
 
