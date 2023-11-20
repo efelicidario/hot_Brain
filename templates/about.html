@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 fixed-top">
+        <div class="container">
+            <a href="#" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                    <!--
+                    <li class="nav-item">
+                        <a href="#learn" class="nav-link">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#questions" class="nav-link">Connect</a>
+                    </li>
+                    -->
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('About') }}" class="nav-link">Logout</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <title>About Us</title>
+  <style>
+    /* Styling with a dark background */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #333; /* Dark background color */
+      color: #fff; /* White text color */
+      text-align: center; /* Center-align text in the body */
+    }
+    h1, h2 {
+      color: #fff; /* White headings */
+    }
+    section {
+      margin-bottom: 30px;
+      text-align: left; /* Align section content to the left */
+      margin: 0 auto; /* Center the sections */
+      max-width: 800px; /* Set maximum width for better readability */
+    }
+    footer {
+      color: #ccc; /* Lighter text for footer */
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>About Us</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Our Story</h2>
+      <p>Welcome to our company! We started our journey with a passion for...</p>
+      <p>...</p>
+    </section>
+
+    <section>
+      <h2>Our Mission</h2>
+      <p>At our company, we strive to...</p>
+      <p>...</p>
+    </section>
+
+    <section>
+      <h2>Meet the Team</h2>
+      <p>Our team is composed of dedicated individuals...</p>
+      <p>...</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Contact us at: email@example.com</p>
+  </footer>
+
+</body>
+</html>
+
+
