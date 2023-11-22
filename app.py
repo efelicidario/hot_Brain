@@ -787,5 +787,5 @@ def send_sms(user_id):
 if __name__ == '__main__':
     db.create_all()
     db.session.commit()
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=True, host='0.0.0.0', port=5000)
     #socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
