@@ -306,6 +306,17 @@ def connect():
     #test() #for testing purposes
     return render_template('connect.html')
 
+@app.route('/About') #endpoint
+def About():
+    #test() #for testing purposes
+    return render_template('about.html')
+
+
+
+
+
+
+
 #This is the login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
