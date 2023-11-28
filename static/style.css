@@ -45,20 +45,6 @@
 
 
 
-/* Style the image itself  second picture*/
-.dating2 img {
-  width: 20%; /* Adjust the width as needed */
-  max-width: 300px; /* Use either percentage or pixels, not both for max-width */
-  height: auto; /* Let the height adjust proportionally */
-  border-radius: 6px;
-  position: absolute;
-  right: 80%; /* Position from the left */
-  top: 20%;
-  transform: translate(-50%, -50%);
-}
-
-
-
 
 
 
@@ -158,3 +144,13 @@
 }
 
 
+/* Style the image itself */
+.dating2 img {
+  width: 300px; /* Adjust the width as needed */
+  height: auto; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  /* Positioning */
+  right: 20px; /* Adjust these values as needed */
+  top: 20px; /* Adjust these values as needed */
+}
