@@ -306,8 +306,8 @@ def connect():
     #test() #for testing purposes
     return render_template('connect.html')
 
-@app.route('/About') #endpoint
-def About():
+@app.route('/about') #endpoint
+def about():
     #test() #for testing purposes
     return render_template('about.html')
 
