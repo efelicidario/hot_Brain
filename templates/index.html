@@ -14,7 +14,19 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     </head>
+
+    <style>
+        
+        body {
+            background: linear-gradient(45deg, #e72e2e, #e2bcc2);
+            /* Gradient background from #e72e2e to #e2bcc2 */
+            font-family: 'Rubik', sans-serif;
+        }
+        
+    </style>
+
     <body>
+
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
             <div class="container">
@@ -78,21 +90,16 @@
                     <div class="overlap-group">
                         <div class="container"> <!-- Add a container to the grid -->
                                     <p class="text">
-                                        <a href="{{ url_for('video') }}" class="btn btn-lg text-light" role="button" aria-pressed="true" style="color: #8b002e">Videos</a>
+                                        <a href="{{ url_for('video') }}" class="btn btn-lg text-light" role="button" aria-pressed="true">Videos</a>
                                     </p>
                                     <p class="text">
-                                        <a href="{{ url_for('login') }}" class="btn btn-lg text-light" role="button" aria-pressed="true" style="background-color: #8b002e">Login</a>
+                                        <a href="{{ url_for('login') }}" class="btn btn-lg text-light" role="button" aria-pressed="true" >Login</a>
                                     </p>
                                     <p class="text">
-                                        <a href="{{ url_for('signup') }}" class="btn btn-danger btn-lg" role="button" aria-pressed="true" style="background-color: #8b002e">Sign Up</a>
+                                        <a href="{{ url_for('signup') }}" class="btn btn-lg text-light" role="button" aria-pressed="true" >Sign Up</a>
                                     </p>
                                     <p class="text">
-                                        <a href="{{ url_for('survey') }}" class="btn btn-danger btn-lg btn-block" style="color: #8b002e">Survey</a><br />
-                                    </p>
-
-
-                                    <p class="text">
-                                        <a href="{{ url_for('about') }}" class="btn btn-danger btn-lg btn-block" style="color: #8b002e">About</a><br />
+                                        <a href="{{ url_for('about') }}" class="btn btn-lg text-light">About</a><br />
                                     </p>
                                     
                                 </div>
@@ -123,7 +130,7 @@
 
 
             <div class="dating2">
-                <img src="/static/pics/profile/dating.png" alt="Dating2" class="img">
+                <img src="/static/pics/dating2.png" alt="Dating2">
             </div>
             
 
