@@ -154,3 +154,23 @@
   right: 20px; /* Adjust these values as needed */
   top: 90px; /* Adjust these values as needed */
 }
+
+.dating3 img {
+  width: 300px; /* Adjust the width as needed */
+  height: auto; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  /* Positioning */
+  right: 20px; /* Adjust these values as needed */
+  top: 90px; /* Adjust these values as needed */
+}
+
+.dating4 img {
+  width: 300px; /* Adjust the width as needed */
+  height: auto; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  /* Positioning */
+  right: 20px; /* Adjust these values as needed */
+  top: 90px; /* Adjust these values as needed */
+}
