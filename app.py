@@ -312,6 +312,11 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/testo') #endpoint
+def testo():
+    #test() #for testing purposes
+    return render_template('testomonials.html')
+
 
 
 
