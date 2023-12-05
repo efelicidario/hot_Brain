@@ -134,6 +134,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
     profile_pic = db.Column(db.String(), nullable=True, default='default.png')
+    banned = db.Column(db.Boolean, default=False) #if the user has been banned
     
     # Create a string
     def __repr__(self):
@@ -494,10 +495,20 @@ def survey4():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    
+    if current_user.banned == True:
+        return redirect(url_for('logout'))
+    
     #if user is new, redirect to survey
     if current_user.completed_survey == False:
         return redirect(url_for('survey'))
     else:
+        #Ban the user if their age preference includes those under 18
+        if current_user.preferance_info.age_range_min < 18 or current_user.preferance_info.age_range_max < 18:
+            current_user.banned = True
+            db.session.commit()
+            return redirect(url_for('logout'))
+        
         image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
         return render_template('dashboard.html', image = image)
 
@@ -640,7 +651,7 @@ def match():
     conn.close()
 
     #For testing, query gets all users except the current user
-    #result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
+    result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
 
     print("Query Result:", result) 
     
@@ -744,6 +755,11 @@ def compare(user1, user2):
                                 data2.append(pickle.load(f))
                         except EOFError:
                             pass
+
+
+                    #Weigh user1's data using the rating
+                    data1 = data1 * getattr(current_user, f'rate{i+1}')
+                    print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
 
                     #get the avg score
                     score += euclidean_distance(data1, data2)
