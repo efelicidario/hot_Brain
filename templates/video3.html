@@ -108,7 +108,7 @@
                 console.log(data);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video4";
+                    window.location.href = "/rate3";
 
                 }, "json").fail(function(response) {
             
@@ -117,7 +117,7 @@
                     console.log(response);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video4";
+                    window.location.href = "/rate3";
                 });
         }
         </script>
@@ -133,7 +133,6 @@
             // For when the video ends
             video.addEventListener("ended", (event) => {
                 stop_movie(user_id, 1);
-                nextButton.style.display = "block";
             });
         </script>
 
