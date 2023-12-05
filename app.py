@@ -152,6 +152,20 @@ class User(db.Model, UserMixin):
     social = db.Column(db.Boolean) #social?
     additonal_info = db.Column(db.String(20)) #additional info
     preferance_info = db.relationship('UserPreferance', backref='user', uselist=False)
+    
+    #Rating answers
+    rate1 = db.Column(db.Integer, default = 0) #rating for video 1
+    rate2 = db.Column(db.Integer, default = 0) #rating for video 2
+    rate3 = db.Column(db.Integer, default = 0) #rating for video 3
+    rate4 = db.Column(db.Integer, default = 0) #rating for video 4
+    rate5 = db.Column(db.Integer, default = 0) #rating for video 5
+    rate6 = db.Column(db.Integer, default = 0) #rating for video 6
+    rate7 = db.Column(db.Integer, default = 0) #rating for video 7
+    rate8 = db.Column(db.Integer, default = 0) #rating for video 8
+    def update_video_rating(self, video_number, rating):
+        # Update the rate field based on the video number
+        setattr(self, f'rate{video_number}', rating)
+        db.session.commit()
 
     #preferences from survey
 class UserPreferance(db.Model):
@@ -799,6 +813,21 @@ def send_sms(user_id):
     )
 
     return 'SMS sent with SID: ' + message.sid
+
+#For rating the video just watched
+@app.route('/rate1')
+@login_required
+def rate1():
+    return render_template('/ratings/rate1.html')
+
+@app.route('/rate1/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate1update(rating):    
+    #Update the user's rating
+    current_user.update_video_rating(1, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video2'))
 
 if __name__ == '__main__':
     db.create_all()
