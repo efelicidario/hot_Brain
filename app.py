@@ -134,6 +134,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
     profile_pic = db.Column(db.String(), nullable=True, default='default.png')
+    banned = db.Column(db.Boolean, default=False) #if the user has been banned
     
     # Create a string
     def __repr__(self):
@@ -494,10 +495,20 @@ def survey4():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    
+    if current_user.banned == True:
+        return redirect(url_for('logout'))
+    
     #if user is new, redirect to survey
     if current_user.completed_survey == False:
         return redirect(url_for('survey'))
     else:
+        #Ban the user if their age preference includes those under 18
+        if current_user.preferance_info.age_range_min < 18 or current_user.preferance_info.age_range_max < 18:
+            current_user.banned = True
+            db.session.commit()
+            return redirect(url_for('logout'))
+        
         image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
         return render_template('dashboard.html', image = image)
 
@@ -639,6 +650,9 @@ def match():
     
     conn.close()
 
+    #For testing, query gets all users except the current user
+    result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
+
     print("Query Result:", result) 
     
     #Filter out the current user from result
@@ -712,10 +726,10 @@ def compare(user1, user2):
     id2 = user2.id
 
     #a percentage
-    score = -1
+    score = 0
 
     #now compare for each video
-    for i in range(0, 2):
+    for i in range(0, 8):
         #get the file names
         filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
         filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
@@ -742,13 +756,21 @@ def compare(user1, user2):
                         except EOFError:
                             pass
 
-                    #get the score
-                    score = euclidean_distance(data1, data2)
+
+                    #Weigh user1's data using the rating
+                    data1 = data1 * getattr(current_user, f'rate{i+1}')
+                    print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+
+                    #get the avg score
+                    score += euclidean_distance(data1, data2)
+                    print("adding score: ", score)
         else:
             print("file does not exist")
             return -1
 
     print("comparing user: ", user1.username, " and user: ", user2.username)
+    score = score / 8
+    print("score: ", score)
     return score
 
 def euclidean_distance(thang1, thang2):
@@ -757,6 +779,7 @@ def euclidean_distance(thang1, thang2):
 
     #one of them is empty
     if not thang1 or not thang2:
+        print("no data")
         return -1
 
     #parse the data or some shid
@@ -768,32 +791,43 @@ def euclidean_distance(thang1, thang2):
     all2 = [thang for sublist in thang2 for thang in sublist]
 
     #see the data
-    print("all1: ", all1, " all2: ", all2)
+    #print("all1: ", all1, " all2: ", all2)
 
     #for each brainwave
     for i in range(len(all1)):
         #I guess we can compare one by one and add it to the avgs
         #while both index's exist
-        if all1[i] is None or all2[i] is None:
+        if i > len(all1) and i > len(all2):
             if i == 0:
+                print("no data")
                 return -1
             else:
+                print("returning avgs with count: ", count, " and avgs: ", avgs)
                 return avgs
 
         ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
         #THIS MIGHT WORK?!
-        o1 = all1[i][0].O1 - all2[i][0].O1
-        o2 = all1[i][0].O2 - all2[i][0].O2
-        t3 = all1[i][0].T3 - all2[i][0].T3
-        t4 = all1[i][0].T4 - all2[i][0].T4  
-        array1 = np.array([o1, o2])
-        array2 = np.array([t3, t4])
+        #print("i is: ", i, " len(all1): ", len(all1), " len(all2): ", len(all2))
+        if i < len(all1) and i < len(all2):
+            o1 = all1[i][0].O1 - all2[i][0].O1
+            o2 = all1[i][0].O2 - all2[i][0].O2
+            t3 = all1[i][0].T3 - all2[i][0].T3
+            t4 = all1[i][0].T4 - all2[i][0].T4  
+            array1 = np.array([o1, o2])
+            array2 = np.array([t3, t4])
 
-        print("array1: ", array1, " array2: ", array2)
+            #print("array1: ", array1, " array2: ", array2)
 
-        avgs += np.sqrt(np.sum((array1 - array2)**2))
-        count += 1
+            avgs += np.sqrt(np.sum((array1 - array2)**2))
+            count += 1
+       # else:
+            #print("Something went wrong")
 
+    #print("returning avgs with count: ", count, " and avgs: ", avgs, " and avgs/count: ", avgs/count)
+    if count == 0:
+        print("no data")
+        return -1
+    print("returning avgs/count: ", avgs/count)
     return (avgs / count)
 
 @app.route('/send_sms/<int:user_id>', methods=['POST'])
