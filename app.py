@@ -816,9 +816,10 @@ def send_sms(user_id):
 
 #For rating the video just watched
 @app.route('/rate1')
-@login_required
 def rate1():
-    return render_template('/ratings/rate1.html')
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate1.html')
+    return redirect(url_for('video2'))
 
 @app.route('/rate1/<int:rating>', methods=['GET', 'POST'])
 @login_required
@@ -828,6 +829,118 @@ def rate1update(rating):
         
     #Redirect to the next video
     return redirect(url_for('video2'))
+
+@app.route('/rate2')
+@login_required
+def rate2():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate2.html')
+    return redirect(url_for('video3'))
+
+@app.route('/rate2/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate2update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(2, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video3'))
+
+@app.route('/rate3')
+@login_required
+def rate3():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate3.html')
+    return redirect(url_for('video4'))
+
+@app.route('/rate3/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate3update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(3, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video4'))
+
+@app.route('/rate4')
+@login_required
+def rate4():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate4.html')
+    return redirect(url_for('video5'))
+
+@app.route('/rate4/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate4update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(4, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video5'))
+
+@app.route('/rate5')
+@login_required
+def rate5():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate5.html')
+    return redirect(url_for('video6'))
+
+@app.route('/rate5/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate5update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(5, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video6'))
+
+@app.route('/rate6')
+@login_required
+def rate6():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate6.html')
+    return redirect(url_for('video7'))
+
+@app.route('/rate6/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate6update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(6, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video7'))
+
+@app.route('/rate7')
+@login_required
+def rate7():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate7.html')
+    return redirect(url_for('video8'))
+
+@app.route('/rate7/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate7update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(7, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video8'))
+
+@app.route('/rate8')
+@login_required
+def rate8():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate8.html')
+    return redirect(url_for('index'))
+
+@app.route('/rate8/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate8update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(8, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('match'))
 
 if __name__ == '__main__':
     db.create_all()

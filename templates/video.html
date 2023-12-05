@@ -125,7 +125,7 @@
                 // This gets called when the browser receives a response from the server
                 console.log(data);
 
-                //takes user to the next video when the video finishes playing
+                //takes user to the rating page when the video finishes playing if the user is logged in, otherwise takes them to the next video
                 window.location.href = "/rate1"
 
                 }, "json").fail(function(response) {
@@ -152,7 +152,6 @@
             // For when the video ends
             video.addEventListener("ended", (event) => {
                 stop_movie(user_id, 0);
-                nextButton.style.display = "block";
             });
         </script>
          <!---
