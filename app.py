@@ -23,7 +23,7 @@ from keys import account_sid, auth_token, twilio_number
 #from itsdangerous import JSONWebSignatureSerializer
 
 import sys
-import datetime
+from datetime import datetime
 import bcrypt
 import traceback
 import os
@@ -152,6 +152,16 @@ class User(db.Model, UserMixin):
     social = db.Column(db.Boolean) #social?
     additonal_info = db.Column(db.String(20)) #additional info
     preferance_info = db.relationship('UserPreferance', backref='user', uselist=False)
+
+class Friends(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Create a function to return a string when we add something
+    def __repr__(self):
+        return '<Name %r' % self.id
+
 
     #preferences from survey
 class UserPreferance(db.Model):
@@ -512,6 +522,28 @@ def user_profile(user_id):
     user = User.query.filter_by(id=user_id).first()
     image = url_for('static', filename='pics/profile/' + user.profile_pic)
     return render_template('user.html', image_file = image, user=user)
+
+# Friends route
+@app.route('/friends', methods=['POST', 'GET'])
+def friends():
+    title = "My Friends List"
+    
+    if request.method == "POST":
+        friend_name = request.form['name']
+        new_friend = Friends(name=friend_name)
+        
+        # Push to database
+        try:
+            db.session.add()
+            db.session.commit()
+            return redirect('/friends')
+        except:
+            return "There was an error adding your friend..."
+    else:
+        friends = Friends.query.order_by(Friends.date_created)
+        return render_template("friends.html", title=title, friends=friends)
+    
+    return render_template("friends.html", title=title)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
