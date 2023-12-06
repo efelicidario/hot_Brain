@@ -128,7 +128,7 @@
                     <div class="card-body" align="center">
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="{{ image }}" width="200" align="right" class="rounded-circle">
+                                <img src="/static/pics/profile/{{current_user.profile_pic}}" width="200" align="right" class="rounded-circle">
                                 <h5 class="card-title" align="left">User ID</h5>
                                 <p class="card-text" align="left">{{current_user.id}}</p>
                             </div>
@@ -163,7 +163,7 @@
                                         aria-pressed="true">Videos</a>
                                 </p>
                                 <p class="text" style="margin-right: 100px;">
-                                    <a href="{{ url_for('match') }}" class="btn btn-lg text-dark" role="button"
+                                    <a href="/match/0" class="btn btn-lg text-dark" role="button"
                                         aria-pressed="true">Match</a>
                                 </p>
                                 <p class="text" style="margin-right: 100px;">

@@ -83,23 +83,25 @@
 
     <div class="match-list">
 
-        <!-- Links to match for specific videos -->
-        <a href="/match" class="btn btn-danger">All</a>
-        <a href="/match/1" class="btn btn-danger">Video 1</a>
-        <a href="/match/2" class="btn btn-danger">Video 2</a>
-        <a href="/match/3" class="btn btn-danger">Video 3</a>
-        <a href="/match/4" class="btn btn-danger">Video 4</a>
-        <a href="/match/5" class="btn btn-danger">Video 5</a>
-        <a href="/match/6" class="btn btn-danger">Video 6</a>
-        <a href="/match/7" class="btn btn-danger">Video 7</a>
-        <a href="/match/8" class="btn btn-danger">Video 8</a>
+        <!-- Links to match for specific videos with song number passed as values -->
+        <div style="margin-top: 10dvb; margin-bottom: 3dvb;">
+            <a href="/match/0" class="btn btn-danger">All</a>
+            <a href="/match/1" class="btn btn-danger">Song 1</a>
+            <a href="/match/2" class="btn btn-danger">Song 2</a>
+            <a href="/match/3" class="btn btn-danger">Song 3</a>
+            <a href="/match/4" class="btn btn-danger">Song 4</a>
+            <a href="/match/5" class="btn btn-danger">Song 5</a>
+            <a href="/match/6" class="btn btn-danger">Song 6</a>
+            <a href="/match/7" class="btn btn-danger">Song 7</a>
+            <a href="/match/8" class="btn btn-danger">Song 8</a>
+        </div>
 
         <h1>Match List</h1>
         {% if sorted_users %}
         {% for user, score in sorted_users %}
         <div class="user-profile">
             <div class="profile-picture">
-                <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
+                <img src="/static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
                 <h1><a href="/user/{{ user.id }}" style="color: rgba(128, 0, 128, 0.473)">{{ user.username }}</a></h1>
                 <h2>{{ user.fname }} {{ user.lname }}</h2>
             </div>
@@ -112,6 +114,23 @@
             </div>
             <div class="compatibility-score">
                 <p>Compatibility Score: {{ score|round(2) }}</p>
+
+                <!-- If song is not 0, display the user's rating of that song-->
+                {% if song != 0 %}
+                {% if user['rate' + song|string] == 1 %}
+                <img src="/static/pics/mortified.png" alt="Mortified" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 2 %}
+                <img src="/static/pics/Sad.png" alt="Sad" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 3 %}
+                <img src="/static/pics/Neutral.png" alt="Neutral" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 4 %}
+                <img src="/static/pics/Happy.png" alt="Happy" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 5 %}
+                <img src="/static/pics/Excited.png" alt="Excited" style="height: 100px; width: 100px;">
+                {% endif %}
+                {% endif %}
+
+
             </div>
         </div>
         {% endfor %}
