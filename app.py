@@ -427,7 +427,7 @@ def survey():
             user_survey.education = request.form.get('education')
 
             db.session.commit()
-            return redirect(url_for('survey2'))
+            return redirect(url_for('gif'))
     return render_template('survey.html')
 
 
@@ -630,6 +630,10 @@ def video7():
 @app.route('/video8')
 def video8():
     return render_template('video8.html')
+  
+@app.route('/gif')
+def gif():
+    return render_template('gif.html')
 
 @app.route('/match/<int:song>', methods=['GET'])
 @login_required
