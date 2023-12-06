@@ -7,6 +7,8 @@ __pycache__/
 *.so
 
 instance/
+*user_imgs/
+data/
 
 # Distribution / packaging
 .DS_Store

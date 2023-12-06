@@ -5,8 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Profile</title>
-    <link rel="stylesheet" href="static/globals.css">
-    <link rel="stylesheet" href="static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="/static/pics/logo-small.png">
@@ -125,6 +123,7 @@
 
 <body>
     <div class="user-profile">
+        <p class="email" id="user" style="display: none;">{{ user['id'] }}</p>
         <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
         <h1 class="user-name">{{ user['username'] }}</h1>
         <p class="username">{{ user['fname'] }} {{ user['lname'] }}</p>
@@ -132,6 +131,35 @@
         <p class="email">{{ user['email'] }}</p>
         <button class="back-button" onclick="goBack()">Back</button>
         <button class="text-button" onclick="textbox()">Send SMS</button>
+        {% if current_user.id == user['id'] %}
+        <button style="margin-left: 10px;" class="text-button" onclick="upload()">Upload Picture</button>
+        {% endif %}        <!-- Upload picture button -->
+
+        <p id="message" style="display: none;">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        </p>
+
+        <form method="post" action="/user" enctype="multipart/form-data" style="padding-top: 2dvb; display: none;"
+            id="joemama">
+            <d1>
+                <p>
+                    <input style="border: none; color: white; background-color: #831c1c5b;" type="file" name="file"
+                        class="form-control" autocomplete="off" required>
+                </p>
+            </d1>
+            <p><input type="submit" value="Submit" class="btn btn-info"
+                    style="background-color: #831c1c5b; color: white; border: none;" onclick="uplaod2()">
+            </p>
+        </form>
+
     </div>
 
     <form action="/send_sms/{{ user['id'] }}" method="post">
@@ -140,7 +168,41 @@
         <button id="send-button" type="submit" style="display: none">Send SMS</button> <!-- Submit button -->
     </form>
 
+    <p style="display: none" id="curuser">{{current_user.id}}</p>
+
+    <div style="justify-content: center; margin-left: 10dvb; display: unset;">
+
+        <p style="justify-content: center; margin-top: 0px; margin-bottom: 7dvb;">User's Images: </p>
+
+        <div class="uploaded-images" style="display:flexbox;">
+            {% for image in images %}
+            <img src="{{ url_for('static', filename='user_imgs/' + ustring|string + '/' + image) }}"
+                alt="Uploaded Image" style="height: 15dvb; width: 15vb;">
+            {% endfor %}
+        </div>
+    </div>
+
     <script>
+
+        function upload2() {
+            document.getElementById("joemama").style.display = "none";
+            document.getElementById("message").style.display = "none";
+        }
+
+        function upload() {
+            //gets current user id
+            var current_user_id = document.getElementById("curuser").innerHTML;
+            //gets user id of the profile page
+            var user_id = document.getElementById("user").innerHTML;
+
+            //if the current user id is the same as the user id of the profile page, then display the upload form
+            if (current_user_id == user_id) {
+                document.getElementById("joemama").style.display = "block";
+                document.getElementById("message").style.display = "block";
+            }
+
+        }
+
         function goBack() {
             window.history.back();
         }

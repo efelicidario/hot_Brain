@@ -37,6 +37,7 @@ from tools.token_required import token_required
 #from tools.get_aws_secrets import get_secrets          #comment/uncomment for test
 
 from tools.logging import logger
+import os
 
 ERROR_MSG = "Ooops.. Didn't work!"
 
@@ -53,8 +54,12 @@ client = Client(account_sid, auth_token)
 #Bcrypt instance
 bcrypt = Bcrypt(app)
 
+#for uploading images
 UPLOAD_FOLDER = 'static/user_imgs'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16MB max file size
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 #Creates the database instance
 db = SQLAlchemy(app)
@@ -550,9 +555,21 @@ def edit_profile():
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def user_profile(user_id):
+    upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], str(user_id))
+    os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+
     user = User.query.filter_by(id=user_id).first()
+
+    ustring = str(user.id)
+
     image = url_for('static', filename='pics/profile/' + user.profile_pic)
-    return render_template('user.html', image_file = image, user=user)
+
+    # Get the list of images in the upload folder
+    images = os.listdir(upload_folder)
+
+    print("images: ", images)
+
+    return render_template('user.html', image_file=image, user=user, images=images, ustring=ustring)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -975,6 +992,31 @@ def rate8update(rating):
         
     #Redirect to the next video
     return redirect(url_for('match'))
+
+@app.route('/user', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected image')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        user_id = session.get('user_id')
+        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'],'/', str(user_id))
+        os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/' + str(session.get('user_id')), filename))
+        flash('Image uploaded')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    else:
+        flash('Invalid file type')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 if __name__ == '__main__':
     db.create_all()
