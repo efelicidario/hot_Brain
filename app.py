@@ -16,7 +16,6 @@ import sqlite3
 import json
 from time import time
 from werkzeug.utils import secure_filename
-from flask_uploads import UploadSet, IMAGES
 import uuid as uuid
 from twilio.rest import Client
 from keys import account_sid, auth_token, twilio_number
