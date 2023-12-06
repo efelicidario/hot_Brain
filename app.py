@@ -37,6 +37,7 @@ from tools.token_required import token_required
 #from tools.get_aws_secrets import get_secrets          #comment/uncomment for test
 
 from tools.logging import logger
+import os
 
 ERROR_MSG = "Ooops.. Didn't work!"
 
@@ -53,8 +54,12 @@ client = Client(account_sid, auth_token)
 #Bcrypt instance
 bcrypt = Bcrypt(app)
 
+#for uploading images
 UPLOAD_FOLDER = 'static/user_imgs'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16MB max file size
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 #Creates the database instance
 db = SQLAlchemy(app)
@@ -134,6 +139,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(20)) #phone number, can be empty
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
     profile_pic = db.Column(db.String(), nullable=True, default='default.png')
+    banned = db.Column(db.Boolean, default=False) #if the user has been banned
     
     # Create a string
     def __repr__(self):
@@ -152,6 +158,20 @@ class User(db.Model, UserMixin):
     social = db.Column(db.Boolean) #social?
     additonal_info = db.Column(db.String(20)) #additional info
     preferance_info = db.relationship('UserPreferance', backref='user', uselist=False)
+    
+    #Rating answers
+    rate1 = db.Column(db.Integer, default = 0) #rating for video 1
+    rate2 = db.Column(db.Integer, default = 0) #rating for video 2
+    rate3 = db.Column(db.Integer, default = 0) #rating for video 3
+    rate4 = db.Column(db.Integer, default = 0) #rating for video 4
+    rate5 = db.Column(db.Integer, default = 0) #rating for video 5
+    rate6 = db.Column(db.Integer, default = 0) #rating for video 6
+    rate7 = db.Column(db.Integer, default = 0) #rating for video 7
+    rate8 = db.Column(db.Integer, default = 0) #rating for video 8
+    def update_video_rating(self, video_number, rating):
+        # Update the rate field based on the video number
+        setattr(self, f'rate{video_number}', rating)
+        db.session.commit()
 
     #preferences from survey
 class UserPreferance(db.Model):
@@ -480,10 +500,16 @@ def survey4():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    #if user is new, redirect to survey
-    if current_user.completed_survey == False:
-        return redirect(url_for('survey'))
+    
+    if current_user.banned == True:
+        return redirect(url_for('logout'))
     else:
+        #Ban the user if their age preference includes those under 18
+        if current_user.preferance_info.age_range_min < 18 or current_user.preferance_info.age_range_max < 18:
+            current_user.banned = True
+            db.session.commit()
+            return redirect(url_for('logout'))
+        
         image = url_for('static', filename='pics/profile/' + current_user.profile_pic)
         return render_template('dashboard.html', image = image)
 
@@ -525,9 +551,21 @@ def edit_profile():
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def user_profile(user_id):
+    upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], str(user_id))
+    os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+
     user = User.query.filter_by(id=user_id).first()
+
+    ustring = str(user.id)
+
     image = url_for('static', filename='pics/profile/' + user.profile_pic)
-    return render_template('user.html', image_file = image, user=user)
+
+    # Get the list of images in the upload folder
+    images = os.listdir(upload_folder)
+
+    print("images: ", images)
+
+    return render_template('user.html', image_file=image, user=user, images=images, ustring=ustring)
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -608,8 +646,13 @@ def gif():
 
 @app.route('/match', methods=['GET'])
 @login_required
-def match():
+def match(song=0):
     #Retrieve all users from the database
+    
+    #if user is new, redirect to survey
+    if current_user.completed_survey == False:
+        return redirect(url_for('survey'))
+    
     user_id = session.get('user_id')
     user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
@@ -638,6 +681,9 @@ def match():
     
     conn.close()
 
+    #For testing, query gets all users except the current user
+    result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
+
     print("Query Result:", result) 
     
     #Filter out the current user from result
@@ -646,7 +692,7 @@ def match():
     print("Users:", users)
     
     #calculate compatability for each user while ignoring the -1's
-    scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
+    scores = [(user, compare(current_user, user, song)) for user in users if compare(current_user, user, song) != -1]
 
     print("Scores:", scores)   
 
@@ -705,19 +751,64 @@ def exec_proc(proc_name):
 
 
 #this will return the avg percentage of the user's brainwave similarity 
-def compare(user1, user2):
+def compare(user1, user2, songnum):
     #get the id's
     id1 = user1.id
     id2 = user2.id
 
     #a percentage
-    score = -1
+    score = 0
 
-    #now compare for each video
-    for i in range(0, 2):
+    #now compare for each video when songnum is 0
+    if songnum == 0:
+        for i in range(0, 8):
+            #get the file names
+            filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
+            filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
+
+            #open the files if they exist
+            if os.path.exists(filename1) and os.path.exists(filename2):
+                with open(filename1, 'rb') as file1:
+                    with open(filename2, 'rb') as file2:
+                        #load the data
+                        data1 = []
+                        data2 = []
+                        
+                        with open(filename1, 'rb') as f:
+                            try:
+                                while True:
+                                    data1.append(pickle.load(f))
+                            except EOFError:
+                                pass
+
+                        with open(filename2, 'rb') as f:
+                            try:
+                                while True:
+                                    data2.append(pickle.load(f))
+                            except EOFError:
+                                pass
+
+
+                        #Weigh user1's data using the rating
+                        data1 = data1 * getattr(current_user, f'rate{i+1}')
+                        print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+
+                        #get the avg score
+                        score += euclidean_distance(data1, data2)
+                        print("adding score: ", score)
+            else:
+                print("file does not exist")
+                return -1
+
+        print("comparing user: ", user1.username, " and user: ", user2.username)
+        score = score / 8
+        print("score: ", score)
+        
+    #now compare single videos when songnum is anything else
+    else:
         #get the file names
-        filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
-        filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
+        filename1 = "data/" + str(id1) + "_" + str(songnum-1) + ".pkl"
+        filename2 = "data/" + str(id2) + "_" + str(songnum-1) + ".pkl"
 
         #open the files if they exist
         if os.path.exists(filename1) and os.path.exists(filename2):
@@ -741,13 +832,23 @@ def compare(user1, user2):
                         except EOFError:
                             pass
 
-                    #get the score
-                    score = euclidean_distance(data1, data2)
+                    #Weigh user1's data using the rating
+                    data1 = data1 * getattr(current_user, f'rate{songnum}')
+                    print("data1 has been weighed by: ", getattr(current_user, f'rate{songnum}'))
+
+                    #get the avg score
+                    score += euclidean_distance(data1, data2)
+                    print("adding score: ", score)
         else:
             print("file does not exist")
             return -1
 
-    print("comparing user: ", user1.username, " and user: ", user2.username)
+        print("comparing user: ", user1.username, " and user: ", user2.username)
+        score = score / 1
+        print("score: ", score)
+        
+        
+        
     return score
 
 def euclidean_distance(thang1, thang2):
@@ -756,6 +857,7 @@ def euclidean_distance(thang1, thang2):
 
     #one of them is empty
     if not thang1 or not thang2:
+        print("no data")
         return -1
 
     #parse the data or some shid
@@ -767,32 +869,43 @@ def euclidean_distance(thang1, thang2):
     all2 = [thang for sublist in thang2 for thang in sublist]
 
     #see the data
-    print("all1: ", all1, " all2: ", all2)
+    #print("all1: ", all1, " all2: ", all2)
 
     #for each brainwave
     for i in range(len(all1)):
         #I guess we can compare one by one and add it to the avgs
         #while both index's exist
-        if all1[i] is None or all2[i] is None:
+        if i > len(all1) and i > len(all2):
             if i == 0:
+                print("no data")
                 return -1
             else:
+                print("returning avgs with count: ", count, " and avgs: ", avgs)
                 return avgs
 
         ###HERE is where we need to parse the data so we can make a numpy array: np.array([0, 0])
         #THIS MIGHT WORK?!
-        o1 = all1[i][0].O1 - all2[i][0].O1
-        o2 = all1[i][0].O2 - all2[i][0].O2
-        t3 = all1[i][0].T3 - all2[i][0].T3
-        t4 = all1[i][0].T4 - all2[i][0].T4  
-        array1 = np.array([o1, o2])
-        array2 = np.array([t3, t4])
+        #print("i is: ", i, " len(all1): ", len(all1), " len(all2): ", len(all2))
+        if i < len(all1) and i < len(all2):
+            o1 = all1[i][0].O1 - all2[i][0].O1
+            o2 = all1[i][0].O2 - all2[i][0].O2
+            t3 = all1[i][0].T3 - all2[i][0].T3
+            t4 = all1[i][0].T4 - all2[i][0].T4  
+            array1 = np.array([o1, o2])
+            array2 = np.array([t3, t4])
 
-        print("array1: ", array1, " array2: ", array2)
+            #print("array1: ", array1, " array2: ", array2)
 
-        avgs += np.sqrt(np.sum((array1 - array2)**2))
-        count += 1
+            avgs += np.sqrt(np.sum((array1 - array2)**2))
+            count += 1
+       # else:
+            #print("Something went wrong")
 
+    #print("returning avgs with count: ", count, " and avgs: ", avgs, " and avgs/count: ", avgs/count)
+    if count == 0:
+        print("no data")
+        return -1
+    print("returning avgs/count: ", avgs/count)
     return (avgs / count)
 
 @app.route('/send_sms/<int:user_id>', methods=['POST'])
@@ -812,6 +925,159 @@ def send_sms(user_id):
     )
 
     return 'SMS sent with SID: ' + message.sid
+
+#For rating the video just watched
+@app.route('/rate1')
+def rate1():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate1.html')
+    return redirect(url_for('video2'))
+
+@app.route('/rate1/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate1update(rating):    
+    #Update the user's rating
+    current_user.update_video_rating(1, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video2'))
+
+@app.route('/rate2')
+@login_required
+def rate2():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate2.html')
+    return redirect(url_for('video3'))
+
+@app.route('/rate2/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate2update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(2, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video3'))
+
+@app.route('/rate3')
+@login_required
+def rate3():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate3.html')
+    return redirect(url_for('video4'))
+
+@app.route('/rate3/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate3update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(3, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video4'))
+
+@app.route('/rate4')
+@login_required
+def rate4():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate4.html')
+    return redirect(url_for('video5'))
+
+@app.route('/rate4/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate4update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(4, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video5'))
+
+@app.route('/rate5')
+@login_required
+def rate5():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate5.html')
+    return redirect(url_for('video6'))
+
+@app.route('/rate5/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate5update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(5, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video6'))
+
+@app.route('/rate6')
+@login_required
+def rate6():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate6.html')
+    return redirect(url_for('video7'))
+
+@app.route('/rate6/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate6update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(6, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video7'))
+
+@app.route('/rate7')
+@login_required
+def rate7():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate7.html')
+    return redirect(url_for('video8'))
+
+@app.route('/rate7/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate7update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(7, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('video8'))
+
+@app.route('/rate8')
+@login_required
+def rate8():
+    if current_user.is_authenticated:
+        return render_template('/ratings/rate8.html')
+    return redirect(url_for('index'))
+
+@app.route('/rate8/<int:rating>', methods=['GET', 'POST'])
+@login_required
+def rate8update(rating):
+    #Update the user's rating
+    current_user.update_video_rating(8, rating)
+        
+    #Redirect to the next video
+    return redirect(url_for('match'))
+
+@app.route('/user', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    file = request.files['file']
+    if file.filename == '':
+        flash('No selected image')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        user_id = session.get('user_id')
+        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'],'/', str(user_id))
+        os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/' + str(session.get('user_id')), filename))
+        flash('Image uploaded')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    else:
+        flash('Invalid file type')
+        return redirect(url_for('user_profile', user_id=session.get('user_id')))
+    
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 if __name__ == '__main__':
     db.create_all()

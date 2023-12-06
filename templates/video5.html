@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Video</title>
-         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    </head>
-    <body>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
-            <div class="container">
-                <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-    
-                <div class="collapse navbar-collapse" id="navmenu">
-                    <ul class="navbar-nav ms-auto">
-                        <!--
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+        <div class="container">
+            <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span
+                    class="text-warning">Brain</span></a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                    <!--
                         <li class="nav-item">
                             <a href="#learn" class="nav-link">Videos</a>
                         </li>
                         -->
-                        <li class="nav-item">
-                            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
-                        </li>
-                        {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     </li>
@@ -37,108 +42,113 @@
                         <a href="{{ url_for('login') }}" class="nav-link">Login</a>
                     </li>
                     {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-
-        <style>
-            body {
-                background: linear-gradient(45deg, #818181, #0f0309); /* Pink gradient */
-             background-attachment: fixed; /* Fixed background */
-             font-family: Arial, sans-serif;
-              display: flex;
-             justify-content: center;
-             align-items: center;
-              height: 100vh;
-             margin: 0;
-              
-            }
-
-            #video-title {
-             font-family: 'Rubik', sans-serif;;
-             font-size: 26px;
-              color: #cacaca; /* Adjust the color to your preference */
-              margin-top: 20px;
-             }
-
-
-          </style>
-
-
-
-
-
-        <!-- Body -->
-        <div class=" text-light d-flex justify-content-center p-5 vh-100">
-            <div class="container">
-                <div class="pt-5 text-center">
-                    <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
-                        <source src="/static/videos/05.mp4" type="video/mp4">
-                          Your browser does not support the video tag.
-                    </video>
-
-                    <div id="video-title">Video 5/8</div>
-
-
-
-                    <p id="user-id" style="display: none;">{{ current_user.id }}</p>
-                  <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
-                </div>
+                </ul>
             </div>
         </div>
+    </nav>
+
+
+    <style>
+        body {
+            background: linear-gradient(45deg, #818181, #0f0309);
+            /* Pink gradient */
+            background-attachment: fixed;
+            /* Fixed background */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+
+        }
+
+        #video-title {
+            font-family: 'Rubik', sans-serif;
+            ;
+            font-size: 26px;
+            color: #cacaca;
+            /* Adjust the color to your preference */
+            margin-top: 20px;
+        }
+    </style>
+
+
+
+
+
+    <!-- Body -->
+    <div class=" text-light d-flex justify-content-center p-5 vh-100">
+        <div class="container">
+            <div class="pt-5 text-center">
+                <video id="video" width="70%" autoplay playsinline style="pointer-events: none;">
+                    <source src="/static/videos/05.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <div id="video-title">Video 5/8</div>
+
+
+
+                <p id="user-id" style="display: none;">{{ current_user.id }}</p>
+                <a id="next" style="display: none;" href="{{url_for('index')}}">Done</a>
+            </div>
+        </div>
+    </div>
 
     <script>
 
-        function play_start(user_id, video_id){
+        function play_start(user_id, video_id) {
 
-            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 4},
-                function(data, textStatus) {
+            $.post("/open_api/play_movie", { "user_id": user_id, "video_id": 4 },
+                function (data, textStatus) {
                     //this gets called when browser receives response from server
                     console.log(data);
-                }, "json").fail( function(response) {
+                }, "json").fail(function (response) {
                     //this gets called if the server throws an error
                     console.log("error");
-                console.log(response);});
+                    console.log(response);
+                });
         }
 
         function stop_movie(user_id, video_id) {
-        $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 4 },
-            function(data, textStatus) {
-                // This gets called when the browser receives a response from the server
-                console.log(data);
+            $.post("/open_api/stop_movie", { "user_id": user_id, "video_id": 4 },
+                function (data, textStatus) {
+                    // This gets called when the browser receives a response from the server
+                    console.log(data);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video6";
+                    window.location.href = "/rate5";
 
-                }, "json").fail(function(response) {
-            
+                }, "json").fail(function (response) {
+
                     // This gets called if the server throws an error
                     console.log("error");
                     console.log(response);
 
                     //takes user back to dashboard when the video finishes playing
-                    window.location.href = "/video6";
+                    window.location.href = "/rate5";
                 });
         }
-        </script>
+    </script>
 
-        <script>
-            const user_id = document.getElementById('user-id').textContent;
-            var nextButton = document.getElementById("next");
+    <script>
+        const user_id = document.getElementById('user-id').textContent;
+        var nextButton = document.getElementById("next");
 
-            video.addEventListener("play", (event) => {
-                play_start(user_id, 1);
-            });
+        video.addEventListener("play", (event) => {
+            play_start(user_id, 1);
+        });
 
-            // For when the video ends
-            video.addEventListener("ended", (event) => {
-                stop_movie(user_id, 1);
-                nextButton.style.display = "block";
-            });
-        </script>
+        // For when the video ends
+        video.addEventListener("ended", (event) => {
+            stop_movie(user_id, 1);
+        });
+    </script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>
