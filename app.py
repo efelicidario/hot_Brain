@@ -631,7 +631,7 @@ def video7():
 def video8():
     return render_template('video8.html')
   
-  @app.route('/gif')
+@app.route('/gif')
 def gif():
     return render_template('gif.html')
 
