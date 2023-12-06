@@ -26,17 +26,28 @@
             /* Increase the font size for the title */
             margin-top: 100px;
         }
+
         .user-profile {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-top: 20px;
-    background-color: rgba(75, 75, 75, 0.247);
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 20px;
-}
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            margin-top: 20px;
+            background-color: rgba(75, 75, 75, 0.247);
+            border: 1px solid rgba(0, 0, 0, 0);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        .btn-danger {
+            background-color: #831c1c5b;
+            border: none;
+            padding: 10px 20px;
+            /* Added padding for a wider button */
+            cursor: pointer;
+            border-radius: 20px;
+            /* Rounded corners for the button */
+        }
     </style>
 </head>
 
@@ -69,8 +80,20 @@
             </div>
         </div>
     </nav>
-    
+
     <div class="match-list">
+
+        <!-- Links to match for specific videos -->
+        <a href="/match" class="btn btn-danger">All</a>
+        <a href="/match/1" class="btn btn-danger">Video 1</a>
+        <a href="/match/2" class="btn btn-danger">Video 2</a>
+        <a href="/match/3" class="btn btn-danger">Video 3</a>
+        <a href="/match/4" class="btn btn-danger">Video 4</a>
+        <a href="/match/5" class="btn btn-danger">Video 5</a>
+        <a href="/match/6" class="btn btn-danger">Video 6</a>
+        <a href="/match/7" class="btn btn-danger">Video 7</a>
+        <a href="/match/8" class="btn btn-danger">Video 8</a>
+
         <h1>Match List</h1>
         {% if sorted_users %}
         {% for user, score in sorted_users %}

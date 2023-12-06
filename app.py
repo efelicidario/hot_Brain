@@ -503,10 +503,6 @@ def dashboard():
     
     if current_user.banned == True:
         return redirect(url_for('logout'))
-    
-    #if user is new, redirect to survey
-    if current_user.completed_survey == False:
-        return redirect(url_for('survey'))
     else:
         #Ban the user if their age preference includes those under 18
         if current_user.preferance_info.age_range_min < 18 or current_user.preferance_info.age_range_max < 18:
@@ -637,8 +633,13 @@ def video8():
 
 @app.route('/match', methods=['GET'])
 @login_required
-def match():
+def match(song=0):
     #Retrieve all users from the database
+    
+    #if user is new, redirect to survey
+    if current_user.completed_survey == False:
+        return redirect(url_for('survey'))
+    
     user_id = session.get('user_id')
     user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
@@ -678,7 +679,7 @@ def match():
     print("Users:", users)
     
     #calculate compatability for each user while ignoring the -1's
-    scores = [(user, compare(current_user, user)) for user in users if compare(current_user, user) != -1]
+    scores = [(user, compare(current_user, user, song)) for user in users if compare(current_user, user, song) != -1]
 
     print("Scores:", scores)   
 
@@ -737,7 +738,7 @@ def exec_proc(proc_name):
 
 
 #this will return the avg percentage of the user's brainwave similarity 
-def compare(user1, user2):
+def compare(user1, user2, songnum):
     #get the id's
     id1 = user1.id
     id2 = user2.id
@@ -745,11 +746,56 @@ def compare(user1, user2):
     #a percentage
     score = 0
 
-    #now compare for each video
-    for i in range(0, 8):
+    #now compare for each video when songnum is 0
+    if songnum == 0:
+        for i in range(0, 8):
+            #get the file names
+            filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
+            filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
+
+            #open the files if they exist
+            if os.path.exists(filename1) and os.path.exists(filename2):
+                with open(filename1, 'rb') as file1:
+                    with open(filename2, 'rb') as file2:
+                        #load the data
+                        data1 = []
+                        data2 = []
+                        
+                        with open(filename1, 'rb') as f:
+                            try:
+                                while True:
+                                    data1.append(pickle.load(f))
+                            except EOFError:
+                                pass
+
+                        with open(filename2, 'rb') as f:
+                            try:
+                                while True:
+                                    data2.append(pickle.load(f))
+                            except EOFError:
+                                pass
+
+
+                        #Weigh user1's data using the rating
+                        data1 = data1 * getattr(current_user, f'rate{i+1}')
+                        print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+
+                        #get the avg score
+                        score += euclidean_distance(data1, data2)
+                        print("adding score: ", score)
+            else:
+                print("file does not exist")
+                return -1
+
+        print("comparing user: ", user1.username, " and user: ", user2.username)
+        score = score / 8
+        print("score: ", score)
+        
+    #now compare single videos when songnum is anything else
+    else:
         #get the file names
-        filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
-        filename2 = "data/" + str(id2) + "_" + str(i) + ".pkl"
+        filename1 = "data/" + str(id1) + "_" + str(songnum-1) + ".pkl"
+        filename2 = "data/" + str(id2) + "_" + str(songnum-1) + ".pkl"
 
         #open the files if they exist
         if os.path.exists(filename1) and os.path.exists(filename2):
@@ -773,10 +819,9 @@ def compare(user1, user2):
                         except EOFError:
                             pass
 
-
                     #Weigh user1's data using the rating
-                    data1 = data1 * getattr(current_user, f'rate{i+1}')
-                    print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+                    data1 = data1 * getattr(current_user, f'rate{songnum}')
+                    print("data1 has been weighed by: ", getattr(current_user, f'rate{songnum}'))
 
                     #get the avg score
                     score += euclidean_distance(data1, data2)
@@ -785,9 +830,12 @@ def compare(user1, user2):
             print("file does not exist")
             return -1
 
-    print("comparing user: ", user1.username, " and user: ", user2.username)
-    score = score / 8
-    print("score: ", score)
+        print("comparing user: ", user1.username, " and user: ", user2.username)
+        score = score / 1
+        print("score: ", score)
+        
+        
+        
     return score
 
 def euclidean_distance(thang1, thang2):
