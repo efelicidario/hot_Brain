@@ -797,6 +797,10 @@ def compare(user1, user2, songnum):
                         #Weigh user1's data using the rating
                         data1 = data1 * getattr(current_user, f'rate{i+1}')
                         print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+                        
+                        #weigh user2's data using the rating
+                        data2 = data2 * getattr(user2, f'rate{i+1}')
+                        print("data2 has been weighed by: ", getattr(user2, f'rate{i+1}'))
 
                         #get the avg score
                         score += euclidean_distance(data1, data2)
@@ -840,6 +844,10 @@ def compare(user1, user2, songnum):
                     #Weigh user1's data using the rating
                     data1 = data1 * getattr(current_user, f'rate{songnum}')
                     print("data1 has been weighed by: ", getattr(current_user, f'rate{songnum}'))
+                    
+                    #weigh user2's data using the rating
+                    data2 = data2 * getattr(user2, f'rate{songnum}')
+                    print("data2 has been weighed by: ", getattr(user2, f'rate{songnum}'))
 
                     #get the avg score
                     score += euclidean_distance(data1, data2)
