@@ -630,23 +630,14 @@ def video7():
 @app.route('/video8')
 def video8():
     return render_template('video8.html')
-
-
-
-
+  
 @app.route('/gif')
 def gif():
     return render_template('gif.html')
 
-
-
-
-
-
-
-@app.route('/match', methods=['GET'])
+@app.route('/match/<int:song>', methods=['GET'])
 @login_required
-def match(song=0):
+def match(song):
     #Retrieve all users from the database
     
     #if user is new, redirect to survey
@@ -700,7 +691,7 @@ def match(song=0):
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
 
-    return render_template('match.html', sorted_users=sorted_users)
+    return render_template('match.html', sorted_users=sorted_users, song=song)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
@@ -761,6 +752,7 @@ def compare(user1, user2, songnum):
 
     #now compare for each video when songnum is 0
     if songnum == 0:
+        print("songnum is 0")
         for i in range(0, 8):
             #get the file names
             filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
@@ -792,6 +784,10 @@ def compare(user1, user2, songnum):
                         #Weigh user1's data using the rating
                         data1 = data1 * getattr(current_user, f'rate{i+1}')
                         print("data1 has been weighed by: ", getattr(current_user, f'rate{i+1}'))
+                        
+                        #weigh user2's data using the rating
+                        data2 = data2 * getattr(user2, f'rate{i+1}')
+                        print("data2 has been weighed by: ", getattr(user2, f'rate{i+1}'))
 
                         #get the avg score
                         score += euclidean_distance(data1, data2)
@@ -835,6 +831,10 @@ def compare(user1, user2, songnum):
                     #Weigh user1's data using the rating
                     data1 = data1 * getattr(current_user, f'rate{songnum}')
                     print("data1 has been weighed by: ", getattr(current_user, f'rate{songnum}'))
+                    
+                    #weigh user2's data using the rating
+                    data2 = data2 * getattr(user2, f'rate{songnum}')
+                    print("data2 has been weighed by: ", getattr(user2, f'rate{songnum}'))
 
                     #get the avg score
                     score += euclidean_distance(data1, data2)
@@ -1052,7 +1052,7 @@ def rate8update(rating):
     current_user.update_video_rating(8, rating)
         
     #Redirect to the next video
-    return redirect(url_for('match'))
+    return redirect(url_for('match', song=0))
 
 @app.route('/user', methods=['POST'])
 def upload_image():
