@@ -631,6 +631,7 @@ def video7():
 def video8():
     return render_template('video8.html')
 
+<<<<<<< HEAD
 
 
 
@@ -645,8 +646,11 @@ def gif():
 
 
 @app.route('/match', methods=['GET'])
+=======
+@app.route('/match/<int:song>', methods=['GET'])
+>>>>>>> 15ee3db (Filtering for individual videos works)
 @login_required
-def match(song=0):
+def match(song):
     #Retrieve all users from the database
     
     #if user is new, redirect to survey
@@ -700,7 +704,7 @@ def match(song=0):
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
 
-    return render_template('match.html', sorted_users=sorted_users)
+    return render_template('match.html', sorted_users=sorted_users, song=song)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
@@ -761,6 +765,7 @@ def compare(user1, user2, songnum):
 
     #now compare for each video when songnum is 0
     if songnum == 0:
+        print("songnum is 0")
         for i in range(0, 8):
             #get the file names
             filename1 = "data/" + str(id1) + "_" + str(i) + ".pkl"
@@ -1052,7 +1057,7 @@ def rate8update(rating):
     current_user.update_video_rating(8, rating)
         
     #Redirect to the next video
-    return redirect(url_for('match'))
+    return redirect(url_for('match', song=0))
 
 @app.route('/user', methods=['POST'])
 def upload_image():
