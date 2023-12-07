@@ -337,8 +337,10 @@ def testo():
     #test() #for testing purposes
     return render_template('testomonials.html')
 
-
-
+@app.route('/feedback') #endpoint
+def feedback():
+    #test() #for testing purposes
+    return render_template('feedback.html')
 
 
 
