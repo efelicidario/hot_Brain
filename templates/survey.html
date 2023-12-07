@@ -16,26 +16,50 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
-        <div class="container">
-            <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+    <div class="container">
+        <!--<a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>-->
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            <img src="/static/pics/clearlogo.png" width="90" height"90" class="d-inline-block align-top">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                  <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ url_for('about') }}" class="nav-link">About</a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ url_for('testo') }}" class="nav-link">Testomonials</a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+              </li>
+              </li>
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                  <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                  <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ url_for('signup') }}" class="nav-link">Signup</a>
+              </li>
+              {% endif %}
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url_for('signup') }}" class="nav-link active">Sign Up</a>
-                    </li>
-                </ul>
-            </div>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
 
 
