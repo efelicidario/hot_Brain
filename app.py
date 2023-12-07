@@ -431,6 +431,25 @@ def survey():
     return render_template('survey.html')
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 @app.route('/survey2', methods=['GET', 'POST'])
 @login_required
