@@ -605,28 +605,6 @@ def friends():
     
     return render_template("friends.html", title=title)
 
-# Friends route
-@app.route('/friends', methods=['POST', 'GET'])
-def friends():
-    title = "My Friends List"
-    
-    if request.method == "POST":
-        friend_name = request.form['name']
-        new_friend = Friends(name=friend_name)
-        
-        # Push to database
-        try:
-            db.session.add()
-            db.session.commit()
-            return redirect('/friends')
-        except:
-            return "There was an error adding your friend..."
-    else:
-        friends = Friends.query.order_by(Friends.date_created)
-        return render_template("friends.html", title=title, friends=friends)
-    
-    return render_template("friends.html", title=title)
-
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
