@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home | hotBrain</title>
+    <title>hotBrain</title>
     <link rel="stylesheet" href="/static/style.css" />
     <link rel="stylesheet" href="/static/globals.css" />
     <link rel="stylesheet" href="/static/styleguide.css" />
@@ -59,6 +59,12 @@
                     </li>
                     </li>
                     {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('friends') }}" class="nav-link">Friends</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('home') }}" class="nav-link">Chat Room</a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     </li>
