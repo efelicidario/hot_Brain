@@ -2,15 +2,18 @@
 ##  Neural dating web application  BrainBit SDK
 [Professor Jardin's Starter Code](https://github.com/cjardin/cs370_fall_2023_REST)
 Neural dating full-stack web application using `HTML/CSS/JS`, `Python Flask`, and the `BrainBit SDK`  
-Built by Andres Hinajosa, Ased Adus, Kyrstyn Hall, Salmah Rashed and Tyler Felicidario  
+Built by Andres Hinojosa, Ased Adus, Kyrstn Hall, Salma Rashed and Tyler Felicidario  
 
 --------------------
-![Alt text](README_imgs/index_screenshot2.png)
+![Alt text](README_imgs/index.png)
+--------------------
+--------------------
+![Alt text](README_imgs/feedback.png)
+--------------------
+--------------------
+![Alt text](README_imgs/match.png)
 --------------------
 
-
-
-![index_screenshot2](https://github.com/efelicidario/hot_Brain/assets/97812524/f6b2f966-087f-4198-866c-e3c56feb9032)
 
 
 
@@ -19,20 +22,11 @@ Built by Andres Hinajosa, Ased Adus, Kyrstyn Hall, Salmah Rashed and Tyler Felic
 - Survey
 - Connect Headband, Video access
 --------------------
-# cs370_fall_2023_REST
-poc to get you started for 370 project
 
-To run.. Must me in windoes power shell..
+### To run, must be in windows power shell..
 
 1. Install python on your machine from python.org
-2. Clode this repo
-3. cd  in the repo dir
+2. Clone this repo
+3. cd into the repo dir
 4. pip intall -r requirements.txt
 5. python app.py
-
-static directory:
-index.html and movie.mp4
-
-open_calls
-play_movie.py
-

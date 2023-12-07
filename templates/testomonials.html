@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/globals.css" />
+    <link rel="stylesheet" href="/static/styleguide.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	  <link rel="icon" href="/static/pics/logo-small.png">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Testimonials</title>
+    <style>
+
+      .testimonial-pic {
+          margin-top: 20px; /* Adjust as needed */
+      }
+  
+  
+      /* Basic styling */
+      body {
+        font-family: Arial, sans-serif;
+        color: #8b002e; /* Font color */
+        background: linear-gradient(45deg, #e72e2e, #e2bcc2);
+        margin: 0;
+        padding: 0;
+      }
+      a{
+        text-decoration: underline;
+        color: #8b002e; 
+      }
+      .testimonial-container {
+        max-width: 800px;
+        margin: 20px auto;
+      }
+      .testimonial-box {
+        background-color: #ffb3b3; /* Pink background */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .testimonial-text {
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+      .testimonial-author {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .thumbs-up,
+      .thumbs-down {
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      .thumbs-count {
+        font-weight: bold;
+      }
+    </style>
+</head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+      <div class="container">
+          <!--<a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span class="text-warning">Brain</span></a>-->
+          <a href="{{ url_for('index') }}" class="navbar-brand">
+              <img src="/static/pics/clearlogo.png" width="90" class="d-inline-block align-top">
+          </a>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navmenu">
+              <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                      <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ url_for('testo') }}" class="nav-link">Testomonials</a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                  </li>
+                  </li>
+                  {% if current_user.is_authenticated %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ url_for('signup') }}" class="nav-link">Signup</a>
+                  </li>
+                  {% endif %}
+                  
+              </ul>
+          </div>
+      </div>
+    </nav>
+
+
+ <section>
+    <p>\n</p>
+    <p>\n</p>
+ </section>
+
+ <div class="testimonial-pic text-center">
+    <img src="/static/pics/clearlogo.png" alt="Logo" style="height: 120px; width: 230px;">
+</div>
+
+    <section class="testimonials-header">
+        <div class="container text-center py-5">
+            <h1 class="display-4">Testimonials</h1>
+            <h4>Want to leave a review? <a href="{{ url_for('feedback') }}">Click here</a></h4>
+        </div>
+    </section>
+
+  <div class="testimonial-container">
+    <div class="testimonial-box">
+      <div class="testimonial-text">
+        "I found my perfect match on this app! The interface is user-friendly and the matches are spot on."
+      </div>
+      <div class="testimonial-author">- Emily</div>
+      <div class="rating">
+        <span class="thumbs-up" onclick="increaseLikes('like-1')">👍</span>
+        <span class="thumbs-count" id="like-1">0</span>
+        <span class="thumbs-down" onclick="increaseLikes('dislike-1')">👎</span>
+        <span class="thumbs-count" id="dislike-1">0</span>
+      </div>
+    </div>
+
+    <div class="testimonial-box">
+      <div class="testimonial-text">
+        "Amazing experience! I never expected a dating app to be this intuitive and fun. Kudos to the team!"
+      </div>
+      <div class="testimonial-author">- Daniel</div>
+      <div class="rating">
+        <span class="thumbs-up" onclick="increaseLikes('like-2')">👍</span>
+        <span class="thumbs-count" id="like-2">0</span>
+        <span class="thumbs-down" onclick="increaseLikes('dislike-2')">👎</span>
+        <span class="thumbs-count" id="dislike-2">0</span>
+      </div>
+    </div>
+
+    <div class="testimonial-box">
+      <div class="testimonial-text">
+        "I've tried many dating apps, but this one stands out. The features are fantastic and the community is great."
+      </div>
+      <div class="testimonial-author">- Sophia</div>
+      <div class="rating">
+        <span class="thumbs-up" onclick="increaseLikes('like-3')">👍</span>
+        <span class="thumbs-count" id="like-3">0</span>
+        <span class="thumbs-down" onclick="increaseLikes('dislike-3')">👎</span>
+        <span class="thumbs-count" id="dislike-3">0</span>
+      </div>
+    </div>
+    <!-- You can add more testimonials following the same structure -->
+  </div>
+
+  <script>
+    function increaseLikes(id) {
+      const countElement = document.getElementById(id);
+      let count = parseInt(countElement.innerText);
+      countElement.innerText = count + 1;
+    }
+  </script>
+  <script>
+    var storedFeedback = localStorage.getItem('userFeedback');
+    var testimonialContainer = document.querySelector('.testimonial-container');
+
+    if (storedFeedback) {
+        var newTestimonialBox = document.createElement('div');
+        newTestimonialBox.className = 'testimonial-box';
+        newTestimonialBox.innerHTML = `
+            <div class="testimonial-text">${storedFeedback}</div>
+            <div class="testimonial-author">- User</div>
+            <div class="rating">
+                <span class="thumbs-up" onclick="increaseLikes('like-new')">👍</span>
+                <span class="thumbs-count" id="like-new">0</span>
+                <span class="thumbs-down" onclick="increaseLikes('dislike-new')">👎</span>
+                <span class="thumbs-count" id="dislike-new">0</span>
+            </div>
+        `;
+        testimonialContainer.appendChild(newTestimonialBox);
+    } else {
+        newTestimonialBox.querySelector('.testimonial-text').innerText = "No feedback available.";
+    }
+</script>
+
+</body>
+</html>

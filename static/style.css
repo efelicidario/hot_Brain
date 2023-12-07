@@ -20,20 +20,31 @@
   border-radius: 6px;
 }
 
-
-/* Position the image container */
-.desktop .dating {
-  position: absolute;
-  top: 221px;
-  left: 0; /* Adjust the left property to move the image to the left */
+/*.dating {
+  position: relative;
+  width: 100%; 
 }
+/*
 
 /* Style the image itself */
-.desktop .dating img {
-  width: 626px; /* Adjust the width as needed */
-  height: 166px; /* Adjust the height as needed */
-  border-radius: 6px;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 .desktop .name {
@@ -82,31 +93,7 @@
     left: 25px;
 }
 
-.desktop .text {
-  position: relative;
-  align-self: stretch;
-  font-family: 'Rubik', sans-serif;
-  font-weight: 500;
-  color: #8b002e; /* Hot pink color */
-  font-size: 20px; /* Adjust the font size as needed */
-  text-align: center;
-  letter-spacing: 0;
-  line-height: normal;
 
-  animation: fadeIn 1s forwards;
-  /* Apply a fade-in animation to all .text elements */
-
-  /* Define the fade-in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-}
 
 
 .desktop .text-wrapper {
@@ -145,4 +132,63 @@
 .desktop .text a:hover {
   color: black;
   /* Change the hover color to black if desired */
+}
+
+/* Style the image itself */
+.dating2 img {
+  width: 20% !important;/* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: 65%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.dating img {
+  width: 20% !important;/* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: 45%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+
+.dating3 img {
+  width: 20% !important;/* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: 5%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.dating4 img {
+  width: 20% !important;/* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: -10%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.dating5 img {
+  width: 20% !important;/* Adjust the width as needed */
+  max-width: 290 px; /* Set a maximum width if necessary */
+  height: 250px; /* Let the height adjust proportionally */
+  border-radius: 6px;
+  position: absolute;
+  right: 25%; /* Position from the left */
+  top: 90%;
+  transform: translate(-50%, -50%);
 }

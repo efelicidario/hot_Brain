@@ -24,59 +24,98 @@
         .match-list {
             font-size: 24px;
             /* Increase the font size for the title */
-            margin-top: 100px;
+            margin-top: 150px;
         }
+
         .user-profile {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-top: 20px;
-    background-color: rgba(75, 75, 75, 0.247);
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 20px;
-}
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            margin-top: 20px;
+            background-color: rgba(75, 75, 75, 0.247);
+            border: 1px solid rgba(0, 0, 0, 0);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        .btn-danger {
+            background-color: #831c1c5b;
+            border: none;
+            padding: 10px 20px;
+            /* Added padding for a wider button */
+            cursor: pointer;
+            border-radius: 20px;
+            /* Rounded corners for the button */
+        }
     </style>
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
-        <div class="container">
-            <a href="{{ url_for('index') }}" class="navbar-brand text-danger">hot<span
-                    class="text-warning">Brain</span></a>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 shadow fixed-top">
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            <img src="/static/pics/clearlogo.png" width="90" class="d-inline-block align-top">
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navmenu">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a href="{{ url_for('index') }}" class="nav-link">Home</a>
-                    </li>
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('testo') }}" class="nav-link">Testomonials</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('connect') }}" class="nav-link">Connect</a>
+                </li>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('signup') }}" class="nav-link">Signup</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
-    
+    </div>
+</nav>
+
     <div class="match-list">
+
+        <!-- Links to match for specific videos with song number passed as values -->
+        <div style="margin-top: 10dvb; margin-bottom: 3dvb;">
+            <a href="/match/0" class="btn btn-danger">All</a>
+            <a href="/match/1" class="btn btn-danger">Song 1</a>
+            <a href="/match/2" class="btn btn-danger">Song 2</a>
+            <a href="/match/3" class="btn btn-danger">Song 3</a>
+            <a href="/match/4" class="btn btn-danger">Song 4</a>
+            <a href="/match/5" class="btn btn-danger">Song 5</a>
+            <a href="/match/6" class="btn btn-danger">Song 6</a>
+            <a href="/match/7" class="btn btn-danger">Song 7</a>
+            <a href="/match/8" class="btn btn-danger">Song 8</a>
+        </div>
+
         <h1>Match List</h1>
         {% if sorted_users %}
         {% for user, score in sorted_users %}
         <div class="user-profile">
             <div class="profile-picture">
-                <img src="static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
+                <img src="/static/pics/profile/{{ user.profile_pic }}" alt="Profile Picture" width="120">
                 <h1><a href="/user/{{ user.id }}" style="color: rgba(128, 0, 128, 0.473)">{{ user.username }}</a></h1>
                 <h2>{{ user.fname }} {{ user.lname }}</h2>
             </div>
@@ -89,6 +128,23 @@
             </div>
             <div class="compatibility-score">
                 <p>Compatibility Score: {{ score|round(2) }}</p>
+
+                <!-- If song is not 0, display the user's rating of that song-->
+                {% if song != 0 %}
+                {% if user['rate' + song|string] == 1 %}
+                <img src="/static/pics/mortified.png" alt="Mortified" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 2 %}
+                <img src="/static/pics/Sad.png" alt="Sad" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 3 %}
+                <img src="/static/pics/Neutral.png" alt="Neutral" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 4 %}
+                <img src="/static/pics/Happy.png" alt="Happy" style="height: 100px; width: 100px;">
+                {% elif user['rate' + song|string] == 5 %}
+                <img src="/static/pics/Excited.png" alt="Excited" style="height: 100px; width: 100px;">
+                {% endif %}
+                {% endif %}
+
+
             </div>
         </div>
         {% endfor %}
