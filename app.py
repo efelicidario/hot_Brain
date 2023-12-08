@@ -579,8 +579,6 @@ def user_profile(user_id):
     # Get the list of images in the upload folder
     images = os.listdir(upload_folder)
 
-    print("images: ", images)
-
     return render_template('user.html', image_file=image, user=user, images=images, ustring=ustring)
 
 # Friends route
