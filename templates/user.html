@@ -28,12 +28,12 @@
             background-color: rgba(75, 75, 75, 0.164);
             /* Semi-transparent greyish background */
             width: 100%;
-            max-width: 500px;
-            /* Limiting the width to avoid overly wide content */
+            max-width: 600px;
             padding: 50px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             text-align: center;
+            margin-top: 300px;
         }
 
         .profile-picture {
@@ -44,7 +44,7 @@
             display: block;
         }
 
-        .user-name {
+        .name {
             font-size: 24px;
             font-weight: bold;
         }
@@ -85,9 +85,30 @@
             /* Rounded corners for the button */
             cursor: pointer;
             /* Add pointer cursor on hover */
-            margin-top: 50px;
+            margin-top: 20px;
         }
     </style>
+    <script>
+        function returnGender(){
+            document.getElementById("gender").innerText = getGenderString();
+        }
+        function getGenderString() {
+            var value = user['gender']
+            console.log("Gender value:", value);
+            if (value === 1) {
+                return 'Female';
+            } 
+            else if (value === 2) {
+                return 'Male';
+            } 
+            else if(value == 3)
+                return 'Nonbinary'
+            else {
+                return '';
+            }
+
+        }
+    </script>
 </head>
 
    <!-- Navbar -->
@@ -139,19 +160,27 @@
     <div class="user-profile">
         <p class="email" id="user" style="display: none;">{{ user['id'] }}</p>
         <img class="profile-picture" src="{{ image_file }}" alt="Profile Picture">
-        <h1 class="user-name">{{ user['fname'] }} {{ user['lname'] }}</h1>
+        <h1 class="name">{{ user['fname'] }} {{ user['lname'] }}</h1>
         <p class="username">@{{ user['username'] }}</p>
-        <p class="email">{{ user['bio'] }}</p>
-        <p class="email">
+        <p class="user-info">{{ user['bio'] }}</p>
+        <hr>
+        <p class="user-info">
             <span class="material-symbols-outlined">cake</span>
-            {{ user['age'] }}
+            {{ user['age'] }} 
             <span style="margin-left: 30px;"></span>
             <span class="material-symbols-outlined">work</span>
             {{ user['occupation'] }}
+            <span style="margin-left: 30px;"></span>
+            <span class="material-symbols-outlined">school</span>
+            <span id="gender">{{ user['education'] }}</span>
+            <span style="margin-left: 30px;"></span>
+            <span class="material-symbols-outlined">person_2</span>
+            <span id="gender">{{ user['gender'] }}</span>
         </p>
-        <p class="email">I am {{ user['personality'] }}!</p>
-        <p class="email">My long term goals are...{{ user['long_term'] }}</p>
-        <p class="email">{{ user['interaction'] }}</p>
+        <hr>
+        <p class="user-info">About myself: <br>{{ user['personality'] }}!</p>
+        <p class="user-info">Hobbies:<br> {{ user['hobbies'] }}!</p>
+        <p class="user-info">My long term goals: <br>{{ user['long_term'] }}</p>
         <button class="back-button" onclick="goBack()">Back</button>
         <button class="text-button" onclick="textbox()">Send SMS</button>
         {% if current_user.id == user['id'] %}
@@ -235,6 +264,8 @@
             document.getElementById("text-input").style.display = "block";
             document.getElementById("send-button").style.display = "block";
         }
+
+        
     </script>
 </body>
 
