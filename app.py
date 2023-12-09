@@ -59,7 +59,7 @@ client = Client(account_sid, auth_token)
 bcrypt = Bcrypt(app)
 
 #for uploading images
-UPLOAD_FOLDER = 'static/user_imgs'
+UPLOAD_FOLDER = 'static/user_imgs/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16MB max file size
 
@@ -567,8 +567,12 @@ def edit_profile():
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def user_profile(user_id):
-    upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], str(user_id))
-    os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+    
+    upload_folder = os.path.join(app.config['UPLOAD_FOLDER'] + str(user_id))
+
+    if(not os.path.exists(upload_folder)):
+        os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+        os.chmod(upload_folder, 0o777)  # Change permissions so anyone can read/write to it
 
     user = User.query.filter_by(id=user_id).first()
 
@@ -1104,8 +1108,11 @@ def upload_image():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         user_id = session.get('user_id')
-        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'],'/', str(user_id))
-        os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'] + str(user_id))
+        print("upload_folder: ", upload_folder)
+        if(not os.path.exists(upload_folder)):
+            os.makedirs(upload_folder, exist_ok=True)  # Create the directory if it doesn't exist
+            os.chmod(upload_folder, 0o777)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'] + '/' + str(session.get('user_id')), filename))
         flash('Image uploaded')
         return redirect(url_for('user_profile', user_id=session.get('user_id')))
