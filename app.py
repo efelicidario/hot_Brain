@@ -3,6 +3,8 @@ from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_wtf.file import FileField
 from flask_socketio import join_room, leave_room, send, SocketIO
 import random
@@ -52,6 +54,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'mewhenthe'
 socketio = SocketIO(app)
 
+
 #For sms
 client = Client(account_sid, auth_token)
 
@@ -67,6 +70,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 #Creates the database instance
 db = SQLAlchemy(app)
+admin = Admin()
 app.app_context().push()
 
 #chat inttegration
@@ -76,6 +80,10 @@ login_manager = LoginManager()
 #login_manager = LoginManager(app) 
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+admin.init_app(app)
+
+
 
 # Outlook SMPT Settings
 app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
@@ -129,6 +137,13 @@ Religion:
 
 
 """
+
+# Admin Model
+class AdminUser(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
 class User(db.Model, UserMixin):
 
     #core info
@@ -144,6 +159,7 @@ class User(db.Model, UserMixin):
     completed_survey = db.Column(db.Boolean, default=False) #if the user has completed the survey
     profile_pic = db.Column(db.String(), nullable=True, default='default.png')
     banned = db.Column(db.Boolean, default=False) #if the user has been banned
+
     
     # Create a string
     def __repr__(self):
@@ -290,6 +306,17 @@ class UpdateForm(FlaskForm):
                 raise ValidationError(
                     "That email already exists. Please choose a different one.")
     
+
+class CustomUserView(ModelView):
+    # Specify the columns you want to display in the list view
+    column_list = ['id', 'username', 'fname',  'lname', 'email', 'age']
+
+admin.add_view(CustomUserView(User, db.session))
+
+
+
+
+
 #Login form
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(
@@ -334,6 +361,10 @@ def index():
         return redirect(url_for('dashboard'))
     return render_template('index.html')
 
+
+
+
+
 #This gets exeduted when connect is clicked
 @app.route('/connect') #endpoint
 def connect():
@@ -374,6 +405,20 @@ def login():
                 session['user_name'] = user.username
                 flash("Login successful.")
                 return redirect(url_for('dashboard'))
+    return render_template('login.html', title='Login', form=form)
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = AdminUser.query.filter_by(username=form.username.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                session['admin_id'] = user.id
+                session['admin_username'] = user.username
+                flash("Login Successful.")
+                return redirect(url_for('admin.index'))
     return render_template('login.html', title='Login', form=form)
 
 def send_email(user):
@@ -1205,7 +1250,28 @@ def disconnect():
     send({"name": name, "message": "has left the room"}, to=room)
     print(f"{name} has left the room {room}")
 
+
+def creat_admin_account():
+    existing_admin = AdminUser.query.filter_by(username='admin').first()
+    if not existing_admin:
+        admin_id = 1
+        admin_username = "admin"
+        admin_password = "admin+hot+brain"
+        admin_email = "hot_brain@gmail.com"
+        hashed_password= bcrypt.generate_password_hash(admin_password)
+        new_admin  = AdminUser(id = admin_id, username = admin_username, email = admin_email, password = hashed_password)
+        db.session.add(new_admin)
+        db.session.commit()
+        print('Admin account created successfully.')
+    else:
+        print("Admin account already existes\n")
+
+
+
+
+
 if __name__ == '__main__':
+    creat_admin_account()
     db.create_all()
     db.session.commit()
     app.run(debug=True, host='0.0.0.0', port=5000)
