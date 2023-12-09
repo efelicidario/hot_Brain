@@ -5,33 +5,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chart</title>
+    <style>
+      body{
+        background-color: rgba(219, 219, 219, 0.827) ;
+      }
+      #myChart {
+            width: 20%; 
+            height: 30%; 
+            margin: 20px; 
+        }
+    </style>
 </head>
 <body>
     <div>
         <canvas id="myChart"></canvas>
-      </div>
+    </div>
+
+    <h1>
+      {{d}}
+    </h1>
+    <h1><a href="{{ url_for('matchpage') }}" style="text-decoration: none; color: black;">go back to match page</a></h1>
       
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       
       <script>
-        const ctx = document.getElementById('myChart');
-      
+       const ctx = document.getElementById('myChart');
+       //const dataValues = {d}
+       //onsole.log("Data Values:", dataValues);
         new Chart(ctx, {
           type: 'line',
           data: {
             labels: ['V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8'],
             datasets: [{
-              label: 'Brainwave ',
-              data: [12, 19, 3, 5, 2, 3, 5, 10, 4, 16],
-              borderWidth: 3
+              label: 'Brainwaves Height',
+              data: [35,43,45,39,51,47,52,44],
+              borderWidth: 2
             }]
           },
           options: {
             scales: {
               y: {
-                beginAtZero: true
+                beginAtZero: false
               }
-            }
+            },
           }
         });
       </script>
