@@ -12,6 +12,7 @@ from string import ascii_uppercase
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
+from config import Config
 import jwt
 import numpy as np
 import pickle
@@ -48,6 +49,7 @@ ERROR_MSG = "Ooops.. Didn't work!"
 
 #Create our app
 app = Flask(__name__)
+app.config.from_object(Config)
 
 #connects app file to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -1249,27 +1251,27 @@ def disconnect():
 
 
 def creat_admin_account():
-    existing_admin = AdminUser.query.filter_by(username='admin').first()
+    existing_admin = AdminUser.query.filter_by(username=Config.ADMIN_USERNAME).first()
     if not existing_admin:
         admin_id = 1
-        admin_username = "admin"
-        admin_password = "admin+hot+brain"
-        admin_email = "hot_brain@gmail.com"
-        hashed_password= bcrypt.generate_password_hash(admin_password)
-        new_admin  = AdminUser(id = admin_id, username = admin_username, email = admin_email, password = hashed_password)
+        admin_username = Config.ADMIN_USERNAME
+        admin_password = Config.ADMIN_PASSWORD
+        admin_email = Config.ADMIN_EMAIL
+        hashed_password = bcrypt.generate_password_hash(admin_password).decode('utf-8')
+        new_admin = AdminUser(id=admin_id, username=admin_username, email=admin_email, password=hashed_password)
         db.session.add(new_admin)
         db.session.commit()
         print('Admin account created successfully.')
     else:
-        print("Admin account already existes\n")
+        print("Admin account already exists\n")
 
 
 
 
 
 if __name__ == '__main__':
-    creat_admin_account()
     db.create_all()
+    creat_admin_account()
     db.session.commit()
     app.run(debug=True, host='0.0.0.0', port=5000)
     #socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
