@@ -356,7 +356,10 @@ def feedback():
     #test() #for testing purposes
     return render_template('feedback.html')
 
-
+@app.route('/matchmade') #endpoint
+def matchmade():
+    #test() #for testing purposes
+    return render_template('match_made.html')
 
 #This is the login page
 @app.route('/login', methods=['GET', 'POST'])
