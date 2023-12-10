@@ -722,6 +722,11 @@ def video8():
 def gif():
     return render_template('gif.html')
 
+
+def contains_zero(input_string):
+    return '0' in input_string
+
+
 @app.route('/match/<int:song>', methods=['GET'])
 @login_required
 def match(song):
@@ -734,25 +739,29 @@ def match(song):
     user_id = session.get('user_id')
     user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND id != {user_id}" 
     user_religion_pref = user_pref.religion_pref
-    religion_numbers_list = re.findall(r'\d+', user_religion_pref)
-    sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+    if not contains_zero(user_religion_pref):
+        religion_numbers_list = re.findall(r'\d+', user_religion_pref)
+        sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+        religion_in_query_format = f" AND religion IN {sql_formatted_list_rel}"
+        query += religion_in_query_format
+
 
     user_race_pref = user_pref.race_pref
-    race_numbers_list = re.findall(r'\d+', user_race_pref)
-    sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+    if not contains_zero(user_religion_pref):
+        race_numbers_list = re.findall(r'\d+', user_race_pref)
+        sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+        race_in_query_fromat = f" AND race IN {sql_formatted_list_race}"
+        query += race_in_query_fromat
 
     user_pref_gen = user_pref.pronoun_pref
-    print(sql_formatted_list_race)
-
+    gen_in_query_fromat = f" AND gender IN ({user_pref_gen})"
+    query += gen_in_query_fromat
 
 
     conn = sqlite3.connect('instance/database.db')  
     cursor = conn.cursor()
-
-
-    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race} AND id != {user_id}"
-
 
     cursor.execute(query)
     result = cursor.fetchall()
