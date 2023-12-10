@@ -12,6 +12,7 @@ from string import ascii_uppercase
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
+from config import Config
 import jwt
 import numpy as np
 import pickle
@@ -48,6 +49,7 @@ ERROR_MSG = "Ooops.. Didn't work!"
 
 #Create our app
 app = Flask(__name__)
+app.config.from_object(Config)
 
 #connects app file to database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -424,7 +426,7 @@ def admin_login():
                 session['admin_username'] = user.username
                 flash("Login Successful.")
                 return redirect(url_for('admin.index'))
-    return render_template('login.html', title='Login', form=form)
+    return render_template('admin_login.html', title='Login', form=form)
 
 def send_email(user):
     #token=user.get_token()
@@ -728,6 +730,11 @@ def video8():
 def gif():
     return render_template('gif.html')
 
+
+def contains_zero(input_string):
+    return '0' in input_string
+
+
 @app.route('/match/<int:song>', methods=['GET'])
 @login_required
 def match(song):
@@ -740,25 +747,29 @@ def match(song):
     user_id = session.get('user_id')
     user_pref = UserPreferance.query.filter_by(id=user_id).first()
 
+    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND id != {user_id}" 
     user_religion_pref = user_pref.religion_pref
-    religion_numbers_list = re.findall(r'\d+', user_religion_pref)
-    sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+    if not contains_zero(user_religion_pref):
+        religion_numbers_list = re.findall(r'\d+', user_religion_pref)
+        sql_formatted_list_rel = '(' + ', '.join(str(num) for num in religion_numbers_list) + ')'
+        religion_in_query_format = f" AND religion IN {sql_formatted_list_rel}"
+        query += religion_in_query_format
+
 
     user_race_pref = user_pref.race_pref
-    race_numbers_list = re.findall(r'\d+', user_race_pref)
-    sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+    if not contains_zero(user_religion_pref):
+        race_numbers_list = re.findall(r'\d+', user_race_pref)
+        sql_formatted_list_race = '(' + ', '.join(str(num) for num in race_numbers_list) + ')'
+        race_in_query_fromat = f" AND race IN {sql_formatted_list_race}"
+        query += race_in_query_fromat
 
     user_pref_gen = user_pref.pronoun_pref
-    print(sql_formatted_list_race)
-
+    gen_in_query_fromat = f" AND gender IN ({user_pref_gen})"
+    query += gen_in_query_fromat
 
 
     conn = sqlite3.connect('instance/database.db')  
     cursor = conn.cursor()
-
-
-    query = f"SELECT fname, lname, age, bio, hobbies, long_term FROM user WHERE age BETWEEN {user_pref.age_range_min} AND {user_pref.age_range_max} AND race IN {sql_formatted_list_race} AND id != {user_id}"
-
 
     cursor.execute(query)
     result = cursor.fetchall()
@@ -1285,27 +1296,27 @@ def disconnect():
 
 
 def creat_admin_account():
-    existing_admin = AdminUser.query.filter_by(username='admin').first()
+    existing_admin = AdminUser.query.filter_by(username=Config.ADMIN_USERNAME).first()
     if not existing_admin:
         admin_id = 1
-        admin_username = "admin"
-        admin_password = "admin+hot+brain"
-        admin_email = "hot_brain@gmail.com"
-        hashed_password= bcrypt.generate_password_hash(admin_password)
-        new_admin  = AdminUser(id = admin_id, username = admin_username, email = admin_email, password = hashed_password)
+        admin_username = Config.ADMIN_USERNAME
+        admin_password = Config.ADMIN_PASSWORD
+        admin_email = Config.ADMIN_EMAIL
+        hashed_password = bcrypt.generate_password_hash(admin_password).decode('utf-8')
+        new_admin = AdminUser(id=admin_id, username=admin_username, email=admin_email, password=hashed_password)
         db.session.add(new_admin)
         db.session.commit()
         print('Admin account created successfully.')
     else:
-        print("Admin account already existes\n")
+        print("Admin account already exists\n")
 
 
 
 
 
 if __name__ == '__main__':
-    creat_admin_account()
     db.create_all()
+    creat_admin_account()
     db.session.commit()
     app.run(debug=True, host='0.0.0.0', port=5000)
     #socketio.run(app, debug=True, host='0.0.0.0', port=80, allow_unsafe_werkzeug=True)
