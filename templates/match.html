@@ -160,8 +160,6 @@
                 <img src="/static/pics/excited.png" alt="Excited" style="height: 100px; width: 100px;">
                 {% endif %}
                 {% endif %}
-
-
             </div>
             <div class="report">
                 <button class="small-button" data-user-id="{{ user.id }}" onclick="blockUser(this)">Add Friend</button>
@@ -176,8 +174,9 @@
         <p>No data :(</p>
         {% endif %}
     </div>
-
-
+    <h4><a href="{{ url_for('matchmade') }}" style="text-decoration: none; color: black;">click for match page</a></h4>
+    <h4><a href="{{ url_for('loadChart') }}" style="text-decoration: none; color: black;">click for brainwave graph</a></h4>
+  
     <script>
         function blockUser(button) {
 
@@ -210,7 +209,7 @@
             alert('Report clicked!');
         }
     </script>
-    
+  
 </body>
 
 </html>

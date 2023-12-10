@@ -405,7 +405,15 @@ def feedback():
     #test() #for testing purposes
     return render_template('feedback.html')
 
+@app.route('/matchmade') #endpoint
+def matchmade():
+    #test() #for testing purposes
+    return render_template('match_made.html')
 
+@app.route('/match') #endpoint
+def matchpage():
+    #test() #for testing purposes
+    return render_template('match.html')
 
 #This is the login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -865,6 +873,34 @@ def exec_proc(proc_name):
     print(type(resp))
     return resp
 
+@app.route('/chart', methods=['POST', 'GET'])
+def loadChart():
+    id = current_user.id
+    data_values = []
+    d = ["test"]
+
+    for i in range(0, 8):
+            #get the file names
+            filename1 = "data/" + str(id) + "_" + str(i) + ".pkl"
+            # Open the file if it exists
+            if os.path.exists(filename1):
+                print("inside if")
+                with open(filename1, 'rb') as file:
+                    # Load the data
+                    data1 = []
+
+                try:
+                    while True:
+                        data1.append(pickle.load(file))
+                except EOFError:
+                    pass
+
+                # Weigh user1's data using the rating
+                data1 = data1 * getattr(current_user, f'rate{i+1}')
+                # Append the processed data1 to data_values list
+                data_values.append(data1)
+
+    return render_template('chart.html', d=d)
 
 #this will return the avg percentage of the user's brainwave similarity 
 def compare(user1, user2, songnum):
