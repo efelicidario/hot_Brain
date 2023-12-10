@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <style>
         body {
             background: linear-gradient(45deg, #e72e2e, #e2bcc2);
@@ -48,6 +50,21 @@
             border-radius: 20px;
             /* Rounded corners for the button */
         }
+        .report {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Adjust the gap as needed */
+        }
+
+        .small-button {
+            padding: 10px;
+            border: none;
+            border-radius: 20px; /* Adjust the radius for rounded edges */
+            background-color: rgba(255, 255, 255, 0.1); /* 10% transparent white background */
+            color: #fff;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -109,7 +126,7 @@
             <a href="/match/7" class="btn btn-danger">Song 7</a>
             <a href="/match/8" class="btn btn-danger">Song 8</a>
         </div>
-
+        
         <h1>Match List</h1>
         {% if sorted_users %}
         {% for user, score in sorted_users %}
@@ -144,16 +161,55 @@
                 {% endif %}
                 {% endif %}
             </div>
+            <div class="report">
+                <button class="small-button" data-user-id="{{ user.id }}" onclick="blockUser(this)">Add Friend</button>
+                <button class="small-button" data-user-id="{{ user.id }}" onclick="blockUser(this)">Block</button>
+                <button class="small-button" data-user-id="{{ user.id }}" onclick="reportUser(this)">Report</button>
+            </div>
+
+            
         </div>
         {% endfor %}
         {% else %}
         <p>No data :(</p>
         {% endif %}
     </div>
-
     <h4><a href="{{ url_for('matchmade') }}" style="text-decoration: none; color: black;">click for match page</a></h4>
     <h4><a href="{{ url_for('loadChart') }}" style="text-decoration: none; color: black;">click for brainwave graph</a></h4>
-    
+  
+    <script>
+        function blockUser(button) {
+
+            var blockedPersonId = button.getAttribute('data-user-id');
+            var userID = "{{ user_id|tojson|safe }}";
+            var blockReason = prompt('Enter reason for blocking:');
+
+            // Example: Make an AJAX request to block the user
+            $.ajax({
+                url: '/block_user',
+                method: 'POST',
+                data: {
+                    'user_id': userID,
+                    'blocked_person_id': blockedPersonId,
+                    'reason': blockReason  // Replace with the actual reason
+                },
+                success: function(response) {
+                    // Handle success response
+                    alert('User blocked successfully!');
+                },
+                error: function(error) {
+                    // Handle error response
+                    alert('Error blocking user!');
+                }
+            });
+        }
+
+        function reportUser() {
+            // Your logic to handle reporting the user
+            alert('Report clicked!');
+        }
+    </script>
+  
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, session, g
+from flask import Flask, flash, render_template, request, redirect, url_for, session, g, jsonify
 from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -195,6 +195,17 @@ class User(db.Model, UserMixin):
         setattr(self, f'rate{video_number}', rating)
         db.session.commit()
 
+class BlockedUsers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    blocked_person_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    reason = db.Column(db.String(255))
+    user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('blocked_users', lazy=True))
+    blocked_person = db.relationship('User', foreign_keys=[blocked_person_id])
+    def __repr__(self):
+        return f"BlockedUsers('{self.user_id}', '{self.blocked_person_id}', '{self.reason}')"
+
+
 class Friends(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
@@ -313,7 +324,12 @@ class CustomUserView(ModelView):
     # Specify the columns you want to display in the list view
     column_list = ['id', 'username', 'fname',  'lname', 'email', 'age']
 
+
+class BlockedUsersAdminView(ModelView):
+    column_list = ['user', 'blocked_person', 'reason']
+
 admin.add_view(CustomUserView(User, db.session))
+admin.add_view(BlockedUsersAdminView(BlockedUsers, db.session))
 
 
 
@@ -501,6 +517,20 @@ def survey():
             return redirect(url_for('gif'))
     return render_template('survey.html')
 
+
+
+@app.route('/block_user', methods=['POST'])
+def block_user():
+    user_id = request.form.get('user_id')
+    blocked_person_id = request.form.get('blocked_person_id')
+    reason = request.form.get('reason')
+
+    # Save to the BlockedUsers table
+    blocked_user = BlockedUsers(user_id=user_id, blocked_person_id=blocked_person_id, reason=reason)
+    db.session.add(blocked_user)
+    db.session.commit()
+
+    return jsonify({'message': 'User blocked successfully'})
 
     
 @app.route('/survey2', methods=['GET', 'POST'])
@@ -773,11 +803,10 @@ def match(song):
 
     cursor.execute(query)
     result = cursor.fetchall()
-    
     conn.close()
 
     #For testing, query gets all users except the current user
-    result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
+    #result = db.session.query(User.fname, User.lname, User.age, User.bio, User.hobbies, User.long_term).filter(User.id != user_id).all()
 
     print("Query Result:", result) 
     
@@ -795,7 +824,7 @@ def match(song):
     sorted_users = sorted(scores, key=lambda x: x[1], reverse=False)
 
 
-    return render_template('match.html', sorted_users=sorted_users, song=song)
+    return render_template('match.html', sorted_users=sorted_users, song=song, user_id=user_id)
 
 
 @app.route("/secure_api/<proc_name>",methods=['GET', 'POST'])
