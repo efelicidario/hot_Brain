@@ -418,7 +418,7 @@ def admin_login():
                 session['admin_username'] = user.username
                 flash("Login Successful.")
                 return redirect(url_for('admin.index'))
-    return render_template('login.html', title='Login', form=form)
+    return render_template('admin_login.html', title='Login', form=form)
 
 def send_email(user):
     #token=user.get_token()
