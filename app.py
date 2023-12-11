@@ -819,7 +819,7 @@ def match(song):
     
     # Check the boolean result
     if user_exists:
-        query_for_blocked = f"SELECT blocked_person_id FROM blocked_users WHERE user_id = {user_id}"
+        query_for_blocked = f"SELECT DISTINCT blocked_person_id FROM blocked_users WHERE user_id = {user_id}"
         cursor.execute(query_for_blocked)
         result1 = cursor.fetchall()
         result1 = tuple(zip(*result1))[0]
