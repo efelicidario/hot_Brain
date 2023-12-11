@@ -3,7 +3,7 @@ from flask_json import FlaskJSON, JsonError, json_response, as_json
 from flask_sqlalchemy import SQLAlchemy #for the database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from flask_admin import Admin
+from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_wtf.file import FileField
 from flask_socketio import join_room, leave_room, send, SocketIO
@@ -72,7 +72,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 #Creates the database instance
 db = SQLAlchemy(app)
-admin = Admin()
+admin = Admin(name='Admin', template_mode='bootstrap3')
+
 app.app_context().push()
 
 #chat inttegration
@@ -328,8 +329,17 @@ class CustomUserView(ModelView):
 class BlockedUsersAdminView(ModelView):
     column_list = ['user', 'blocked_person', 'reason']
 
+class LogoutView(BaseView):
+    @expose('/')
+    def index(self):
+        if current_user.is_authenticated:
+            logout_user()
+        return redirect(url_for('index'))
+
 admin.add_view(CustomUserView(User, db.session))
 admin.add_view(BlockedUsersAdminView(BlockedUsers, db.session))
+admin.add_view(LogoutView(name='Logout', endpoint='logout', menu_icon_type='glyph', menu_icon_value='glyphicon-off'))
+
 
 
 
