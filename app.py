@@ -807,9 +807,25 @@ def match(song):
     gen_in_query_fromat = f" AND gender IN ({user_pref_gen})"
     query += gen_in_query_fromat
 
-
-    conn = sqlite3.connect('instance/database.db')  
+    #get the blockeduseres from blocked table
+    conn = sqlite3.connect('instance/database.db')
     cursor = conn.cursor()
+
+    # Execute the query
+    cursor.execute(f"SELECT COUNT(*) > 0 AS user_exists FROM blocked_users WHERE user_id = {user_id}")
+
+    # Fetch the result
+    user_exists = cursor.fetchone()[0]
+    
+    # Check the boolean result
+    if user_exists:
+        query_for_blocked = f"SELECT blocked_person_id FROM blocked_users WHERE user_id = {user_id}"
+        cursor.execute(query_for_blocked)
+        result1 = cursor.fetchall()
+        result1 = tuple(zip(*result1))[0]
+        blocked_by_user = f" AND id NOT IN {result1}"
+        query += blocked_by_user
+
 
     cursor.execute(query)
     result = cursor.fetchall()
