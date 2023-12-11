@@ -20,7 +20,7 @@ from flask_mail import Message#, Mail
 #from app import db, mail
 import sqlite3
 import json
-from time import time
+import time
 from werkzeug.utils import secure_filename
 import uuid as uuid
 from twilio.rest import Client
@@ -34,7 +34,7 @@ import bcrypt
 import traceback
 import os
 import re, ast
-
+from tools.eeg import HB_state, get_HB_state
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
 from tools.token_required import token_required
@@ -393,11 +393,25 @@ def index():
 
 
 
-#This gets exeduted when connect is clicked
-@app.route('/connect') #endpoint
+
+# This gets executed when connect is clicked
+@app.route('/connect', methods=['GET'])  # endpoint
 def connect():
-    #test() #for testing purposes
-    return render_template('connect.html')
+    update_hb_state()
+    return render_template('connect.html', HB_s=HB_s)
+
+
+def update_hb_state():
+    global HB_s
+    HB_s = get_HB_state()
+    return HB_s
+
+@socketio.on('update_request')
+def handle_update_request():
+    while True:
+        update_hb_state()
+        socketio.emit('update_data', HB_s)
+        time.sleep(5)
 
 @app.route('/about') #endpoint
 def about():
@@ -774,6 +788,21 @@ def gif():
 def contains_zero(input_string):
     return '0' in input_string
 
+def convert_tuples_to_string(data):
+    if not data:
+        return ""
+  
+    result = "("
+    for i, item in enumerate(data):
+        if len(item) == 1:
+            result += f"{item[0]}"
+        else:
+            result += f"{', '.join(str(x) for x in item)}"
+        if i < len(data) - 1:
+            result += ", "
+
+    result += ")"
+    return result 
 
 @app.route('/match/<int:song>', methods=['GET'])
 @login_required
@@ -819,14 +848,15 @@ def match(song):
     
     # Check the boolean result
     if user_exists:
-        query_for_blocked = f"SELECT blocked_person_id FROM blocked_users WHERE user_id = {user_id}"
+        query_for_blocked = f"SELECT DISTINCT blocked_person_id FROM blocked_users WHERE user_id = {user_id}"
         cursor.execute(query_for_blocked)
         result1 = cursor.fetchall()
-        result1 = tuple(zip(*result1))[0]
-        blocked_by_user = f" AND id NOT IN {result1}"
+        print (result1)
+        blocked_user_in_SQL_format = convert_tuples_to_string(result1)
+        blocked_by_user = f" AND id NOT IN {blocked_user_in_SQL_format}"
         query += blocked_by_user
 
-
+    print(query)
     cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
