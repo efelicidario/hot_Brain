@@ -20,7 +20,7 @@ from flask_mail import Message#, Mail
 #from app import db, mail
 import sqlite3
 import json
-from time import time
+import time
 from werkzeug.utils import secure_filename
 import uuid as uuid
 from twilio.rest import Client
@@ -34,7 +34,7 @@ import bcrypt
 import traceback
 import os
 import re, ast
-
+from tools.eeg import HB_state, get_HB_state
 #from tools.eeg import get_head_band_sensor_object, change_user_and_vid, filename#, test #comment out for mac
 
 from tools.token_required import token_required
@@ -393,11 +393,25 @@ def index():
 
 
 
-#This gets exeduted when connect is clicked
-@app.route('/connect') #endpoint
+
+# This gets executed when connect is clicked
+@app.route('/connect', methods=['GET'])  # endpoint
 def connect():
-    #test() #for testing purposes
-    return render_template('connect.html')
+    update_hb_state()
+    return render_template('connect.html', HB_s=HB_s)
+
+
+def update_hb_state():
+    global HB_s
+    HB_s = get_HB_state()
+    return HB_s
+
+@socketio.on('update_request')
+def handle_update_request():
+    while True:
+        update_hb_state()
+        socketio.emit('update_data', HB_s)
+        time.sleep(5)
 
 @app.route('/about') #endpoint
 def about():

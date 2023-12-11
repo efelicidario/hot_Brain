@@ -15,8 +15,16 @@ filename_lock = threading.Lock()
 #will be used to store the data
 pdata = []
 
+HB_state = "Not connected yet"
+
 def on_sensor_state_changed(sensor, state):
+    global HB_state
+    HB_state = state 
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
+
+def get_HB_state():
+    return HB_state
+
 
 def on_brain_bit_signal_data_received(sensor, data):
     global filename

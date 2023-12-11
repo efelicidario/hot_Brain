@@ -9,6 +9,9 @@
     <link rel="icon" href="/static/pics/logo-small.png">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+
+    
     <!--<style>
         .container {
             display: flex;
@@ -133,13 +136,26 @@
             <button id="connect" type="button" class="btn btn-danger">Connect</button>
             <a class="btn btn-danger btn" href="{{url_for('video')}}">Next</a>
 
-            <p id="connectionStatus">Checking connection status...</p>
+            <p id="connectionStatus">Checking connection status... {{HB_s}} </p>
+    
 
         </div>
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 
-  
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
 
+        socket.on('connect', function() {
+            console.log('Connected to server');
+            socket.emit('update_request');
+        });
+
+        socket.on('update_data', function(data) {
+            console.log('Received updated data:', data);
+            document.getElementById('heartbeat-state').innerText = data;
+        });
+    </script>
 </body>
 </html>
