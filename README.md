@@ -1,4 +1,5 @@
 # hotBrain
+
 ##  Neural dating web application  BrainBit SDK
 [Professor Jardin's Starter Code](https://github.com/cjardin/cs370_fall_2023_REST)
 Neural dating full-stack web application using `HTML/CSS/JS`, `Python Flask`, and the `BrainBit SDK`  
@@ -13,7 +14,9 @@ Built by Andres Hinojosa, Ased Adus, Kyrstn Hall, Salma Rashed and Tyler Felicid
 --------------------
 ![Alt text](README_imgs/match.png)
 --------------------
-
+--------------------
+![Alt text](README_imgs/profile.png)
+--------------------
 
 
 
@@ -30,3 +33,8 @@ Built by Andres Hinojosa, Ased Adus, Kyrstn Hall, Salma Rashed and Tyler Felicid
 3. cd into the repo dir
 4. pip intall -r requirements.txt
 5. python app.py
+--------------------
+
+### Video Demo
+[![Video](README_imgs/thumbnail.png)](https://youtu.be/isRykt4BO4I)
+
