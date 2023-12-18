@@ -36,5 +36,5 @@ Built by Andres Hinojosa, Ased Adus, Kyrstn Hall, Salma Rashed and Tyler Felicid
 --------------------
 
 ### Video Demo
-[![Video](README_imgs/thumbnail.png)](https://youtu.be/isRykt4BO4I)
+[![Video](README_imgs/thumbnail.png)](https://youtu.be/isRykt4BO4I?si=zqqlJkqqA1u7TQ3N)
 
